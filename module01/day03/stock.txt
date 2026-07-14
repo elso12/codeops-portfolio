@@ -1,0 +1,6 @@
+Paracetamol,50
+Amoxicillin,4
+ORS,15
+Vitamin C,24
+Cough Syrup,12
+Ibuprofen,40
