@@ -1,0 +1,9 @@
+cat <<EOF > module01/day03/transactions.txt
+Almaz,500
+Dawit,200
+Almaz,300
+Hanna,1000
+Dawit,150
+Samuel,400
+Hanna,200
+EOF

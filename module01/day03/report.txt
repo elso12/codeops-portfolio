@@ -1,0 +1,5 @@
+--- Customer Transaction Report ---
+Hanna: 1200 ETB
+Almaz: 800 ETB
+Samuel: 400 ETB
+Dawit: 350 ETB
