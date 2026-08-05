@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reservations — Habesha Eatery, Bole</title>
+  <meta name="description" content="Reserve a table and explore the menu at Habesha Eatery in Bole, Addis Ababa.">
+</head>
+<body>
+  <header>
+    <h1>Reserve at Habesha Eatery</h1>
+  </header>
+
+  <nav>
+    <a href="index.html">Reservations</a> · 
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <main>
+    <!-- Reservation Form -->
+    <section aria-labelledby="reservation-heading">
+      <h2 id="reservation-heading">Reservation Form</h2>
+      <form action="/reserve" method="post">
+        <label for="fullname">Full Name</label>
+        <input id="fullname" name="fullname" type="text" required>
+
+        <label for="date">Date</label>
+        <input id="date" name="date" type="date" required>
+
+        <label for="time">Time</label>
+        <input id="time" name="time" type="time" required>
+
+        <label for="guests">Number of Guests</label>
+        <input id="guests" name="guests" type="number" min="1" required>
+
+        <button type="submit">Book Now</button>
+      </form>
+    </section>
+
+    <!-- Menu Table -->
+    <section aria-labelledby="menu-heading">
+      <h2 id="menu-heading">Menu (Prices in ETB)</h2>
+      <table>
+        <caption>Habesha Eatery Menu</caption>
+        <thead>
+          <tr>
+            <th scope="col">Dish</th>
+            <th scope="col">Price (ETB)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Doro Wat</td>
+            <td>250</td>
+          </tr>
+          <tr>
+            <td>Kitfo</td>
+            <td>300</td>
+          </tr>
+          <tr>
+            <td>Shiro</td>
+            <td>150</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Media Block -->
+    <section aria-labelledby="media-heading">
+      <h2 id="media-heading">Experience Habesha Eatery</h2>
+      <img src="injera.jpg" alt="Traditional injera served with stews">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18..."
+              title="Map showing Habesha Eatery location in Bole, Addis Ababa"></iframe>
+    </section>
+  </main>
+
+  <footer>Bole, Addis Ababa</footer>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Ethio Telecom Registration &amp; Day 12 Exercises</title>
+  <meta name="description" content="Day 12 practice exercises featuring an Ethio Telecom registration form, Ethiopian Airlines flight schedule table, media block with map, and accessibility fixes.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <h1>Day 12 Practice Exercises</h1>
+
+  <!-- 1. Ethio Telecom Registration Form -->
+  <section aria-labelledby="form-heading">
+    <h2 id="form-heading">Ethio Telecom Registration Form</h2>
+    
+    <!-- 
+      Method Justification:
+      POST is chosen for this registration form to protect sensitive user data (Full Name, Email, Phone Number).
+      Unlike GET (which appends form data to the URL query string and exposes it in browser history, server logs, and bookmarks),
+      POST transmits form data securely inside the HTTP request body.
+    -->
+    <form action="/submit-registration" method="post">
+      <div>
+        <label for="name">Full Name:</label>
+        <input id="name" name="name" type="text" required>
+      </div>
+
+      <div>
+        <label for="email">Email Address:</label>
+        <input id="email" name="email" type="email" required>
+      </div>
+
+      <div>
+        <label for="tel">Phone Number (+251…):</label>
+        <input id="tel" name="tel" type="tel"
+               pattern="^\+251\d{9}$"
+               placeholder="+2519XXXXXXXX"
+               title="Phone number must start with +251 followed by 9 digits"
+               required>
+      </div>
+
+      <div>
+        <label for="branch">Preferred Branch:</label>
+        <select id="branch" name="branch" required>
+          <option value="">-- Select Branch --</option>
+          <option value="bole">Bole</option>
+          <option value="kazanchis">Kazanchis</option>
+          <option value="piassa">Piassa</option>
+        </select>
+      </div>
+
+      <button type="submit">Register Service</button>
+    </form>
+  </section>
+
+  <!-- 2. Ethiopian Airlines Flight Table -->
+  <section aria-labelledby="table-heading">
+    <h2 id="table-heading">Ethiopian Airlines Flight Schedule</h2>
+    <table>
+      <caption>Sample Ethiopian Airlines Flights</caption>
+      <thead>
+        <tr>
+          <th scope="col">Flight</th>
+          <th scope="col">From</th>
+          <th scope="col">To</th>
+          <th scope="col">Departs</th>
+          <th scope="col">Price ETB</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ET101</td>
+          <td>Addis Ababa</td>
+          <td>Nairobi</td>
+          <td>08:00</td>
+          <td>3,500</td>
+        </tr>
+        <tr>
+          <td>ET202</td>
+          <td>Addis Ababa</td>
+          <td>Dubai</td>
+          <td>10:30</td>
+          <td>5,200</td>
+        </tr>
+        <tr>
+          <td>ET303</td>
+          <td>Addis Ababa</td>
+          <td>London</td>
+          <td>14:00</td>
+          <td>12,000</td>
+        </tr>
+        <tr>
+          <td>ET404</td>
+          <td>Addis Ababa</td>
+          <td>Johannesburg</td>
+          <td>16:45</td>
+          <td>4,800</td>
+        </tr>
+        <tr>
+          <td>ET505</td>
+          <td>Addis Ababa</td>
+          <td>Washington DC</td>
+          <td>23:00</td>
+          <td>18,500</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 3. Media Block -->
+  <section aria-labelledby="media-heading">
+    <h2 id="media-heading">Ethiopian Culinary &amp; Location Media Block</h2>
+    
+    <figure>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Injera_with_several_types_of_wat.jpg"
+           alt="Traditional Ethiopian Injera flatbread served with various spiced wat stews">
+      <figcaption>Injera — Ethiopia’s iconic sourdough flatbread served with traditional wat stews.</figcaption>
+    </figure>
+
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d504460.6636543103!2d38.4484528027196!3d8.963030869882964!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85cef5ab402d%3A0x8467b6b037a24d49!2sAddis%20Ababa!5e0!3m2!1sen!2set!4v1785934357289!5m2!1sen!2set"
+      width="600"
+      height="450"
+      style="border:0;"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      title="Google Map showing Addis Ababa, Ethiopia location">
+    </iframe>
+  </section>
+
+  <!-- 4. Accessibility Fixes -->
+  <section aria-labelledby="access-heading">
+    <h2 id="access-heading">Accessibility Fixes</h2>
+
+    <!-- 
+      Fix 1: Replaced generic <div> with a native <button> element.
+      Screen reader / Keyboard benefit: Native <button> elements automatically gain keyboard focusability via Tab key,
+      can be activated using Enter or Space key, and announce their role ('button') to screen readers.
+    -->
+    <button type="button">Click Me</button>
+
+    <!-- 
+      Fix 2: Associated an unlabelled <input> with an explicit <label> using matching for/id attributes.
+      Screen reader benefit: Screen readers announce the label text ('Username') when the user focuses on the input field,
+      informing non-visual users what data is expected.
+    -->
+    <div>
+      <label for="username">Username:</label>
+      <input id="username" name="username" type="text">
+    </div>
+
+    <!-- 
+      Fix 3: Added descriptive alt text to an <img> element missing an alternative text attribute.
+      Screen reader benefit: Screen readers read the alt text aloud to visually impaired users so they understand
+      the content and context of the image instead of hearing a raw filename or missing element announcement.
+    -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Lalibela_Bet_Giyorgis.jpg/800px-Lalibela_Bet_Giyorgis.jpg"
+         alt="Historic rock-hewn Church of Saint George in Lalibela, Ethiopia">
+  </section>
+
+</body>
+</html>
