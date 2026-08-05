@@ -1,0 +1,85 @@
+:root {
+  --brand: hsl(212, 68%, 33%);
+  --brand-hover: hsl(212, 68%, 45%);
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --radius: 12px;
+  --text-color: #2d3748;
+  --bg-color: #f9fafb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  line-height: 1.6;
+  background: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  max-width: 380px;
+  margin: var(--space-lg) auto;
+  padding: var(--space-md);
+  border: 1px solid #E2E8F0;
+  border-radius: var(--radius);
+  background: white;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Decorative pseudo-element accent */
+.card::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  width: 60px;
+  height: 6px;
+  background: var(--brand);
+  border-radius: 3px;
+}
+
+.business-name {
+  font-family: "Playfair Display", serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+  color: var(--brand);
+}
+
+.tagline {
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-bottom: var(--space-md);
+  color: #4a5568;
+}
+
+.description {
+  margin-bottom: var(--space-md);
+}
+
+.btn {
+  background: var(--brand);
+  color: white;
+  padding: var(--space-sm) var(--space-md);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.btn:hover {
+  background: var(--brand-hover);
+}
+
+.btn:focus {
+  outline: 2px solid var(--brand-hover);
+  outline-offset: 2px;
+}

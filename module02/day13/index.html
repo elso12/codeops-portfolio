@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Day 13 Exercises</title>
+  <style>
+    /* 1. Custom Properties */
+    :root {
+      --primary-color: #1e90ff;
+      --secondary-color: #ff6347;
+      --spacing: 12px;
+      --font-stack: "Segoe UI", Arial, sans-serif;
+    }
+    .btn {
+      background-color: var(--primary-color);
+      color: var(--secondary-color);
+      padding: var(--spacing);
+      font-family: var(--font-stack);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* 2. Content-box vs Border-box */
+    .card {
+      width: 300px;
+      padding: 24px;
+      border: 2px solid black;
+      box-sizing: content-box; /* total width > 300px */
+      margin-bottom: 10px;
+    }
+    .card-fixed {
+      width: 300px;
+      padding: 24px;
+      border: 2px solid black;
+      box-sizing: border-box; /* total width = 300px */
+    }
+
+    /* 3. Specificity Example */
+    p {
+      color: green; /* element */
+    }
+    .text {
+      color: blue; /* class */
+    }
+    #highlight {
+      color: red; /* ID wins */
+    }
+
+    /* 4. Ethiopian Airlines Schedule Table */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+    th {
+      background-color: #1e90ff;
+      color: white;
+      padding: 12px;
+    }
+    td {
+      padding: 12px;
+      border: 1px solid #ccc;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    /* 5. Palette Conversion */
+    .palette {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .color-box {
+      width: 100px;
+      height: 100px;
+      border-radius: 6px;
+    }
+    .hover:hover {
+      filter: brightness(120%);
+    }
+  </style>
+</head>
+<body>
+  <h1>Day 13 Exercises</h1>
+
+  <!-- 1. Button -->
+  <h2>1. Custom Properties Button</h2>
+  <button class="btn">Styled Button</button>
+
+  <!-- 2. Cards -->
+  <h2>2. Content-box vs Border-box</h2>
+  <div class="card">Content-box card (renders wider than 300px)</div>
+  <div class="card-fixed">Border-box card (exactly 300px)</div>
+
+  <!-- 3. Specificity -->
+  <h2>3. Specificity Example</h2>
+  <p class="text" id="highlight">This paragraph is styled by element, class, and ID. ID wins (red).</p>
+
+  <!-- 4. Ethiopian Airlines Schedule -->
+  <h2>4. Ethiopian Airlines Schedule</h2>
+  <table>
+    <tr>
+      <th>Flight</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Departure</th>
+      <th>Arrival</th>
+    </tr>
+    <tr>
+      <td>ET101</td><td>Addis Ababa</td><td>Nairobi</td><td>08:00</td><td>09:30</td>
+    </tr>
+    <tr>
+      <td>ET202</td><td>Addis Ababa</td><td>Dubai</td><td>10:00</td><td>14:00</td>
+    </tr>
+    <tr>
+      <td>ET303</td><td>Addis Ababa</td><td>London</td><td>12:00</td><td>18:00</td>
+    </tr>
+    <tr>
+      <td>ET404</td><td>Addis Ababa</td><td>Johannesburg</td><td>15:00</td><td>18:00</td>
+    </tr>
+    <tr>
+      <td>ET505</td><td>Addis Ababa</td><td>New York</td><td>22:00</td><td>06:00</td>
+    </tr>
+  </table>
+
+  <!-- 5. Palette -->
+  <h2>5. Color Palette</h2>
+  <div class="palette">
+    <div class="color-box hover" style="background-color: hsl(209, 100%, 56%);"></div>
+    <div class="color-box hover" style="background-color: hsl(9, 100%, 64%);"></div>
+    <div class="color-box hover" style="background-color: hsl(120, 61%, 50%);"></div>
+  </div>
+</body>
+</html>
