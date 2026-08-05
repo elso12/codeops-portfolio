@@ -1,0 +1,107 @@
+/* Grid skeleton */
+.app {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  grid-template-areas:
+    "header header"
+    "sidebar main"
+    "footer footer";
+  min-height: 100vh;
+}
+
+/* Sticky header */
+.app > header {
+  grid-area: header;
+  position: sticky;
+  top: 0;
+  background: #006747;
+  color: white;
+  padding: 10px;
+}
+
+/* Sidebar */
+.sidebar {
+  grid-area: sidebar;
+  background: #f2f2f2;
+  padding: 20px;
+}
+
+/* Main content */
+.main {
+  grid-area: main;
+  padding: 20px;
+}
+
+/* Footer */
+.footer {
+  grid-area: footer;
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
+
+/* Navbar with Flexbox */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.nav-links a { color: white; text-decoration: none; }
+.btn {
+  background: hsl(212, 68%, 33%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn:hover { background: hsl(212, 68%, 45%); }
+
+/* Toolbar inside main */
+.toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Responsive card grid */
+.cards {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.card {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 8px;
+  position: relative;
+}
+.badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+}
+
+/* Media query collapse */
+@media (max-width: 700px) {
+  .app {
+    grid-template-areas:
+      "header"
+      "sidebar"
+      "main"
+      "footer";
+    grid-template-columns: 1fr;
+  }
+}

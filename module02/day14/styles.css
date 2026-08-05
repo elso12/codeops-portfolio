@@ -1,0 +1,108 @@
+/* Global reset */
+* { box-sizing: border-box; }
+body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+
+/* 1. Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e90ff;
+  padding: 10px 20px;
+  color: white;
+}
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.nav-links a { color: white; text-decoration: none; }
+.btn {
+  background: hsl(212, 68%, 33%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn:hover { background: hsl(212, 68%, 45%); }
+
+/* 2. Flex Cards */
+.cards {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+.card {
+  flex: 1;
+  min-width: 200px;
+  background: #f2f2f2;
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+}
+
+/* 3. Photo Gallery */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.photo {
+  background: #ddd;
+  padding: 40px;
+  text-align: center;
+  border-radius: 6px;
+}
+
+/* 4. Full Page Layout */
+.grid-layout {
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "sidebar main"
+    "footer footer";
+  grid-template-columns: 200px 1fr;
+  gap: 10px;
+  margin: 20px 0;
+}
+.header { grid-area: header; background: #1e90ff; color: white; padding: 10px; }
+.sidebar { grid-area: sidebar; background: #f2f2f2; padding: 10px; }
+.main { grid-area: main; background: #e6e6e6; padding: 10px; }
+.footer { grid-area: footer; background: #333; color: white; padding: 10px; }
+
+@media (max-width: 700px) {
+  .grid-layout {
+    grid-template-areas:
+      "header"
+      "sidebar"
+      "main"
+      "footer";
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 5. Product Card with Badge */
+.product-card {
+  position: relative;
+  width: 200px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+.badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 8px;
+  font-size: 0.8rem;
+}
+.product-card img {
+  width: 100%;
+  border-radius: 6px;
+}
