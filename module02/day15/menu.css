@@ -1,0 +1,119 @@
+/* Import Professional Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Playfair+Display:wght@600;700&display=swap');
+
+/* CSS Variables for consistent theming */
+:root {
+  --clr-bg: #fdfbf7;
+  --clr-card: #ffffff;
+  --clr-text-main: #222222;
+  --clr-text-muted: #666666;
+  --clr-accent: #8B0000;
+  --radius: 12px;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s ease;
+}
+
+/* Base mobile-first styles */
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  background-color: var(--clr-bg);
+  color: var(--clr-text-main);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.menu {
+  padding: 5rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.menu-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.menu-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin: 0 0 1rem 0;
+  color: var(--clr-text-main);
+}
+
+.menu-header p {
+  color: var(--clr-text-muted);
+  font-size: 1.1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* single column mobile */
+  gap: 1.5rem;
+}
+
+.menu-card {
+  background: var(--clr-card);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px dashed #eaeaea;
+  padding-bottom: 1rem;
+}
+
+.menu-card h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  margin: 0;
+  color: var(--clr-text-main);
+}
+
+.price {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  color: var(--clr-accent);
+  font-size: 1.15rem;
+}
+
+.menu-card p {
+  margin: 0;
+  color: var(--clr-text-muted);
+  font-size: 0.95rem;
+}
+
+/* Hover animation with reduced-motion guard */
+@media (prefers-reduced-motion: no-preference) {
+  .menu-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(139, 0, 0, 0.1);
+  }
+}
+
+/* Tablet breakpoint: 2 columns */
+@media (min-width: 768px) {
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Desktop breakpoint: 3 columns */
+@media (min-width: 1024px) {
+  .menu-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+  }
+}
