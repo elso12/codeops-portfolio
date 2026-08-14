@@ -1,0 +1,13 @@
+TEST CASES & EXPECTED BEHAVIOR
+
+Action: Submit form with empty fields.
+Expected: Error reads "Enter your full name." / Counter does not change.
+
+Action: Submit "Almaz" with phone "123".
+Expected: Error reads "Enter a valid Ethiopian phone number." / Counter does not change.
+
+Action: Submit "Almaz" with phone "0912345678".
+Expected: Form clears, Error disappears, Counter increments by 1.
+
+Action: Refresh the browser.
+Expected: Counter successfully loads the saved count from localStorage.

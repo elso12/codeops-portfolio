@@ -38,4 +38,3 @@ highValueOrders.forEach(order => {
 console.log("\n=================================");
 console.log(`GRAND TOTAL: ${format(grandTotal)}`);
 console.log("=================================");
-//day18
