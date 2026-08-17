@@ -1,0 +1,19 @@
+PROJECT: Birr Watch (Module 2, Day 22 Exercise)
+AUTHOR: Elsay Belude
+COURSE: CodeOps - Full Stack Software Development (IBT College Canada)
+
+API ENDPOINT USED:
+GET https://open.er-api.com/v6/latest/ETB
+
+PROJECT STRUCTURE:
+- index.html   : Core semantic markup and container scaffolding (#status, #convert-form, #amount, #currency, #result, #watchlist)
+- styles.css   : Responsive modern styling, status states, and dynamic component classes (.rm)
+- app.js       : Central state object, API fetch, render loop, event delegation, and localStorage persistence
+- README.md    : Portfolio-grade project documentation
+
+TEST CASES & VERIFICATION:
+1. Loading State: On startup, the UI displays "Loading rates..." before fetching the live API data.
+2. Conversion: Typing an amount (e.g., 500) and selecting a currency calculates the correct converted value using state rates.
+3. Validation: Non-numeric inputs, negative numbers, or invalid decimal formats are safely caught and rejected with a user-friendly message.
+4. Watchlist: Clicking "Add to Watchlist" adds the currency with a duplicate prevention guard. Clicking the "×" (.rm) button removes the row via event delegation.
+5. Persistence: Refreshing the browser correctly restores the saved watchlist and settings from localStorage.

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birr Watch</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <h1>Birr Watch</h1>
+        <p id="status" class="status info">Loading rates...</p>
+        
+        <div class="card">
+            <form id="convert-form">
+                <div class="input-group">
+                    <label for="amount">Amount (ETB)</label>
+                    <input id="amount" type="text" value="100" placeholder="e.g. 500.50" />
+                </div>
+                
+                <div class="input-group">
+                    <label for="currency">Convert to</label>
+                    <select id="currency"></select>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">Convert</button>
+                    <button type="button" id="watch-btn" class="btn-secondary">Add to Watchlist</button>
+                </div>
+            </form>
+            <p id="result"></p>
+        </div>
+
+        <div class="card watchlist-card">
+            <h2>Watchlist</h2>
+            <ul id="watchlist"></ul>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
