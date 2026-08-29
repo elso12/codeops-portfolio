@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import Dish from './Dish.jsx';
+import Menu from './Menu.jsx';
 import Sidebar from './Sidebar.jsx';
 import Footer from './Footer.jsx';
-import menuData from './menu.json';
 
 function Header() {
   return (
@@ -14,14 +13,18 @@ function Header() {
 
 export default function App() {
   const [cart, setCart] = useState([]);
+  
+  // Static filter as requested by the slide instructions. 
+  // Change this string to "Main", "Vegetarian", or "Unknown" to test the filter and empty state.
+  const activeCategory = "All"; 
 
   function addToCart(selectedDish) {
     setCart((prevCart) => {
-      const existingItem = prevCart.find(item => item.id === selectedDish.id);
+      const existingItem = prevCart.find(item => item.name === selectedDish.name);
       
       if (existingItem) {
         return prevCart.map(item =>
-          item.id === selectedDish.id
+          item.name === selectedDish.name
             ? { ...item, qty: item.qty + 1 }
             : item
         );
@@ -30,16 +33,16 @@ export default function App() {
     });
   }
 
-  function removeFromCart(dishId) {
+  function removeFromCart(dishName) {
     setCart((prevCart) => {
-      const existingItem = prevCart.find(item => item.id === dishId);
+      const existingItem = prevCart.find(item => item.name === dishName);
       
       if (existingItem.qty === 1) {
-        return prevCart.filter(item => item.id !== dishId);
+        return prevCart.filter(item => item.name !== dishName);
       }
       
       return prevCart.map(item =>
-        item.id === dishId
+        item.name === dishName
           ? { ...item, qty: item.qty - 1 }
           : item
       );
@@ -52,20 +55,8 @@ export default function App() {
       
       <div className="layout-grid">
         <main>
-          <h2>Menu</h2>
-          <section className="menu-grid">
-            {menuData.map(dish => (
-              <Dish 
-                key={dish.id} 
-                id={dish.id}
-                name={dish.name} 
-                price={dish.price}
-                category={dish.category}
-                spicy={dish.spicy}
-                onAdd={() => addToCart(dish)}
-              />
-            ))}
-          </section>
+          <h2>Menu ({activeCategory})</h2>
+          <Menu categoryFilter={activeCategory} onAddToCart={addToCart} />
         </main>
         
         <Sidebar cart={cart} onRemove={removeFromCart} />
