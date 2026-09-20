@@ -1,0 +1,272 @@
+/* Mesob House - Authentic Habesha Dining Design System */
+:root {
+  /* Primary Paprika Palette */
+  --color-paprika: #8F2D14;
+  --color-paprika-light: #A8361A;
+  --color-paprika-dark: #691D0A;
+  --color-paprika-glow: rgba(143, 45, 20, 0.18);
+  --color-paprika-subtle: rgba(143, 45, 20, 0.08);
+
+  /* Turmeric Gold & Ochre */
+  --color-turmeric: #D99426;
+  --color-turmeric-light: #E7A43B;
+  --color-turmeric-dark: #A96E14;
+  --color-turmeric-bg: #FDF7E7;
+  --color-turmeric-border: #F3DCAC;
+
+  /* Forest & Herb Green (Tsom / Fasting) */
+  --color-forest: #1E4D2B;
+  --color-forest-light: #2B693C;
+  --color-forest-bg: #EBF4ED;
+  --color-forest-border: #C6E0CB;
+
+  /* Neutrals & Warm Canvas */
+  --color-canvas: #FAF6F0;
+  --color-canvas-alt: #F4ECE1;
+  --color-card-bg: #FFFFFF;
+  --color-card-border: rgba(143, 45, 20, 0.12);
+  --color-text-main: #231F20;
+  --color-text-muted: #5C5252;
+  --color-text-light: #8A7E7E;
+
+  /* Accent & Glass */
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --shadow-sm: 0 2px 8px rgba(35, 31, 32, 0.04);
+  --shadow-md: 0 8px 24px rgba(35, 31, 32, 0.07);
+  --shadow-lg: 0 16px 40px rgba(143, 45, 20, 0.12);
+  --shadow-glow: 0 12px 32px rgba(217, 148, 38, 0.25);
+
+  /* Typography */
+  --font-serif: 'Fraunces', Garamond, Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-amharic: 'Noto Sans Ethiopic', 'Plus Jakarta Sans', sans-serif;
+
+  /* Transitions */
+  --transition-smooth: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 9999px;
+}
+
+/* Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-canvas);
+  color: var(--color-text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Typography Utility */
+h1, h2, h3, h4, .font-serif {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--color-text-main);
+  letter-spacing: -0.015em;
+}
+
+.amharic-text {
+  font-family: var(--font-amharic);
+  letter-spacing: 0.02em;
+}
+
+/* Links & Buttons */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: var(--transition-smooth);
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
+/* Button Variants */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--color-paprika);
+  color: #FFFFFF;
+  padding: 12px 24px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 14px var(--color-paprika-glow);
+  transition: var(--transition-smooth);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-paprika-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--color-paprika-glow);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--color-canvas-alt);
+  color: var(--color-text-main);
+  padding: 12px 22px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1px solid rgba(143, 45, 20, 0.1);
+  transition: var(--transition-smooth);
+}
+
+.btn-secondary:hover {
+  background-color: #EFE4D6;
+  transform: translateY(-2px);
+}
+
+.btn-accent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--color-turmeric-bg);
+  color: var(--color-turmeric-dark);
+  border: 1px solid var(--color-turmeric-border);
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: var(--transition-smooth);
+}
+
+.btn-accent:hover {
+  background-color: #FAECD1;
+  transform: translateY(-2px);
+}
+
+/* Badges */
+.badge-hearth {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(143, 45, 20, 0.08);
+  color: var(--color-paprika);
+  border: 1px solid rgba(143, 45, 20, 0.16);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.badge-fasting {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: var(--color-forest-bg);
+  color: var(--color-forest);
+  border: 1px solid var(--color-forest-border);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-special {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: var(--color-turmeric-bg);
+  color: var(--color-turmeric-dark);
+  border: 1px solid var(--color-turmeric-border);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Toast Notification */
+.toast-notification {
+  position: fixed;
+  bottom: 84px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-text-main);
+  color: #FFFFFF;
+  padding: 12px 24px;
+  border-radius: var(--radius-full);
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--shadow-lg);
+  z-index: 9999;
+  animation: slideUpToast 0.3s ease-out;
+}
+
+@keyframes slideUpToast {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 14px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-canvas);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D9C9B8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C2B09D;
+}

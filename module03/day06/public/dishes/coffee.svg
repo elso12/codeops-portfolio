@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgCoffee" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#2D1A10"/>
+      <stop offset="100%" stop-color="#0E0704"/>
+    </radialGradient>
+    <linearGradient id="jebenaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3D291F"/>
+      <stop offset="50%" stop-color="#231710"/>
+      <stop offset="100%" stop-color="#0F0A07"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bgCoffee)"/>
+
+  <!-- Traditional Clay Jebena Pot & Sini Cup -->
+  <g filter="url(#shadow)">
+    <!-- Jebena Base Ring -->
+    <ellipse cx="380" cy="420" rx="90" ry="20" fill="#17100A"/>
+
+    <!-- Jebena Round Body -->
+    <circle cx="380" cy="330" r="110" fill="url(#jebenaGrad)" stroke="#5E4032" stroke-width="4"/>
+
+    <!-- Jebena Long Neck -->
+    <path d="M 360 230 L 360 140 C 360 130 400 130 400 140 L 400 230 Z" fill="url(#jebenaGrad)" stroke="#5E4032" stroke-width="3"/>
+    <!-- Neck Stopper (Straw / Grass) -->
+    <ellipse cx="380" cy="135" rx="22" ry="12" fill="#D99426"/>
+
+    <!-- Spout -->
+    <path d="M 440 270 L 490 230 C 495 235 490 245 480 255 L 435 295 Z" fill="url(#jebenaGrad)" stroke="#5E4032" stroke-width="2"/>
+
+    <!-- Handle -->
+    <path d="M 290 260 Q 240 330 290 380" fill="none" stroke="#3D291F" stroke-width="16" stroke-linecap="round"/>
+    <path d="M 290 260 Q 240 330 290 380" fill="none" stroke="#5E4032" stroke-width="6" stroke-linecap="round"/>
+
+    <!-- Traditional Sini Coffee Cup (White Porcelain with Red/Blue Motif) -->
+    <path d="M 520 350 L 510 400 Q 540 415 570 400 L 560 350 Z" fill="#FDFBF7" stroke="#E5DCCE" stroke-width="3"/>
+    <!-- Coffee Surface -->
+    <ellipse cx="540" cy="350" rx="20" ry="6" fill="#140803"/>
+    <!-- Red Motif Band -->
+    <path d="M 515 370 Q 540 380 565 370" fill="none" stroke="#8F2D14" stroke-width="4"/>
+
+    <!-- Popcorn Side Bowl -->
+    <ellipse cx="260" cy="400" rx="40" ry="16" fill="#7A4C32"/>
+    <circle cx="250" cy="390" r="10" fill="#FFFDF9"/>
+    <circle cx="270" cy="385" r="12" fill="#FFFDF9"/>
+    <circle cx="260" cy="380" r="11" fill="#FFFDF9"/>
+
+    <!-- Frankincense Aroma Smoke -->
+    <path d="M 380 120 Q 360 80 390 50 T 370 20" fill="none" stroke="#FFF" stroke-width="3" opacity="0.4" stroke-linecap="round"/>
+    <path d="M 540 330 Q 550 300 540 270" fill="none" stroke="#FFF" stroke-width="2" opacity="0.4" stroke-linecap="round"/>
+  </g>
+
+  <!-- Title Badge Overlay -->
+  <rect x="220" y="500" width="360" height="48" rx="24" fill="#0E0704" opacity="0.85" stroke="#D99426" stroke-width="1.5"/>
+  <text x="400" y="530" font-family="'Fraunces', Georgia, serif" font-size="20" font-weight="bold" fill="#F5EDE0" text-anchor="middle">Jebena Coffee Ceremony • ቡና</text>
+</svg>
