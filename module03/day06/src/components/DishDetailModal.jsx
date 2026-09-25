@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { getDishImage, DEFAULT_FALLBACK_IMAGE } from '../services/api';
 import { 
@@ -15,6 +15,24 @@ export default function DishDetailModal() {
   const [quantity, setQuantity] = useState(1);
   const [specialNote, setSpecialNote] = useState('');
 
+  // Reset state when a new dish is selected
+  useEffect(() => {
+    if (activeDishModal) {
+      setQuantity(1);
+      setSpecialNote('');
+    }
+  }, [activeDishModal]);
+
+  // Keyboard accessibility: Close on Escape key
+  useEffect(() => {
+    if (!activeDishModal) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') closeDishModal();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeDishModal, closeDishModal]);
+
   if (!activeDishModal) return null;
 
   const dish = activeDishModal;
@@ -29,7 +47,7 @@ export default function DishDetailModal() {
   };
 
   return (
-    <div className="modal-backdrop" onClick={closeDishModal}>
+    <div className="modal-backdrop" onClick={closeDishModal} role="dialog" aria-modal="true">
       <div 
         className="dish-modal-content"
         onClick={(e) => e.stopPropagation()}

@@ -1,8 +1,11 @@
 import React from 'react';
-import { FiMapPin, FiClock, FiPhone, FiMail, FiHeart } from 'react-icons/fi';
+import { FiMapPin, FiClock, FiPhone, FiMail, FiHeart, FiInstagram, FiFacebook, FiTwitter } from 'react-icons/fi';
 import { GiCookingPot, GiCoffeePot } from 'react-icons/gi';
+import { useCart } from '../context/CartContext';
 
 export default function Footer({ onNavigate }) {
+  const { openLegal, openTracker } = useCart();
+
   const handleNav = (id) => {
     if (onNavigate) {
       onNavigate(id);
@@ -34,29 +37,42 @@ export default function Footer({ onNavigate }) {
               <GiCoffeePot className="pill-coffee" />
               <span>Buna Ceremony 4:00 PM Daily</span>
             </div>
+            {/* Social Links */}
+            <div className="footer-social-row">
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="social-icon-btn">
+                <FiInstagram />
+              </a>
+              <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" className="social-icon-btn">
+                <FiFacebook />
+              </a>
+              <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter" className="social-icon-btn">
+                <FiTwitter />
+              </a>
+            </div>
           </div>
 
           {/* Quick Links */}
           <div className="footer-col">
-            <h4 className="footer-heading">Culinary Experience</h4>
+            <h4 className="footer-heading">Culinary & Dining</h4>
             <ul className="footer-links">
               <li><button onClick={() => handleNav('specials')}>Chef's Today's Specials</button></li>
-              <li><button onClick={() => handleNav('menu')}>Traditional Stews & Wat</button></li>
-              <li><button onClick={() => handleNav('menu')}>Tibs & Pan-Charred Grills</button></li>
-              <li><button onClick={() => handleNav('menu')}>Kitfo & Highland Delicacies</button></li>
-              <li><button onClick={() => handleNav('menu')}>Fasting & Vegan (Tsom)</button></li>
-              <li><button onClick={() => handleNav('menu')}>Wild Honey Tej & Beverages</button></li>
+              <li><button onClick={() => handleNav('menu')}>Banquet Menu & Wats</button></li>
+              <li><button onClick={() => handleNav('buna-ceremony')}>The Buna Coffee Ceremony</button></li>
+              <li><button onClick={() => handleNav('reviews')}>Guest Reviews & Press</button></li>
+              <li><button onClick={() => openTracker()}>Track Active Order 🚚</button></li>
             </ul>
           </div>
 
-          {/* Culture & Visit */}
+          {/* Culture & Information */}
           <div className="footer-col">
-            <h4 className="footer-heading">Culture & Heritage</h4>
+            <h4 className="footer-heading">Guest Resources</h4>
             <ul className="footer-links">
-              <li><button onClick={() => handleNav('buna-ceremony')}>The Sacred Buna Ceremony</button></li>
-              <li><button onClick={() => handleNav('heritage')}>Gursha: Dining Etiquette</button></li>
-              <li><button onClick={() => handleNav('heritage')}>Hand-Woven Mesob Tradition</button></li>
-              <li><button onClick={() => handleNav('heritage')}>100% Ancient Teff Grain</button></li>
+              <li><button onClick={() => handleNav('faq')}>Frequently Asked Questions</button></li>
+              <li><button onClick={() => handleNav('heritage')}>Gursha Etiquette & Heritage</button></li>
+              <li><button onClick={() => handleNav('contact')}>Location, Map & Direct Message</button></li>
+              <li><button onClick={() => openLegal('privacy')}>Privacy & Guest Policy</button></li>
+              <li><button onClick={() => openLegal('terms')}>Terms of Reservation</button></li>
+              <li><button onClick={() => openLegal('allergens')}>Allergen & Teff Guarantee</button></li>
             </ul>
           </div>
 
@@ -91,6 +107,13 @@ export default function Footer({ onNavigate }) {
         <div className="footer-bottom">
           <div className="footer-copyright">
             © {new Date().getFullYear()} Mesob House (Addis Eats). All rights reserved.
+          </div>
+          <div className="footer-legal-links">
+            <button onClick={() => openLegal('privacy')}>Privacy Policy</button>
+            <span className="dot-sep">•</span>
+            <button onClick={() => openLegal('terms')}>Terms of Service</button>
+            <span className="dot-sep">•</span>
+            <button onClick={() => openLegal('allergens')}>Allergen Disclosures</button>
           </div>
           <div className="footer-credit">
             <span>Prepared with</span>

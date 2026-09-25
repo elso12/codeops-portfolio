@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { getDishImage, DEFAULT_FALLBACK_IMAGE } from '../services/api';
+import { checkoutSchema } from '../utils/validationSchemas';
 import { 
   FiX, 
   FiTrash2, 
@@ -13,7 +14,8 @@ import {
   FiTruck,
   FiHome,
   FiCoffee,
-  FiUser
+  FiUser,
+  FiAlertCircle
 } from 'react-icons/fi';
 import { GiCookingPot } from 'react-icons/gi';
 
@@ -29,7 +31,8 @@ export default function CartDrawer() {
     deliveryFee, 
     grandTotalETB,
     diningType,
-    setDiningType
+    setDiningType,
+    addOrder
   } = useCart();
 
   const { user, openAuthModal } = useAuth();
@@ -39,45 +42,103 @@ export default function CartDrawer() {
   const [customerPhone, setCustomerPhone] = useState('');
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('telebirr'); // 'telebirr' | 'cbe' | 'cash'
+  const [validationErrors, setValidationErrors] = useState({});
   const [orderId, setOrderId] = useState('');
   const [placedOrderDetails, setPlacedOrderDetails] = useState(null);
 
-  const activeName = customerName || user?.name || '';
-  const activePhone = customerPhone || user?.phone || '';
-  const activeAddress = deliveryAddress || user?.address || '';
+  // Sync inputs with logged-in user profile on load or auth change
+  useEffect(() => {
+    if (user) {
+      setCustomerName((prev) => prev || user.name || '');
+      setCustomerPhone((prev) => prev || user.phone || '');
+      setDeliveryAddress((prev) => prev || user.address || '');
+    }
+  }, [user, checkoutStep]);
+
+  // Keyboard accessibility: Close on Escape key
+  useEffect(() => {
+    if (!isCartOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        handleCloseAll();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isCartOpen]);
 
   if (!isCartOpen) return null;
 
   const handleProceedCheckout = () => {
     if (cart.length === 0) return;
+    setValidationErrors({});
     setCheckoutStep('checkout');
   };
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
+
+    const formData = {
+      customerName: customerName || user?.name || '',
+      customerPhone: customerPhone || user?.phone || '',
+      deliveryAddress: deliveryAddress || user?.address || '',
+      paymentMethod
+    };
+
+    // Zod international validation check
+    const validationResult = checkoutSchema.safeParse(formData);
+    if (!validationResult.success) {
+      const formattedErrors = {};
+      validationResult.error.errors.forEach((err) => {
+        if (err.path[0]) formattedErrors[err.path[0]] = err.message;
+      });
+      setValidationErrors(formattedErrors);
+      return;
+    }
+
+    setValidationErrors({});
     const newOrderId = `MH-${Math.floor(100000 + Math.random() * 900000)}`;
+    const newOrderObj = {
+      id: newOrderId,
+      customer: formData.customerName,
+      phone: formData.customerPhone,
+      address: formData.deliveryAddress,
+      diningType,
+      payment: formData.paymentMethod,
+      totalETB: grandTotalETB,
+      items: cart.map((item) => `${item.nameEn} (x${item.quantity})`),
+      placedAt: 'Just now',
+      estimatedTime: '25–35 mins',
+      stepIndex: 0
+    };
+
     setOrderId(newOrderId);
     setPlacedOrderDetails({
       id: newOrderId,
-      name: activeName,
-      phone: activePhone,
-      address: activeAddress,
+      name: formData.customerName,
+      phone: formData.customerPhone,
+      address: formData.deliveryAddress,
       dining: diningType,
-      payment: paymentMethod,
-      total: grandTotalETB,
-      itemCount: cart.reduce((acc, item) => acc + item.quantity, 0)
+      payment: formData.paymentMethod,
+      total: grandTotalETB
     });
+
+    if (addOrder) {
+      addOrder(newOrderObj);
+    }
+
     setCheckoutStep('success');
     clearCart();
   };
 
   const handleCloseAll = () => {
     setCheckoutStep('cart');
+    setValidationErrors({});
     closeCart();
   };
 
   return (
-    <div className="modal-backdrop" onClick={handleCloseAll}>
+    <div className="modal-backdrop" onClick={handleCloseAll} role="dialog" aria-modal="true">
       <div 
         className="cart-drawer-panel"
         onClick={(e) => e.stopPropagation()}
@@ -225,7 +286,7 @@ export default function CartDrawer() {
           </>
         )}
 
-        {/* STEP 2: CHECKOUT FORM */}
+        {/* STEP 2: CHECKOUT FORM WITH INTERNATIONAL ZOD VALIDATION */}
         {checkoutStep === 'checkout' && (
           <form className="checkout-step-view" onSubmit={handlePlaceOrder}>
             <div className="checkout-header-summary">
@@ -269,34 +330,40 @@ export default function CartDrawer() {
                 <label>Full Name *</label>
                 <input 
                   type="text" 
-                  required 
-                  placeholder="e.g. Almaz Bekele"
-                  value={activeName}
+                  placeholder="e.g. Almaz Bekele or Sarah Jenkins"
+                  value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                 />
+                {validationErrors.customerName && (
+                  <span className="field-error-msg"><FiAlertCircle /> {validationErrors.customerName}</span>
+                )}
               </div>
 
               <div className="form-group">
-                <label>Phone Number (for Order Updates) *</label>
+                <label>Phone Number (Local or International) *</label>
                 <input 
                   type="tel" 
-                  required 
-                  placeholder="091 123 4567"
-                  value={activePhone}
+                  placeholder="+251 91 123 4567 or +1 (555) 019-2834"
+                  value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
                 />
+                {validationErrors.customerPhone && (
+                  <span className="field-error-msg"><FiAlertCircle /> {validationErrors.customerPhone}</span>
+                )}
               </div>
 
               {diningType === 'delivery' ? (
                 <div className="form-group">
-                  <label>Delivery Address in Addis Ababa *</label>
+                  <label>Delivery Address *</label>
                   <input 
                     type="text" 
-                    required 
                     placeholder="e.g. Bole Atlas, behind 2000 Habesha, House 412"
-                    value={activeAddress}
+                    value={deliveryAddress}
                     onChange={(e) => setDeliveryAddress(e.target.value)}
                   />
+                  {validationErrors.deliveryAddress && (
+                    <span className="field-error-msg"><FiAlertCircle /> {validationErrors.deliveryAddress}</span>
+                  )}
                 </div>
               ) : (
                 <div className="form-group">
@@ -304,9 +371,12 @@ export default function CartDrawer() {
                   <input 
                     type="text" 
                     placeholder="e.g. Round Mesob Hearth, VIP Balcony, Terrace"
-                    value={activeAddress}
+                    value={deliveryAddress}
                     onChange={(e) => setDeliveryAddress(e.target.value)}
                   />
+                  {validationErrors.deliveryAddress && (
+                    <span className="field-error-msg"><FiAlertCircle /> {validationErrors.deliveryAddress}</span>
+                  )}
                 </div>
               )}
 

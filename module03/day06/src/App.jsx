@@ -1,22 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { CartProvider, useCart } from './context/CartContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { fetchFullMenu, fetchSpecials, NORMALIZED_FALLBACK_MENU, NORMALIZED_FALLBACK_SPECIALS } from './services/api';
+import ErrorBoundary from './components/ErrorBoundary';
 
 import Header from './components/Header';
 import Hero from './components/Hero';
-import SpecialsSection from './components/SpecialsSection';
-import MenuSection from './components/MenuSection';
-import BunaCeremony from './components/BunaCeremony';
-import HeritageSection from './components/HeritageSection';
-import Footer from './components/Footer';
-import DishDetailModal from './components/DishDetailModal';
-import CartDrawer from './components/CartDrawer';
-import ReservationModal from './components/ReservationModal';
-import AuthModal from './components/AuthModal';
 import MobileBottomNav from './components/MobileBottomNav';
+import Footer from './components/Footer';
+
+// Lazy-loaded components for optimal initial bundle & performance
+const SpecialsSection = lazy(() => import('./components/SpecialsSection'));
+const MenuSection = lazy(() => import('./components/MenuSection'));
+const BunaCeremony = lazy(() => import('./components/BunaCeremony'));
+const HeritageSection = lazy(() => import('./components/HeritageSection'));
+const ReviewsSection = lazy(() => import('./components/ReviewsSection'));
+const FaqSection = lazy(() => import('./components/FaqSection'));
+const ContactSection = lazy(() => import('./components/ContactSection'));
+const NewsletterSection = lazy(() => import('./components/NewsletterSection'));
+
+// Lazy-loaded modals & drawers
+const DishDetailModal = lazy(() => import('./components/DishDetailModal'));
+const CartDrawer = lazy(() => import('./components/CartDrawer'));
+const ReservationModal = lazy(() => import('./components/ReservationModal'));
+const AuthModal = lazy(() => import('./components/AuthModal'));
+const OrderTrackerModal = lazy(() => import('./components/OrderTrackerModal'));
+const LegalModal = lazy(() => import('./components/LegalModal'));
+const CookieConsent = lazy(() => import('./components/CookieConsent'));
 
 import './App.css';
+
+// Section Loader Fallback Component
+function SectionLoader() {
+  return (
+    <div className="container" style={{ padding: '60px 24px', textAlign: 'center' }}>
+      <div className="dish-card skeleton-card" style={{ maxWidth: '600px', margin: '0 auto', padding: '30px' }}>
+        <div className="skeleton-line" style={{ width: '40%', margin: '0 auto 12px auto' }} />
+        <div className="skeleton-line" style={{ width: '70%', margin: '0 auto 8px auto' }} />
+        <div className="skeleton-line" style={{ width: '50%', margin: '0 auto' }} />
+      </div>
+    </div>
+  );
+}
 
 function MainApp() {
   const [menu, setMenu] = useState(NORMALIZED_FALLBACK_MENU);
@@ -80,34 +105,54 @@ function MainApp() {
         onExploreCeremony={() => scrollToSection('buna-ceremony')}
       />
 
-      {/* Chef Specials */}
-      <SpecialsSection 
-        specials={specials}
-        loading={loadingSpecials}
-      />
+      {/* Lazy Loaded Sections with Suspense */}
+      <Suspense fallback={<SectionLoader />}>
+        {/* Chef Specials */}
+        <SpecialsSection 
+          specials={specials}
+          loading={loadingSpecials}
+        />
 
-      {/* Full Banquet Menu & Filters */}
-      <MenuSection 
-        menu={menu}
-        loading={loadingMenu}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
+        {/* Full Banquet Menu & Filters */}
+        <MenuSection 
+          menu={menu}
+          loading={loadingMenu}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
 
-      {/* Traditional Buna Coffee Ceremony */}
-      <BunaCeremony />
+        {/* Traditional Buna Coffee Ceremony */}
+        <BunaCeremony />
 
-      {/* Gursha & Ethiopian Hospitality Heritage */}
-      <HeritageSection />
+        {/* Gursha & Ethiopian Hospitality Heritage */}
+        <HeritageSection />
+
+        {/* Customer Reviews & Press Features */}
+        <ReviewsSection />
+
+        {/* FAQ & Teff Information */}
+        <FaqSection />
+
+        {/* Location, Contact & Interactive Form */}
+        <ContactSection />
+
+        {/* VIP Dining Club Newsletter */}
+        <NewsletterSection />
+      </Suspense>
 
       {/* Footer */}
       <Footer onNavigate={scrollToSection} />
 
-      {/* Modals and Drawers */}
-      <DishDetailModal />
-      <CartDrawer />
-      <ReservationModal />
-      <AuthModal />
+      {/* Modals and Drawers with Suspense */}
+      <Suspense fallback={null}>
+        <DishDetailModal />
+        <CartDrawer />
+        <ReservationModal />
+        <AuthModal />
+        <OrderTrackerModal />
+        <LegalModal />
+        <CookieConsent />
+      </Suspense>
 
       {/* Mobile Sticky Navigation */}
       <MobileBottomNav onNavigate={scrollToSection} />
@@ -117,10 +162,12 @@ function MainApp() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <CartProvider>
-        <MainApp />
-      </CartProvider>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <CartProvider>
+          <MainApp />
+        </CartProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

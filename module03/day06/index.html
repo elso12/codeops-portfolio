@@ -8,10 +8,54 @@
     <meta name="description" content="Mesob House - Communal Warmth, Slow-Cooked Heritage. Experience authentic Ethiopian & Eritrean dining with slow-simmered wats, teff injera, prime kitfo, and traditional Buna coffee ceremony." />
     <title>Mesob House | Authentic Habesha Dining & Addis Eats</title>
 
+    <!-- Open Graph & Social Sharing -->
+    <meta property="og:title" content="Mesob House | Authentic Habesha Dining & Addis Eats" />
+    <meta property="og:description" content="Experience authentic Ethiopian & Eritrean dining with slow-simmered wats, 100% teff injera, prime kitfo, and traditional Buna coffee ceremony." />
+    <meta property="og:type" content="restaurant" />
+    <meta property="og:url" content="https://mesobhouse.com" />
+    
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Noto+Sans+Ethiopic:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet" />
+
+    <!-- Schema.org JSON-LD Structured Data for Restaurant -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Mesob House (Addis Eats)",
+      "image": "https://mesobhouse.com/hero.jpg",
+      "servesCuisine": ["Ethiopian", "Eritrean", "Habesha", "African"],
+      "priceRange": "$$",
+      "telephone": "+251911234567",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Bole Medhanialem, Behind Edna Mall",
+        "addressLocality": "Addis Ababa",
+        "addressCountry": "ET"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          "opens": "11:30",
+          "closes": "23:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Saturday", "Sunday"],
+          "opens": "11:00",
+          "closes": "24:00"
+        }
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "1480"
+      }
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>

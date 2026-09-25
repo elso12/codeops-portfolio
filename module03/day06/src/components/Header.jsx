@@ -12,12 +12,13 @@ import {
   FiMapPin,
   FiUser,
   FiLogOut,
-  FiChevronDown
+  FiChevronDown,
+  FiTruck
 } from 'react-icons/fi';
 import { GiCoffeePot, GiCookingPot } from 'react-icons/gi';
 
 export default function Header({ searchQuery, setSearchQuery, onNavigate }) {
-  const { totalItems, openCart, openReservation } = useCart();
+  const { totalItems, openCart, openReservation, openTracker } = useCart();
   const { user, openAuthModal, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -76,16 +77,22 @@ export default function Header({ searchQuery, setSearchQuery, onNavigate }) {
           {/* Desktop Navigation Links */}
           <nav className="desktop-nav">
             <button className="nav-link" onClick={() => handleNavClick('specials')}>
-              Today's Specials
+              Specials
             </button>
             <button className="nav-link" onClick={() => handleNavClick('menu')}>
-              Banquet Menu
+              Menu
             </button>
             <button className="nav-link" onClick={() => handleNavClick('buna-ceremony')}>
               Buna Ceremony
             </button>
-            <button className="nav-link" onClick={() => handleNavClick('heritage')}>
-              Gursha & Heritage
+            <button className="nav-link" onClick={() => handleNavClick('reviews')}>
+              Reviews
+            </button>
+            <button className="nav-link" onClick={() => handleNavClick('faq')}>
+              FAQs
+            </button>
+            <button className="nav-link" onClick={() => handleNavClick('contact')}>
+              Contact
             </button>
           </nav>
 
@@ -113,6 +120,16 @@ export default function Header({ searchQuery, setSearchQuery, onNavigate }) {
               )}
             </div>
 
+            {/* Track Order Button */}
+            <button 
+              className="icon-btn tracker-btn"
+              onClick={() => openTracker()}
+              title="Track Active Order"
+              aria-label="Track Active Order"
+            >
+              <FiTruck />
+            </button>
+
             {/* User Account / Auth Control */}
             {user ? (
               <div className="user-menu-wrapper">
@@ -134,6 +151,12 @@ export default function Header({ searchQuery, setSearchQuery, onNavigate }) {
                       <span className="user-location-badge">📍 {user.address}</span>
                     </div>
                     <div className="dropdown-divider"></div>
+                    <button 
+                      className="dropdown-item"
+                      onClick={() => { setIsUserMenuOpen(false); openTracker(); }}
+                    >
+                      <FiTruck /> Track My Order
+                    </button>
                     <button 
                       className="dropdown-item logout-item"
                       onClick={() => { setIsUserMenuOpen(false); logout(); }}
@@ -227,8 +250,17 @@ export default function Header({ searchQuery, setSearchQuery, onNavigate }) {
               <button onClick={() => handleNavClick('buna-ceremony')}>
                 ☕ Buna Ceremony (የቡና ሥነ-ሥርዓት)
               </button>
-              <button onClick={() => handleNavClick('heritage')}>
-                🌿 Gursha & Culture (ባህልና እንግዳ ተቀባይነት)
+              <button onClick={() => handleNavClick('reviews')}>
+                ⭐ Guest Reviews & Ratings
+              </button>
+              <button onClick={() => handleNavClick('faq')}>
+                ❓ FAQs & Teff Info
+              </button>
+              <button onClick={() => handleNavClick('contact')}>
+                📍 Contact & Location
+              </button>
+              <button onClick={() => { setMobileMenuOpen(false); openTracker(); }}>
+                🚚 Track Active Order
               </button>
               <button className="mobile-reserve-link" onClick={() => { setMobileMenuOpen(false); openReservation(); }}>
                 <FiCalendar /> Reserve a Traditional Mesob Table

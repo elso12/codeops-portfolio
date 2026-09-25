@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
-import { FiX, FiCalendar, FiClock, FiUsers, FiCheckCircle } from 'react-icons/fi';
+import { reservationSchema } from '../utils/validationSchemas';
+import { FiX, FiCalendar, FiClock, FiUsers, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
 import { GiCookingPot } from 'react-icons/gi';
 
 export default function ReservationModal() {
@@ -12,22 +13,56 @@ export default function ReservationModal() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [specialNotes, setSpecialNotes] = useState('');
+  const [validationErrors, setValidationErrors] = useState({});
   const [confirmed, setConfirmed] = useState(false);
+
+  // Keyboard accessibility: Close on Escape key
+  useEffect(() => {
+    if (!isReservationOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') handleClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isReservationOpen]);
 
   if (!isReservationOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const formData = {
+      partySize,
+      date,
+      time,
+      seatingPreference,
+      name,
+      phone,
+      specialNotes
+    };
+
+    const validationResult = reservationSchema.safeParse(formData);
+    if (!validationResult.success) {
+      const formattedErrors = {};
+      validationResult.error.errors.forEach((err) => {
+        if (err.path[0]) formattedErrors[err.path[0]] = err.message;
+      });
+      setValidationErrors(formattedErrors);
+      return;
+    }
+
+    setValidationErrors({});
     setConfirmed(true);
   };
 
   const handleClose = () => {
     setConfirmed(false);
+    setValidationErrors({});
     closeReservation();
   };
 
   return (
-    <div className="modal-backdrop" onClick={handleClose}>
+    <div className="modal-backdrop" onClick={handleClose} role="dialog" aria-modal="true">
       <div 
         className="reservation-modal-content"
         onClick={(e) => e.stopPropagation()}
@@ -48,7 +83,7 @@ export default function ReservationModal() {
                 <span>BOLE MEDHANIALEM, ADDIS ABABA</span>
               </div>
               <h2>Reserve a Traditional Mesob Table</h2>
-              <span className="amharic-sub amharic-text">ቦታ ያስይዙ • የሐበሻ ማዕድ</span>
+              <span className="amharic-sub amharic-text">ቦታ ያስይዙ • International & Local Guests</span>
               <p>Join us for communal dining, fresh stone-ground injera, and daily Buna ceremony.</p>
             </div>
 
@@ -62,16 +97,21 @@ export default function ReservationModal() {
                   <option value="8">8 Guests (Large Banquet)</option>
                   <option value="12">10-14 Guests (Royal Hall)</option>
                 </select>
+                {validationErrors.partySize && (
+                  <span className="field-error-msg"><FiAlertCircle /> {validationErrors.partySize}</span>
+                )}
               </div>
 
               <div className="form-group">
                 <label><FiCalendar /> Date</label>
                 <input 
                   type="date" 
-                  required 
                   value={date} 
                   onChange={(e) => setDate(e.target.value)} 
                 />
+                {validationErrors.date && (
+                  <span className="field-error-msg"><FiAlertCircle /> {validationErrors.date}</span>
+                )}
               </div>
 
               <div className="form-group">
@@ -84,6 +124,9 @@ export default function ReservationModal() {
                   <option value="20:00">8:00 PM (Prime Dinner)</option>
                   <option value="21:30">9:30 PM (Late Night Tej Feast)</option>
                 </select>
+                {validationErrors.time && (
+                  <span className="field-error-msg"><FiAlertCircle /> {validationErrors.time}</span>
+                )}
               </div>
 
               <div className="form-group">
@@ -103,22 +146,26 @@ export default function ReservationModal() {
                 <label>Contact Name *</label>
                 <input 
                   type="text" 
-                  required 
-                  placeholder="e.g. Dawit Haile"
+                  placeholder="e.g. Dawit Haile or Sarah Jenkins"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
+                {validationErrors.name && (
+                  <span className="field-error-msg"><FiAlertCircle /> {validationErrors.name}</span>
+                )}
               </div>
 
               <div className="form-group">
-                <label>Phone Number *</label>
+                <label>Phone Number (Local or International) *</label>
                 <input 
                   type="tel" 
-                  required 
-                  placeholder="091 123 4567"
+                  placeholder="+251 91 123 4567 or +1 (555) 019-2834"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                 />
+                {validationErrors.phone && (
+                  <span className="field-error-msg"><FiAlertCircle /> {validationErrors.phone}</span>
+                )}
               </div>
             </div>
 
