@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { getDishImage, DEFAULT_FALLBACK_IMAGE } from '../services/api';
@@ -38,22 +40,34 @@ export default function CartDrawer() {
   const { user, openAuthModal } = useAuth();
 
   const [checkoutStep, setCheckoutStep] = useState('cart'); // 'cart' | 'checkout' | 'success'
-  const [customerName, setCustomerName] = useState('');
-  const [customerPhone, setCustomerPhone] = useState('');
-  const [deliveryAddress, setDeliveryAddress] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('telebirr'); // 'telebirr' | 'cbe' | 'cash'
-  const [validationErrors, setValidationErrors] = useState({});
   const [orderId, setOrderId] = useState('');
   const [placedOrderDetails, setPlacedOrderDetails] = useState(null);
 
-  // Sync inputs with logged-in user profile on load or auth change
+  // React Hook Form for Checkout
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    reset
+  } = useForm({
+    resolver: zodResolver(checkoutSchema),
+    defaultValues: {
+      customerName: user?.name || '',
+      customerPhone: user?.phone || '',
+      deliveryAddress: user?.address || '',
+      paymentMethod: 'telebirr'
+    }
+  });
+
+  // Sync prefilled data when user logs in or switches to checkout
   useEffect(() => {
     if (user) {
-      setCustomerName((prev) => prev || user.name || '');
-      setCustomerPhone((prev) => prev || user.phone || '');
-      setDeliveryAddress((prev) => prev || user.address || '');
+      if (user.name) setValue('customerName', user.name);
+      if (user.phone) setValue('customerPhone', user.phone);
+      if (user.address) setValue('deliveryAddress', user.address);
     }
-  }, [user, checkoutStep]);
+  }, [user, checkoutStep, setValue]);
 
   // Keyboard accessibility: Close on Escape key
   useEffect(() => {
@@ -71,32 +85,10 @@ export default function CartDrawer() {
 
   const handleProceedCheckout = () => {
     if (cart.length === 0) return;
-    setValidationErrors({});
     setCheckoutStep('checkout');
   };
 
-  const handlePlaceOrder = (e) => {
-    e.preventDefault();
-
-    const formData = {
-      customerName: customerName || user?.name || '',
-      customerPhone: customerPhone || user?.phone || '',
-      deliveryAddress: deliveryAddress || user?.address || '',
-      paymentMethod
-    };
-
-    // Zod international validation check
-    const validationResult = checkoutSchema.safeParse(formData);
-    if (!validationResult.success) {
-      const formattedErrors = {};
-      validationResult.error.errors.forEach((err) => {
-        if (err.path[0]) formattedErrors[err.path[0]] = err.message;
-      });
-      setValidationErrors(formattedErrors);
-      return;
-    }
-
-    setValidationErrors({});
+  const onCheckoutSubmit = (formData) => {
     const newOrderId = `MH-${Math.floor(100000 + Math.random() * 900000)}`;
     const newOrderObj = {
       id: newOrderId,
@@ -129,11 +121,11 @@ export default function CartDrawer() {
 
     setCheckoutStep('success');
     clearCart();
+    reset();
   };
 
   const handleCloseAll = () => {
     setCheckoutStep('cart');
-    setValidationErrors({});
     closeCart();
   };
 
@@ -239,9 +231,9 @@ export default function CartDrawer() {
                               <FiPlus />
                             </button>
                           </div>
-                          <div className="cart-item-price">
+                          <span className="cart-item-price">
                             ETB {(item.priceETB * item.quantity).toLocaleString()}
-                          </div>
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -286,9 +278,9 @@ export default function CartDrawer() {
           </>
         )}
 
-        {/* STEP 2: CHECKOUT FORM WITH INTERNATIONAL ZOD VALIDATION */}
+        {/* STEP 2: CHECKOUT FORM WITH REACT-HOOK-FORM & ZOD VALIDATION */}
         {checkoutStep === 'checkout' && (
-          <form className="checkout-step-view" onSubmit={handlePlaceOrder}>
+          <form className="checkout-step-view" onSubmit={handleSubmit(onCheckoutSubmit)} noValidate>
             <div className="checkout-header-summary">
               <button 
                 type="button" 
@@ -331,11 +323,10 @@ export default function CartDrawer() {
                 <input 
                   type="text" 
                   placeholder="e.g. Almaz Bekele or Sarah Jenkins"
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
+                  {...register('customerName')}
                 />
-                {validationErrors.customerName && (
-                  <span className="field-error-msg"><FiAlertCircle /> {validationErrors.customerName}</span>
+                {errors.customerName && (
+                  <span className="field-error-msg"><FiAlertCircle /> {errors.customerName.message}</span>
                 )}
               </div>
 
@@ -344,53 +335,34 @@ export default function CartDrawer() {
                 <input 
                   type="tel" 
                   placeholder="+251 91 123 4567 or +1 (555) 019-2834"
-                  value={customerPhone}
-                  onChange={(e) => setCustomerPhone(e.target.value)}
+                  {...register('customerPhone')}
                 />
-                {validationErrors.customerPhone && (
-                  <span className="field-error-msg"><FiAlertCircle /> {validationErrors.customerPhone}</span>
+                {errors.customerPhone && (
+                  <span className="field-error-msg"><FiAlertCircle /> {errors.customerPhone.message}</span>
                 )}
               </div>
 
-              {diningType === 'delivery' ? (
-                <div className="form-group">
-                  <label>Delivery Address *</label>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. Bole Atlas, behind 2000 Habesha, House 412"
-                    value={deliveryAddress}
-                    onChange={(e) => setDeliveryAddress(e.target.value)}
-                  />
-                  {validationErrors.deliveryAddress && (
-                    <span className="field-error-msg"><FiAlertCircle /> {validationErrors.deliveryAddress}</span>
-                  )}
-                </div>
-              ) : (
-                <div className="form-group">
-                  <label>Table Preference / Seating</label>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. Round Mesob Hearth, VIP Balcony, Terrace"
-                    value={deliveryAddress}
-                    onChange={(e) => setDeliveryAddress(e.target.value)}
-                  />
-                  {validationErrors.deliveryAddress && (
-                    <span className="field-error-msg"><FiAlertCircle /> {validationErrors.deliveryAddress}</span>
-                  )}
-                </div>
-              )}
+              <div className="form-group">
+                <label>{diningType === 'delivery' ? 'Delivery Address *' : 'Table Preference / Seating'}</label>
+                <input 
+                  type="text" 
+                  placeholder={diningType === 'delivery' ? "e.g. Bole Atlas, house 412" : "e.g. Round Mesob Hearth, VIP Terrace"}
+                  {...register('deliveryAddress')}
+                />
+                {errors.deliveryAddress && (
+                  <span className="field-error-msg"><FiAlertCircle /> {errors.deliveryAddress.message}</span>
+                )}
+              </div>
 
               {/* Payment Method Selector */}
               <div className="form-group">
                 <label>Select Payment Method</label>
                 <div className="payment-options">
-                  <label className={`payment-pill ${paymentMethod === 'telebirr' ? 'selected' : ''}`}>
+                  <label className="payment-pill">
                     <input 
                       type="radio" 
-                      name="payment" 
                       value="telebirr"
-                      checked={paymentMethod === 'telebirr'}
-                      onChange={() => setPaymentMethod('telebirr')}
+                      {...register('paymentMethod')}
                     />
                     <div className="payment-label">
                       <strong>telebirr</strong>
@@ -398,13 +370,11 @@ export default function CartDrawer() {
                     </div>
                   </label>
 
-                  <label className={`payment-pill ${paymentMethod === 'cbe' ? 'selected' : ''}`}>
+                  <label className="payment-pill">
                     <input 
                       type="radio" 
-                      name="payment" 
                       value="cbe"
-                      checked={paymentMethod === 'cbe'}
-                      onChange={() => setPaymentMethod('cbe')}
+                      {...register('paymentMethod')}
                     />
                     <div className="payment-label">
                       <strong>CBE Birr</strong>
@@ -412,13 +382,11 @@ export default function CartDrawer() {
                     </div>
                   </label>
 
-                  <label className={`payment-pill ${paymentMethod === 'cash' ? 'selected' : ''}`}>
+                  <label className="payment-pill">
                     <input 
                       type="radio" 
-                      name="payment" 
                       value="cash"
-                      checked={paymentMethod === 'cash'}
-                      onChange={() => setPaymentMethod('cash')}
+                      {...register('paymentMethod')}
                     />
                     <div className="payment-label">
                       <strong>Cash / Card</strong>
@@ -426,6 +394,9 @@ export default function CartDrawer() {
                     </div>
                   </label>
                 </div>
+                {errors.paymentMethod && (
+                  <span className="field-error-msg"><FiAlertCircle /> {errors.paymentMethod.message}</span>
+                )}
               </div>
             </div>
 
@@ -490,7 +461,7 @@ export default function CartDrawer() {
               </div>
 
               <p className="order-sms-notice">
-                An SMS confirmation with live order tracking has been sent to <strong>{placedOrderDetails?.phone || customerPhone}</strong>. Estimated preparation time is <strong>25–35 minutes</strong>.
+                An SMS confirmation with live order tracking has been sent to <strong>{placedOrderDetails?.phone}</strong>. Estimated preparation time is <strong>25–35 minutes</strong>.
               </p>
             </div>
 

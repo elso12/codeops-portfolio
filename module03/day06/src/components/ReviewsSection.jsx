@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { FiStar, FiCheckCircle, FiEdit3, FiX, FiThumbsUp, FiAward, FiAlertCircle } from 'react-icons/fi';
 import { GiRoundStar } from 'react-icons/gi';
 import { useCart } from '../context/CartContext';
@@ -60,11 +62,23 @@ export default function ReviewsSection() {
   const [likedIds, setLikedIds] = useState([]);
   const { showToast } = useCart();
 
-  // Form State
-  const [author, setAuthor] = useState('');
-  const [rating, setRating] = useState(5);
-  const [comment, setComment] = useState('');
-  const [fieldErrors, setFieldErrors] = useState({});
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+    reset
+  } = useForm({
+    resolver: zodResolver(reviewSchema),
+    defaultValues: {
+      author: '',
+      rating: 5,
+      comment: ''
+    }
+  });
+
+  const ratingValue = watch('rating', 5);
 
   // Keyboard accessibility: Close on Escape key
   useEffect(() => {
@@ -82,40 +96,22 @@ export default function ReviewsSection() {
     setReviewsList(prev => prev.map(r => r.id === id ? { ...r, likes: r.likes + 1 } : r));
   };
 
-  const handleSubmitReview = (e) => {
-    e.preventDefault();
-    setFieldErrors({});
-
-    const formData = { author, rating: Number(rating), comment };
-    const result = reviewSchema.safeParse(formData);
-
-    if (!result.success) {
-      const formattedErrors = {};
-      result.error.errors.forEach((err) => {
-        if (err.path[0]) formattedErrors[err.path[0]] = err.message;
-      });
-      setFieldErrors(formattedErrors);
-      return;
-    }
-
+  const onValidReviewSubmit = (data) => {
     const newRev = {
       id: Date.now(),
-      author: formData.author,
+      author: data.author,
       role: 'Verified Diner',
       avatar: '🌟',
-      rating: formData.rating,
+      rating: Number(data.rating),
       date: 'Just now',
       tag: 'New Community Review',
-      content: formData.comment,
+      content: data.comment,
       likes: 0
     };
 
     setReviewsList([newRev, ...reviewsList]);
     setIsModalOpen(false);
-    setAuthor('');
-    setComment('');
-    setRating(5);
-    setFieldErrors({});
+    reset();
     showToast('Thank you! Your review has been published with warmth.');
   };
 
@@ -149,33 +145,34 @@ export default function ReviewsSection() {
                 <FiStar key={i} className="star-filled" />
               ))}
             </div>
-            <span className="score-label">Based on 1,480+ Reviews</span>
+            <span className="rating-subtitle">Based on 1,480+ Global Reviews</span>
           </div>
-          <div className="metric-badges-row">
-            <div className="metric-badge">
-              <FiAward className="metric-badge-icon" />
+
+          <div className="metric-divider"></div>
+
+          <div className="metric-badges">
+            <div className="metric-badge-item">
+              <FiAward className="metric-icon" />
               <div>
-                <strong>#1 Ethiopian Restaurant</strong>
-                <small>Culinary Excellence Award 2026</small>
+                <strong>Best Ethiopian Restaurant 2026</strong>
+                <span>Culinary Excellence Awards</span>
               </div>
             </div>
-            <div className="metric-badge">
-              <FiCheckCircle className="metric-badge-icon" />
+            <div className="metric-badge-item">
+              <FiCheckCircle className="metric-icon" />
               <div>
-                <strong>100% Ancient Teff</strong>
-                <small>Authentic Gluten-Free Ferment</small>
+                <strong>99.4% Verified Satisfaction</strong>
+                <span>Dine-In & Delivery Guests</span>
               </div>
             </div>
           </div>
-          <button 
-            className="btn-accent review-submit-trigger"
-            onClick={() => setIsModalOpen(true)}
-          >
-            <FiEdit3 /> Write a Review (አስተያየት ይፃፉ)
+
+          <button className="btn-primary write-review-btn" onClick={() => setIsModalOpen(true)}>
+            <FiEdit3 /> Write a Guest Review
           </button>
         </div>
 
-        {/* Filter Pills */}
+        {/* Filter Bar */}
         <div className="reviews-filter-bar">
           <button 
             className={`filter-btn ${activeFilter === 'all' ? 'active' : ''}`}
@@ -187,80 +184,80 @@ export default function ReviewsSection() {
             className={`filter-btn ${activeFilter === 'press' ? 'active' : ''}`}
             onClick={() => setActiveFilter('press')}
           >
-            🏆 Press & Critic Highlights
+            Press & Critics
           </button>
           <button 
             className={`filter-btn ${activeFilter === '5star' ? 'active' : ''}`}
             onClick={() => setActiveFilter('5star')}
           >
-            ⭐ 5-Star Guests
+            5-Star Guest Reviews
           </button>
         </div>
 
-        {/* Grid of Reviews */}
+        {/* Reviews Cards Grid */}
         <div className="reviews-grid">
           {filteredReviews.map((rev) => (
-            <div key={rev.id} className={`review-card ${rev.press ? 'press-highlight' : ''}`}>
-              <div className="review-card-top">
-                <div className="reviewer-info">
-                  <span className="reviewer-avatar">{rev.avatar}</span>
-                  <div>
-                    <h4 className="reviewer-name">{rev.author}</h4>
-                    <span className="reviewer-role">{rev.role}</span>
-                  </div>
+            <div key={rev.id} className="review-card">
+              <div className="review-card-header">
+                <div className="author-avatar-box">
+                  <span className="avatar-emoji">{rev.avatar}</span>
                 </div>
-                <span className="review-tag-badge">{rev.tag}</span>
+                <div className="author-details">
+                  <h4 className="author-name">{rev.author}</h4>
+                  <span className="author-role">{rev.role}</span>
+                  {rev.press && <span className="press-name">📰 {rev.press}</span>}
+                </div>
+                <span className="review-date">{rev.date}</span>
               </div>
 
-              <div className="review-stars-row">
-                {[...Array(rev.rating)].map((_, i) => (
-                  <FiStar key={i} className="star-filled" />
-                ))}
-                <span className="review-date">{rev.date}</span>
+              <div className="review-rating-row">
+                <div className="stars-row small">
+                  {[...Array(5)].map((_, i) => (
+                    <FiStar key={i} className={i < rev.rating ? 'star-filled' : 'star-empty'} />
+                  ))}
+                </div>
+                <span className="review-tag">{rev.tag}</span>
               </div>
 
               <p className="review-content">"{rev.content}"</p>
 
-              {rev.press && (
-                <div className="press-citation">
-                  <span>As featured in <strong>{rev.press}</strong></span>
-                </div>
-              )}
-
-              <div className="review-footer">
+              <div className="review-card-footer">
                 <button 
                   className={`like-btn ${likedIds.includes(rev.id) ? 'liked' : ''}`}
                   onClick={() => handleLike(rev.id)}
                 >
-                  <FiThumbsUp /> Helpful ({rev.likes})
+                  <FiThumbsUp /> {rev.likes} Helpful
                 </button>
+                <span className="verified-badge">
+                  <FiCheckCircle /> Verified Guest
+                </span>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Write a Review Modal */}
+      {/* Write Review Modal */}
       {isModalOpen && (
-        <div className="modal-backdrop" onClick={() => setIsModalOpen(false)} role="dialog" aria-modal="true">
-          <div className="modal-card review-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
+          <div className="modal-content review-modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" onClick={() => setIsModalOpen(false)}>
               <FiX />
             </button>
+
             <h3 className="modal-title">Share Your Mesob Experience</h3>
             <p className="modal-subtitle">Your story helps us keep the hearth burning bright.</p>
 
-            <form onSubmit={handleSubmitReview} className="review-form">
+            <form onSubmit={handleSubmit(onValidReviewSubmit)} className="review-form" noValidate>
               <div className="form-group">
                 <label>Your Name / Handle *</label>
                 <input 
                   type="text" 
                   placeholder="e.g. Samuel K." 
-                  value={author}
-                  onChange={(e) => setAuthor(e.target.value)}
+                  {...register('author')}
                 />
-                {fieldErrors.author && (
-                  <span className="field-error-msg"><FiAlertCircle /> {fieldErrors.author}</span>
+                {errors.author && (
+                  <span className="field-error-msg"><FiAlertCircle /> {errors.author.message}</span>
                 )}
               </div>
 
@@ -271,16 +268,16 @@ export default function ReviewsSection() {
                     <button
                       key={star}
                       type="button"
-                      className={`star-input-btn ${star <= rating ? 'active' : ''}`}
-                      onClick={() => setRating(star)}
+                      className={`star-input-btn ${star <= ratingValue ? 'active' : ''}`}
+                      onClick={() => setValue('rating', star, { shouldValidate: true })}
                     >
                       <FiStar />
                     </button>
                   ))}
-                  <span className="rating-num-label">{rating} Out of 5 Stars</span>
+                  <span className="rating-num-label">{ratingValue} Out of 5 Stars</span>
                 </div>
-                {fieldErrors.rating && (
-                  <span className="field-error-msg"><FiAlertCircle /> {fieldErrors.rating}</span>
+                {errors.rating && (
+                  <span className="field-error-msg"><FiAlertCircle /> {errors.rating.message}</span>
                 )}
               </div>
 
@@ -289,11 +286,10 @@ export default function ReviewsSection() {
                 <textarea
                   rows="4"
                   placeholder="Tell us about the dishes, service, Buna coffee ceremony, or ambiance..."
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
+                  {...register('comment')}
                 ></textarea>
-                {fieldErrors.comment && (
-                  <span className="field-error-msg"><FiAlertCircle /> {fieldErrors.comment}</span>
+                {errors.comment && (
+                  <span className="field-error-msg"><FiAlertCircle /> {errors.comment.message}</span>
                 )}
               </div>
 

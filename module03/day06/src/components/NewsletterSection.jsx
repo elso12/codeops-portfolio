@@ -1,31 +1,29 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { FiMail, FiGift, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
 import { GiCoffeeBeans } from 'react-icons/gi';
 import { useCart } from '../context/CartContext';
 import { newsletterSchema } from '../utils/validationSchemas';
 
 export default function NewsletterSection() {
-  const [email, setEmail] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const { showToast } = useCart();
 
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    setErrorMsg('');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm({
+    resolver: zodResolver(newsletterSchema),
+    defaultValues: { email: '' }
+  });
 
-    const result = newsletterSchema.safeParse({ email });
-    if (!result.success) {
-      setErrorMsg(result.error.errors[0]?.message || 'Please enter a valid email address.');
-      return;
-    }
-
-    setErrorMsg('');
+  const onValidSubmit = () => {
     setSubscribed(true);
     showToast('Welcome to the VIP Mesob Dining Club! 15% discount code sent.');
-    setTimeout(() => {
-      setEmail('');
-    }, 3000);
+    reset();
   };
 
   return (
@@ -51,14 +49,13 @@ export default function NewsletterSection() {
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubscribe} className="newsletter-form">
+              <form onSubmit={handleSubmit(onValidSubmit)} className="newsletter-form" noValidate>
                 <div className="input-group">
                   <FiMail className="input-icon" />
                   <input 
                     type="email" 
                     placeholder="Enter your personal email address..." 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    {...register('email')}
                   />
                 </div>
                 <button type="submit" className="btn-accent subscribe-btn">
@@ -67,9 +64,9 @@ export default function NewsletterSection() {
               </form>
             )}
 
-            {errorMsg && (
+            {errors.email && (
               <div className="field-error-msg" style={{ color: '#FFD1D1', marginTop: '10px' }}>
-                <FiAlertCircle /> {errorMsg}
+                <FiAlertCircle /> {errors.email.message}
               </div>
             )}
 

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useCart } from '../context/CartContext';
 import { reservationSchema } from '../utils/validationSchemas';
 import { FiX, FiCalendar, FiClock, FiUsers, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
@@ -6,15 +8,26 @@ import { GiCookingPot } from 'react-icons/gi';
 
 export default function ReservationModal() {
   const { isReservationOpen, closeReservation } = useCart();
-  const [partySize, setPartySize] = useState('4');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('19:00');
-  const [seatingPreference, setSeatingPreference] = useState('traditional-mesob');
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [specialNotes, setSpecialNotes] = useState('');
-  const [validationErrors, setValidationErrors] = useState({});
   const [confirmed, setConfirmed] = useState(false);
+  const [submittedData, setSubmittedData] = useState(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm({
+    resolver: zodResolver(reservationSchema),
+    defaultValues: {
+      partySize: '4',
+      date: new Date().toISOString().split('T')[0],
+      time: '19:00',
+      seatingPreference: 'traditional-mesob',
+      name: '',
+      phone: '',
+      specialNotes: ''
+    }
+  });
 
   // Keyboard accessibility: Close on Escape key
   useEffect(() => {
@@ -28,36 +41,15 @@ export default function ReservationModal() {
 
   if (!isReservationOpen) return null;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const formData = {
-      partySize,
-      date,
-      time,
-      seatingPreference,
-      name,
-      phone,
-      specialNotes
-    };
-
-    const validationResult = reservationSchema.safeParse(formData);
-    if (!validationResult.success) {
-      const formattedErrors = {};
-      validationResult.error.errors.forEach((err) => {
-        if (err.path[0]) formattedErrors[err.path[0]] = err.message;
-      });
-      setValidationErrors(formattedErrors);
-      return;
-    }
-
-    setValidationErrors({});
+  const onValidSubmit = (data) => {
+    setSubmittedData(data);
     setConfirmed(true);
   };
 
   const handleClose = () => {
     setConfirmed(false);
-    setValidationErrors({});
+    setSubmittedData(null);
+    reset();
     closeReservation();
   };
 
@@ -76,7 +68,7 @@ export default function ReservationModal() {
         </button>
 
         {!confirmed ? (
-          <form onSubmit={handleSubmit} className="reservation-form">
+          <form onSubmit={handleSubmit(onValidSubmit)} className="reservation-form" noValidate>
             <div className="res-header">
               <div className="badge-hearth">
                 <GiCookingPot />
@@ -90,15 +82,15 @@ export default function ReservationModal() {
             <div className="form-grid">
               <div className="form-group">
                 <label><FiUsers /> Party Size</label>
-                <select value={partySize} onChange={(e) => setPartySize(e.target.value)}>
+                <select {...register('partySize')}>
                   <option value="2">2 Guests (Couple Mesob)</option>
                   <option value="4">4 Guests (Family Mesob)</option>
                   <option value="6">6 Guests (Communal Circle)</option>
                   <option value="8">8 Guests (Large Banquet)</option>
                   <option value="12">10-14 Guests (Royal Hall)</option>
                 </select>
-                {validationErrors.partySize && (
-                  <span className="field-error-msg"><FiAlertCircle /> {validationErrors.partySize}</span>
+                {errors.partySize && (
+                  <span className="field-error-msg"><FiAlertCircle /> {errors.partySize.message}</span>
                 )}
               </div>
 
@@ -106,17 +98,16 @@ export default function ReservationModal() {
                 <label><FiCalendar /> Date</label>
                 <input 
                   type="date" 
-                  value={date} 
-                  onChange={(e) => setDate(e.target.value)} 
+                  {...register('date')}
                 />
-                {validationErrors.date && (
-                  <span className="field-error-msg"><FiAlertCircle /> {validationErrors.date}</span>
+                {errors.date && (
+                  <span className="field-error-msg"><FiAlertCircle /> {errors.date.message}</span>
                 )}
               </div>
 
               <div className="form-group">
                 <label><FiClock /> Time</label>
-                <select value={time} onChange={(e) => setTime(e.target.value)}>
+                <select {...register('time')}>
                   <option value="12:00">12:00 PM (Lunch Banquet)</option>
                   <option value="13:30">1:30 PM (Lunch)</option>
                   <option value="16:00">4:00 PM (Coffee Ceremony & Late Lunch)</option>
@@ -124,17 +115,14 @@ export default function ReservationModal() {
                   <option value="20:00">8:00 PM (Prime Dinner)</option>
                   <option value="21:30">9:30 PM (Late Night Tej Feast)</option>
                 </select>
-                {validationErrors.time && (
-                  <span className="field-error-msg"><FiAlertCircle /> {validationErrors.time}</span>
+                {errors.time && (
+                  <span className="field-error-msg"><FiAlertCircle /> {errors.time.message}</span>
                 )}
               </div>
 
               <div className="form-group">
                 <label>Seating Preference</label>
-                <select 
-                  value={seatingPreference} 
-                  onChange={(e) => setSeatingPreference(e.target.value)}
-                >
+                <select {...register('seatingPreference')}>
                   <option value="traditional-mesob">Traditional Woven Mesob with Low Stools</option>
                   <option value="modern-table">Elevated Dining Table</option>
                   <option value="hearth-view">Ceremonial Buna Hearth View</option>
@@ -147,11 +135,10 @@ export default function ReservationModal() {
                 <input 
                   type="text" 
                   placeholder="e.g. Dawit Haile or Sarah Jenkins"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  {...register('name')}
                 />
-                {validationErrors.name && (
-                  <span className="field-error-msg"><FiAlertCircle /> {validationErrors.name}</span>
+                {errors.name && (
+                  <span className="field-error-msg"><FiAlertCircle /> {errors.name.message}</span>
                 )}
               </div>
 
@@ -160,11 +147,10 @@ export default function ReservationModal() {
                 <input 
                   type="tel" 
                   placeholder="+251 91 123 4567 or +1 (555) 019-2834"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  {...register('phone')}
                 />
-                {validationErrors.phone && (
-                  <span className="field-error-msg"><FiAlertCircle /> {validationErrors.phone}</span>
+                {errors.phone && (
+                  <span className="field-error-msg"><FiAlertCircle /> {errors.phone.message}</span>
                 )}
               </div>
             </div>
@@ -174,8 +160,7 @@ export default function ReservationModal() {
               <textarea 
                 rows="2"
                 placeholder="e.g. Birthday celebration, strict fasting (vegan) group, extra tej..."
-                value={specialNotes}
-                onChange={(e) => setSpecialNotes(e.target.value)}
+                {...register('specialNotes')}
               />
             </div>
 
@@ -194,9 +179,9 @@ export default function ReservationModal() {
 
             <div className="order-ref-card">
               <p>
-                A table for <strong>{partySize} guests</strong> has been reserved for <strong>{name}</strong> on <strong>{date || 'Today'}</strong> at <strong>{time}</strong>.
+                A table for <strong>{submittedData?.partySize || '4'} guests</strong> has been reserved for <strong>{submittedData?.name}</strong> on <strong>{submittedData?.date}</strong> at <strong>{submittedData?.time}</strong>.
               </p>
-              <p>A confirmation SMS has been sent to <strong>{phone}</strong>.</p>
+              <p>A confirmation SMS has been sent to <strong>{submittedData?.phone}</strong>.</p>
             </div>
 
             <button className="btn-primary" onClick={handleClose}>

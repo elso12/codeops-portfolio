@@ -1,46 +1,40 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { FiMapPin, FiClock, FiPhone, FiMail, FiSend, FiCheckCircle, FiCompass, FiAlertCircle } from 'react-icons/fi';
 import { GiEnvelope } from 'react-icons/gi';
 import { useCart } from '../context/CartContext';
 import { contactSchema } from '../utils/validationSchemas';
 
 export default function ContactSection() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: 'General Inquiry',
-    message: ''
-  });
-  const [fieldErrors, setFieldErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [lastEmail, setLastEmail] = useState('');
   const { showToast } = useCart();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setFieldErrors({});
-
-    const result = contactSchema.safeParse(formData);
-    if (!result.success) {
-      const formattedErrors = {};
-      result.error.errors.forEach((err) => {
-        if (err.path[0]) formattedErrors[err.path[0]] = err.message;
-      });
-      setFieldErrors(formattedErrors);
-      return;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      subject: 'General Inquiry',
+      message: ''
     }
+  });
 
+  const onValidSubmit = (data) => {
+    setLastEmail(data.email);
     setSubmitted(true);
-    setFieldErrors({});
     showToast('Inquiry received! Our concierge will contact you shortly.');
+    reset();
     setTimeout(() => {
       setSubmitted(false);
-      setFormData({ name: '', email: '', phone: '', subject: 'General Inquiry', message: '' });
-    }, 4000);
+    }, 5000);
   };
 
   return (
@@ -134,35 +128,31 @@ export default function ContactSection() {
               <div className="contact-success-state">
                 <FiCheckCircle className="success-icon" />
                 <h4>Message Received (እግዚአብሔር ይስጥልን)!</h4>
-                <p>Thank you for reaching out to Mesob House. Our host will respond to {formData.email} within 2 hours.</p>
+                <p>Thank you for reaching out to Mesob House. Our host will respond to {lastEmail || 'your email'} within 2 hours.</p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="contact-form">
+              <form onSubmit={handleSubmit(onValidSubmit)} className="contact-form" noValidate>
                 <div className="form-row-2col">
                   <div className="form-group">
                     <label>Full Name *</label>
                     <input 
                       type="text" 
-                      name="name" 
                       placeholder="e.g. Almaz Bekele" 
-                      value={formData.name}
-                      onChange={handleChange}
+                      {...register('name')}
                     />
-                    {fieldErrors.name && (
-                      <span className="field-error-msg"><FiAlertCircle /> {fieldErrors.name}</span>
+                    {errors.name && (
+                      <span className="field-error-msg"><FiAlertCircle /> {errors.name.message}</span>
                     )}
                   </div>
                   <div className="form-group">
                     <label>Email Address *</label>
                     <input 
                       type="email" 
-                      name="email" 
                       placeholder="almaz@example.com" 
-                      value={formData.email}
-                      onChange={handleChange}
+                      {...register('email')}
                     />
-                    {fieldErrors.email && (
-                      <span className="field-error-msg"><FiAlertCircle /> {fieldErrors.email}</span>
+                    {errors.email && (
+                      <span className="field-error-msg"><FiAlertCircle /> {errors.email.message}</span>
                     )}
                   </div>
                 </div>
@@ -172,19 +162,16 @@ export default function ContactSection() {
                     <label>Phone Number (Optional)</label>
                     <input 
                       type="tel" 
-                      name="phone" 
                       placeholder="+251 9... / +1..." 
-                      value={formData.phone}
-                      onChange={handleChange}
+                      {...register('phone')}
                     />
+                    {errors.phone && (
+                      <span className="field-error-msg"><FiAlertCircle /> {errors.phone.message}</span>
+                    )}
                   </div>
                   <div className="form-group">
                     <label>Subject</label>
-                    <select 
-                      name="subject" 
-                      value={formData.subject}
-                      onChange={handleChange}
-                    >
+                    <select {...register('subject')}>
                       <option value="General Inquiry">General Inquiry</option>
                       <option value="Private Dining & Events">Private Dining & Events</option>
                       <option value="Catering & Gursha Banquets">Catering & Banquets</option>
@@ -197,14 +184,12 @@ export default function ContactSection() {
                 <div className="form-group">
                   <label>Message *</label>
                   <textarea 
-                    name="message" 
                     rows="5" 
                     placeholder="Describe your inquiry, event date, guest count, or questions..." 
-                    value={formData.message}
-                    onChange={handleChange}
+                    {...register('message')}
                   ></textarea>
-                  {fieldErrors.message && (
-                    <span className="field-error-msg"><FiAlertCircle /> {fieldErrors.message}</span>
+                  {errors.message && (
+                    <span className="field-error-msg"><FiAlertCircle /> {errors.message.message}</span>
                   )}
                 </div>
 
