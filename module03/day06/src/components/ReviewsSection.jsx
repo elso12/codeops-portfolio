@@ -239,7 +239,7 @@ export default function ReviewsSection() {
 
       {/* Write Review Modal */}
       {isModalOpen && (
-        <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
+        <div className="modal-backdrop" onClick={() => setIsModalOpen(false)} role="dialog" aria-modal="true">
           <div className="modal-content review-modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" onClick={() => setIsModalOpen(false)}>
               <FiX />

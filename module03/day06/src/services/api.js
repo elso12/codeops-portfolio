@@ -1,11 +1,11 @@
 // Addis Eats & Mesob House Menu API Service
 const BASE_URL = 'https://addis-eats-backend.onrender.com';
 
-// Authentic high-quality local real food photos for Ethiopian dishes
+// Primary dish image mappings by slug
 export const DISH_IMAGES = {
   'doro-wat': '/dishes/doro-wat.jpg',
   'siga-wat': '/dishes/siga-wat.jpg',
-  'beg-alicha-wat': '/dishes/shiro.jpg',
+  'beg-alicha-wat': '/dishes/beg-alicha-wat.jpg',
   'shiro-tegamino': '/dishes/shiro.jpg',
   'shiro-bozena': '/dishes/shiro.jpg',
   'siga-derek-tibs': '/dishes/tibs.jpg',
@@ -30,14 +30,44 @@ export const DEFAULT_FALLBACK_IMAGE = '/dishes/doro-wat.jpg';
 
 export function getDishImage(dish) {
   if (!dish) return DEFAULT_FALLBACK_IMAGE;
+
+  // 1. Direct slug match
   if (dish.slug && DISH_IMAGES[dish.slug]) return DISH_IMAGES[dish.slug];
 
-  const category = (dish.category || '').toLowerCase();
-  if (category.includes('stew') || category.includes('wat')) return DISH_IMAGES['doro-wat'];
-  if (category.includes('tibs') || category.includes('grill')) return DISH_IMAGES['siga-derek-tibs'];
-  if (category.includes('kitfo') || category.includes('raw')) return DISH_IMAGES['kitfo-dulet'];
-  if (category.includes('vegan') || category.includes('fasting') || category.includes('tsom')) return DISH_IMAGES['full-vegan-beyaynetu'];
-  if (category.includes('beverage') || category.includes('tej') || category.includes('drink')) return DISH_IMAGES['house-tej-carafe'];
+  // 2. Direct custom image property match (if non-svg valid photo)
+  if (dish.image && dish.image !== DEFAULT_FALLBACK_IMAGE && !dish.image.endsWith('.svg')) return dish.image;
+  if (dish.imageUrl && !dish.imageUrl.endsWith('.svg')) return dish.imageUrl;
+
+  // 3. Name & text search (English & Amharic keywords)
+  const searchText = `${dish.slug || ''} ${dish.nameEn || ''} ${dish.nameAm || ''} ${dish.name || ''} ${dish.title || ''} ${dish.category || ''}`.toLowerCase();
+
+  if (searchText.includes('doro') || searchText.includes('የዶሮ')) return DISH_IMAGES['doro-wat'];
+  if (searchText.includes('beg') || searchText.includes('alicha') || searchText.includes('የበግ')) return DISH_IMAGES['beg-alicha-wat'];
+  if (searchText.includes('siga wat') || searchText.includes('የስጋ ወጥ') || (searchText.includes('siga') && searchText.includes('wat'))) return DISH_IMAGES['siga-wat'];
+
+  if (searchText.includes('bozena') || searchText.includes('ቦዘና')) return DISH_IMAGES['shiro-bozena'];
+  if (searchText.includes('tegamino') || searchText.includes('ተጋሚኖ')) return DISH_IMAGES['shiro-tegamino'];
+  if (searchText.includes('shiro') || searchText.includes('ሽሮ')) return DISH_IMAGES['shiro-tegamino'];
+
+  if (searchText.includes('derek') || searchText.includes('ደረቅ')) return DISH_IMAGES['siga-derek-tibs'];
+  if (searchText.includes('awaze') || searchText.includes('አዋዜ')) return DISH_IMAGES['awaze-lamb-tibs'];
+  if (searchText.includes('quanta') || searchText.includes('ቋንጣ')) return DISH_IMAGES['quanta-firfir'];
+  if (searchText.includes('fish') || searchText.includes('tilapia') || searchText.includes('ዓሳ')) return DISH_IMAGES['chornake-fish-tibs'];
+  if (searchText.includes('tibs') || searchText.includes('ጥብስ')) return DISH_IMAGES['siga-derek-tibs'];
+
+  if (searchText.includes('gored') || searchText.includes('ጎረድ')) return DISH_IMAGES['gored-gored'];
+  if (searchText.includes('dulet') || searchText.includes('ዱለት')) return DISH_IMAGES['kitfo-dulet'];
+  if (searchText.includes('kitfo') || searchText.includes('ክትፎ')) return DISH_IMAGES['prime-beef-kitfo'];
+
+  if (searchText.includes('misir') || searchText.includes('ምስር')) return DISH_IMAGES['misir-wat'];
+  if (searchText.includes('kik') || searchText.includes('ክክ')) return DISH_IMAGES['kik-alicha-wat'];
+  if (searchText.includes('gomen') || searchText.includes('ጎመን')) return DISH_IMAGES['gomen-collards'];
+  if (searchText.includes('fitfit') || searchText.includes('timatim') || searchText.includes('ፍትፍት')) return DISH_IMAGES['fresh-timatim-fitfit'];
+  if (searchText.includes('beyaynetu') || searchText.includes('በያይነቱ') || searchText.includes('vegan') || searchText.includes('fasting')) return DISH_IMAGES['full-vegan-beyaynetu'];
+
+  if (searchText.includes('tej') || searchText.includes('ጠጅ') || searchText.includes('mead')) return DISH_IMAGES['house-tej-carafe'];
+  if (searchText.includes('coffee') || searchText.includes('jebena') || searchText.includes('ቡና')) return DISH_IMAGES['jebena-spiced-coffee'];
+  if (searchText.includes('tea') || searchText.includes('chai') || searchText.includes('shai') || searchText.includes('ሻይ')) return DISH_IMAGES['spiced-habesha-chai'];
 
   return DEFAULT_FALLBACK_IMAGE;
 }

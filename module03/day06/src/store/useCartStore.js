@@ -38,14 +38,17 @@ export const useCartStore = create(
       activeTrackId: 'MESOB-8921',
       legalModalState: { open: false, type: 'privacy' },
       orderToast: null,
+      toastTimer: null,
       orders: MOCK_ORDERS,
 
       // Actions
       showToast: (message) => {
+        if (get().toastTimer) clearTimeout(get().toastTimer);
         set({ orderToast: message });
-        setTimeout(() => {
-          set({ orderToast: null });
+        const timer = setTimeout(() => {
+          set({ orderToast: null, toastTimer: null });
         }, 3500);
+        set({ toastTimer: timer });
       },
 
       addToCart: (dish, quantity = 1, note = '') => {
@@ -109,7 +112,7 @@ export const useCartStore = create(
       setActiveTrackId: (id) => set({ activeTrackId: id }),
 
       openLegal: (type = 'privacy') => set({ legalModalState: { open: true, type } }),
-      closeLegal: () => set((state) => ({ legalModalState: { ...state.legalModalState, open: false } })),
+      closeLegal: () => set((state) => ({ legalModalState: { ...(state.legalModalState || {}), open: false } })),
 
       addOrder: (newOrder) => {
         set((state) => ({

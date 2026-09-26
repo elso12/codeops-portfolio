@@ -18,12 +18,15 @@ export const useAuthStore = create(
       isAuthModalOpen: false,
       authTab: 'login', // 'login' | 'register'
       authToast: '',
+      authToastTimer: null,
 
       showToast: (message) => {
+        if (get().authToastTimer) clearTimeout(get().authToastTimer);
         set({ authToast: message });
-        setTimeout(() => {
-          set({ authToast: '' });
+        const timer = setTimeout(() => {
+          set({ authToast: '', authToastTimer: null });
         }, 4000);
+        set({ authToastTimer: timer });
       },
 
       openAuthModal: (tab = 'login') => {

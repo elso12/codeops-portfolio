@@ -3802,23 +3802,26 @@
   margin-top: 4px;
 }
 
-/* All Device Responsive Enhancements */
+/* Comprehensive Device Responsiveness & Touch Enhancements */
 @media (max-width: 600px) {
   .modal-card,
   .auth-modal-content,
   .reservation-modal-content,
-  .dish-modal-content {
-    width: 95% !important;
-    max-width: 95% !important;
-    padding: 24px 16px !important;
-    margin: 10px auto !important;
-    max-height: 90vh;
+  .dish-modal-content,
+  .tracker-modal {
+    width: 94% !important;
+    max-width: 94% !important;
+    padding: 20px 14px !important;
+    margin: 12px auto !important;
+    max-height: 88vh;
     overflow-y: auto;
+    border-radius: 16px;
   }
 
   .cart-drawer-panel {
     width: 100% !important;
     max-width: 100% !important;
+    border-radius: 0;
   }
 
   .form-grid,
@@ -3840,15 +3843,67 @@
     font-size: 0.85rem;
     padding: 8px 12px;
   }
+
+  /* Tracker Stepper Timeline Mobile Adaptation */
+  .timeline-stepper {
+    padding-left: 8px;
+  }
+
+  .timeline-step {
+    gap: 12px;
+    padding-bottom: 16px;
+  }
+
+  .step-circle {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .step-label {
+    font-size: 0.92rem;
+  }
+
+  .step-desc {
+    font-size: 0.8rem;
+  }
+
+  .tracker-search-form {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tracker-search-form .btn-track {
+    width: 100%;
+  }
+
+  .cart-item-row {
+    gap: 10px;
+    padding: 10px 0;
+  }
+
+  .cart-item-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+  }
+
+  /* Safe Area for Mobile Bottom Nav */
+  body {
+    padding-bottom: 70px;
+  }
 }
 
 @media (min-width: 601px) and (max-width: 1024px) {
   .modal-card,
   .auth-modal-content,
   .reservation-modal-content,
-  .dish-modal-content {
+  .dish-modal-content,
+  .tracker-modal {
     width: 85% !important;
     max-width: 680px !important;
+    max-height: 85vh;
   }
 
   .cart-drawer-panel {

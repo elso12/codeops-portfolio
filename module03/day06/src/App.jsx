@@ -9,8 +9,7 @@ import Hero from './components/Hero';
 import MobileBottomNav from './components/MobileBottomNav';
 import Footer from './components/Footer';
 
-// Lazy-loaded components for optimal initial bundle & performance
-const SpecialsSection = lazy(() => import('./components/SpecialsSection'));
+import SpecialsSection from './components/SpecialsSection';
 const MenuSection = lazy(() => import('./components/MenuSection'));
 const BunaCeremony = lazy(() => import('./components/BunaCeremony'));
 const HeritageSection = lazy(() => import('./components/HeritageSection'));

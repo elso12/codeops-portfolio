@@ -37,7 +37,7 @@ export default function DishDetailModal() {
 
   const dish = activeDishModal;
   const imageUrl = getDishImage(dish);
-  const itemTotal = dish.priceETB * quantity;
+  const itemTotal = Number(dish.priceETB || 0) * quantity;
 
   const handleAdd = () => {
     addToCart(dish, quantity, specialNote);
@@ -101,7 +101,7 @@ export default function DishDetailModal() {
             <div className="modal-price-row">
               <div className="modal-price">
                 <span className="currency">ETB</span>
-                <span className="amount">{dish.priceETB.toLocaleString()}</span>
+                <span className="amount">{Number(dish.priceETB || 0).toLocaleString()}</span>
               </div>
               <div className="modal-spice-level">
                 <GiChiliPepper className="chili-icon" />

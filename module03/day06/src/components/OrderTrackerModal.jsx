@@ -14,16 +14,16 @@ export default function OrderTrackerModal() {
   const { isTrackerOpen, closeTracker, orders, activeTrackId, setActiveTrackId } = useCart();
   const [searchId, setSearchId] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-
-  // Default to activeTrackId or first order in orders list
-  const currentOrderId = searchId || activeTrackId || (orders && orders[0] ? orders[0].id : 'MESOB-8921');
-  const activeOrder = orders?.find(o => o.id.toUpperCase() === currentOrderId.toUpperCase()) || orders?.[0];
+  const [currentOrder, setCurrentOrder] = useState(null);
 
   useEffect(() => {
-    if (activeTrackId) {
-      setSearchId(activeTrackId);
-    }
-  }, [activeTrackId]);
+    if (!isTrackerOpen) return;
+    const targetId = activeTrackId || (orders && orders[0] ? orders[0].id : 'MESOB-8921');
+    setSearchId(targetId);
+    setErrorMsg('');
+    const found = orders?.find(o => o.id.toUpperCase() === targetId.toUpperCase());
+    setCurrentOrder(found || orders?.[0] || null);
+  }, [isTrackerOpen, activeTrackId, orders]);
 
   // Keyboard accessibility: Close on Escape key
   useEffect(() => {
@@ -41,11 +41,18 @@ export default function OrderTrackerModal() {
     e.preventDefault();
     setErrorMsg('');
     const query = searchId.trim().toUpperCase();
+    if (!query) {
+      setErrorMsg('Please enter an Order ID to search.');
+      setCurrentOrder(null);
+      return;
+    }
     const found = orders?.find(o => o.id.toUpperCase() === query);
     if (found) {
       if (setActiveTrackId) setActiveTrackId(found.id);
+      setCurrentOrder(found);
     } else {
-      setErrorMsg(`No active order found with ID "${query}". Try tracking an active feast order.`);
+      setCurrentOrder(null);
+      setErrorMsg(`No active order found with ID "${query}". Please check your reference number.`);
     }
   };
 
@@ -79,24 +86,24 @@ export default function OrderTrackerModal() {
 
         {errorMsg && <div className="tracker-error">{errorMsg}</div>}
 
-        {activeOrder ? (
+        {currentOrder ? (
           <div className="tracker-body">
             {/* Order Info Card */}
             <div className="order-summary-box">
               <div className="order-summary-row">
                 <div>
-                  <span className="order-id-badge">ID: {activeOrder.id}</span>
-                  <strong className="customer-name">{activeOrder.customer}</strong>
+                  <span className="order-id-badge">ID: {currentOrder.id}</span>
+                  <strong className="customer-name">{currentOrder.customer}</strong>
                 </div>
                 <div className="time-badge">
-                  <FiClock /> <span>ETA: {activeOrder.estimatedTime}</span>
+                  <FiClock /> <span>ETA: {currentOrder.estimatedTime}</span>
                 </div>
               </div>
 
               <div className="order-details-meta">
-                <p>📍 <strong>Destination:</strong> {activeOrder.address}</p>
-                <p>🍲 <strong>Items:</strong> {Array.isArray(activeOrder.items) ? activeOrder.items.join(', ') : activeOrder.items}</p>
-                <p>💵 <strong>Total:</strong> {activeOrder.totalETB || activeOrder.total} ETB ({String(activeOrder.diningType || 'delivery').toUpperCase()})</p>
+                <p>📍 <strong>Destination:</strong> {currentOrder.address}</p>
+                <p>🍲 <strong>Items:</strong> {Array.isArray(currentOrder.items) ? currentOrder.items.join(', ') : currentOrder.items}</p>
+                <p>💵 <strong>Total:</strong> {currentOrder.totalETB || currentOrder.total} ETB ({String(currentOrder.diningType || 'delivery').toUpperCase()})</p>
               </div>
             </div>
 
@@ -104,8 +111,8 @@ export default function OrderTrackerModal() {
             <div className="timeline-stepper">
               {STEPS.map((step, idx) => {
                 const IconComponent = step.icon;
-                const isDone = idx < (activeOrder.stepIndex ?? 1);
-                const isCurrent = idx === (activeOrder.stepIndex ?? 1);
+                const isDone = idx < (currentOrder.stepIndex ?? 1);
+                const isCurrent = idx === (currentOrder.stepIndex ?? 1);
 
                 let statusClass = 'pending';
                 if (isDone) statusClass = 'completed';

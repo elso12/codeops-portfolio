@@ -24,6 +24,18 @@ export default function Header({ searchQuery, setSearchQuery, onNavigate }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
+  // Close user dropdown when clicking outside
+  React.useEffect(() => {
+    if (!isUserMenuOpen) return;
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.user-menu-wrapper')) {
+        setIsUserMenuOpen(false);
+      }
+    };
+    window.addEventListener('click', handleClickOutside);
+    return () => window.removeEventListener('click', handleClickOutside);
+  }, [isUserMenuOpen]);
+
   const handleNavClick = (sectionId) => {
     setMobileMenuOpen(false);
     if (onNavigate) {
@@ -33,6 +45,13 @@ export default function Header({ searchQuery, setSearchQuery, onNavigate }) {
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
+    }
+  };
+
+  const handleSearchChange = (val) => {
+    setSearchQuery(val);
+    if (val.trim() && onNavigate) {
+      onNavigate('menu');
     }
   };
 
@@ -113,7 +132,7 @@ export default function Header({ searchQuery, setSearchQuery, onNavigate }) {
                   type="text"
                   placeholder="Search wats, kitfo, tibs..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => handleSearchChange(e.target.value)}
                   className="navbar-search-input"
                   autoFocus
                 />
@@ -216,7 +235,7 @@ export default function Header({ searchQuery, setSearchQuery, onNavigate }) {
                 type="text"
                 placeholder="Search wats, kitfo, vegan..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
               />
             </div>
             <nav className="mobile-nav-links">

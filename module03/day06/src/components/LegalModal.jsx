@@ -1,17 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FiX, FiShield, FiFileText, FiAlertCircle } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
 
 export default function LegalModal() {
   const { legalModalState, closeLegal, openLegal } = useCart();
 
-  if (!legalModalState.open) return null;
+  useEffect(() => {
+    if (!legalModalState?.open) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') closeLegal();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [legalModalState?.open, closeLegal]);
+
+  if (!legalModalState?.open) return null;
 
   const currentTab = legalModalState.type || 'privacy';
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal-card legal-modal">
+    <div className="modal-backdrop" onClick={closeLegal} role="dialog" aria-modal="true">
+      <div className="modal-card legal-modal" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close-btn" onClick={closeLegal} aria-label="Close Modal">
           <FiX />
         </button>

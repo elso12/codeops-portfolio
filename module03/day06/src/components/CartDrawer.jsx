@@ -63,11 +63,18 @@ export default function CartDrawer() {
   // Sync prefilled data when user logs in or switches to checkout
   useEffect(() => {
     if (user) {
-      if (user.name) setValue('customerName', user.name);
-      if (user.phone) setValue('customerPhone', user.phone);
-      if (user.address) setValue('deliveryAddress', user.address);
+      if (user.name) setValue('customerName', user.name, { shouldValidate: true });
+      if (user.phone) setValue('customerPhone', user.phone, { shouldValidate: true });
+      if (user.address && diningType === 'delivery') {
+        setValue('deliveryAddress', user.address, { shouldValidate: true });
+      }
     }
-  }, [user, checkoutStep, setValue]);
+    if (diningType === 'dine-in') {
+      setValue('deliveryAddress', 'Main Dining Room (Mesob Table)', { shouldValidate: true });
+    } else if (diningType === 'takeout') {
+      setValue('deliveryAddress', 'Takeaway Pickup Counter', { shouldValidate: true });
+    }
+  }, [user, checkoutStep, diningType, setValue]);
 
   // Keyboard accessibility: Close on Escape key
   useEffect(() => {
@@ -89,12 +96,15 @@ export default function CartDrawer() {
   };
 
   const onCheckoutSubmit = (formData) => {
+    const finalAddress = formData.deliveryAddress?.trim() || 
+      (diningType === 'dine-in' ? 'Main Dining Room (Mesob Table)' : diningType === 'takeout' ? 'Takeaway Pickup Counter' : 'Bole, Addis Ababa');
+    
     const newOrderId = `MH-${Math.floor(100000 + Math.random() * 900000)}`;
     const newOrderObj = {
       id: newOrderId,
       customer: formData.customerName,
       phone: formData.customerPhone,
-      address: formData.deliveryAddress,
+      address: finalAddress,
       diningType,
       payment: formData.paymentMethod,
       totalETB: grandTotalETB,
@@ -109,7 +119,7 @@ export default function CartDrawer() {
       id: newOrderId,
       name: formData.customerName,
       phone: formData.customerPhone,
-      address: formData.deliveryAddress,
+      address: finalAddress,
       dining: diningType,
       payment: formData.paymentMethod,
       total: grandTotalETB

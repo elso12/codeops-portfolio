@@ -91,7 +91,7 @@ export default function DishCard({ dish }) {
         <div className="dish-footer">
           <div className="dish-price">
             <span className="currency">ETB</span>
-            <span className="amount">{dish.priceETB.toLocaleString()}</span>
+            <span className="amount">{Number(dish.priceETB || 0).toLocaleString()}</span>
           </div>
           <button 
             className="quick-add-btn"

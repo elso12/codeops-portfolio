@@ -41,20 +41,22 @@ export default function MenuSection({ menu, loading, searchQuery, setSearchQuery
       result = result.filter((item) => item.isSpecial);
     }
 
-    // Search query filter (matches English, Amharic, description, ingredients)
+    // Search query filter (matches English, Amharic, tagline, slug, description, ingredients)
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       result = result.filter((item) => {
         const matchEn = item.nameEn ? item.nameEn.toLowerCase().includes(q) : false;
         const matchAm = item.nameAm ? item.nameAm.includes(q) : false;
+        const matchTagline = item.tagline ? item.tagline.toLowerCase().includes(q) : false;
+        const matchSlug = item.slug ? item.slug.toLowerCase().includes(q) : false;
         const matchDesc = item.description ? item.description.toLowerCase().includes(q) : false;
         const matchCategory = item.category ? item.category.toLowerCase().includes(q) : false;
         const matchIngredients = item.ingredients 
           ? (Array.isArray(item.ingredients) 
-              ? item.ingredients.some(ing => ing && ing.toLowerCase().includes(q))
+              ? item.ingredients.some(ing => ing && String(ing).toLowerCase().includes(q))
               : String(item.ingredients).toLowerCase().includes(q))
           : false;
-        return matchEn || matchAm || matchDesc || matchCategory || matchIngredients;
+        return matchEn || matchAm || matchTagline || matchSlug || matchDesc || matchCategory || matchIngredients;
       });
     }
 
