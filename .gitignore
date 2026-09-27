@@ -23,3 +23,7 @@ Thumbs.db
 *.log
 dist/
 build/cd
+# Node dependencies
+node_modules/
+package-lock.json
+.oxlint-cache

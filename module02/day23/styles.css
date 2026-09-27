@@ -1,0 +1,234 @@
+:root {
+--green: #2E8B57;
+--green-hover: #246e44;
+--ink: #1A2433;
+--line: #E2E8F0;
+--radius: 10px;
+--bg: #F8FAFC;
+--error-red: #DC2626;
+--success-green: #065F46;
+--success-bg: #D1FAE5;
+}
+* {
+box-sizing: border-box;
+}
+body {
+font-family: system-ui, -apple-system, sans-serif;
+color: var(--ink);
+background-color: var(--bg);
+margin: 0;
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+}
+header {
+background-color: var(--green);
+color: white;
+padding: 1.25rem 2rem;
+display: flex;
+justify-content: space-between;
+align-items: center;
+flex-wrap: wrap;
+gap: 1rem;
+}
+header h1 {
+margin: 0;
+}
+#search {
+padding: 0.6rem 1rem;
+border-radius: 5px;
+border: none;
+width: 100%;
+max-width: 300px;
+font-size: 1rem;
+}
+main {
+display: grid;
+grid-template-columns: 1fr;
+gap: 1.5rem;
+padding: 1.5rem;
+max-width: 1200px;
+margin: 0 auto;
+width: 100%;
+}
+#menu {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+gap: 1rem;
+align-content: start;
+}
+@media (min-width: 800px) {
+main {
+grid-template-columns: 2fr 1fr;
+}
+}
+.dish {
+background-color: white;
+border: 1px solid var(--line);
+border-radius: var(--radius);
+padding: 1rem;
+display: flex;
+flex-direction: column;
+box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+}
+.dish-img {
+width: 100%;
+height: 160px;
+object-fit: cover;
+border-radius: 6px;
+margin-bottom: 0.75rem;
+background-color: var(--line);
+}
+.dish-category {
+font-size: 0.75rem;
+color: #64748b;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+margin-bottom: 0.25rem;
+}
+.dish h3 {
+color: var(--ink);
+margin: 0 0 0.5rem 0;
+font-size: 1.05rem;
+}
+.price {
+color: var(--green);
+font-weight: 700;
+font-size: 1.1rem;
+margin-bottom: 1rem;
+}
+button {
+cursor: pointer;
+border-radius: 5px;
+border: none;
+font-weight: 600;
+transition: background-color 0.2s, opacity 0.2s;
+}
+button:hover {
+opacity: 0.9;
+}
+button.add {
+background-color: var(--green);
+color: white;
+padding: 0.7rem;
+margin-top: auto;
+width: 100%;
+}
+button.add:hover {
+background-color: var(--green-hover);
+}
+#cart-panel {
+background-color: white;
+border: 1px solid var(--line);
+border-radius: var(--radius);
+padding: 1.5rem;
+height: fit-content;
+}
+#cart-panel h2 {
+margin-top: 0;
+border-bottom: 1px solid var(--line);
+padding-bottom: 0.5rem;
+}
+#cart-list {
+list-style: none;
+padding: 0;
+margin: 0 0 1rem 0;
+}
+#cart-list li {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 0.5rem 0;
+border-bottom: 1px dashed var(--line);
+}
+.cart-controls {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+}
+button.rm {
+background: none;
+color: var(--error-red);
+font-size: 1.1rem;
+padding: 0 0.25rem;
+}
+.cart-total-display {
+border-top: 2px solid var(--line);
+padding-top: 0.75rem;
+text-align: right;
+font-weight: bold;
+font-size: 1.15rem;
+margin-bottom: 1.5rem;
+}
+#checkout {
+display: flex;
+flex-direction: column;
+gap: 0.85rem;
+border-top: 1px solid var(--line);
+padding-top: 1.25rem;
+}
+#checkout h3 {
+margin: 0 0 0.25rem 0;
+font-size: 1.1rem;
+}
+#checkout label {
+display: flex;
+flex-direction: column;
+font-size: 0.85rem;
+font-weight: 600;
+color: #475569;
+gap: 0.35rem;
+}
+#checkout input,
+#checkout select {
+padding: 0.6rem;
+border: 1px solid var(--line);
+border-radius: 5px;
+font-size: 0.95rem;
+}
+#checkout input:focus,
+#checkout select:focus {
+outline: 2px solid var(--green);
+border-color: transparent;
+}
+.btn-checkout {
+background-color: var(--green);
+color: white;
+padding: 0.8rem;
+font-size: 1rem;
+margin-top: 0.5rem;
+}
+.btn-checkout:hover {
+background-color: var(--green-hover);
+}
+.error {
+color: var(--error-red);
+font-size: 0.85rem;
+font-weight: 600;
+margin: 0;
+min-height: 1.2rem;
+}
+.confirmation-box {
+background-color: var(--success-bg);
+color: var(--success-green);
+border: 1px solid #A7F3D0;
+padding: 0.85rem;
+border-radius: 6px;
+font-size: 0.9rem;
+margin-bottom: 1rem;
+line-height: 1.4;
+}
+.hidden {
+display: none;
+}
+.empty-state {
+color: #64748b;
+font-size: 0.95rem;
+padding: 0.5rem 0;
+}
+footer {
+background-color: var(--line);
+text-align: center;
+padding: 1rem;
+margin-top: auto;
+}

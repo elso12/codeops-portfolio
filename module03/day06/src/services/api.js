@@ -1,28 +1,28 @@
 // Addis Eats & Mesob House Menu API Service
 const BASE_URL = 'https://addis-eats-backend.onrender.com';
 
-// Primary dish image mappings by slug
+// Primary dish image mappings by slug with dedicated authentic photos matching each dish name
 export const DISH_IMAGES = {
   'doro-wat': '/dishes/doro-wat.jpg',
   'siga-wat': '/dishes/siga-wat.jpg',
   'beg-alicha-wat': '/dishes/beg-alicha-wat.jpg',
   'shiro-tegamino': '/dishes/shiro.jpg',
-  'shiro-bozena': '/dishes/shiro.jpg',
+  'shiro-bozena': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Taita_and_shiro.jpg/800px-Taita_and_shiro.jpg',
   'siga-derek-tibs': '/dishes/tibs.jpg',
-  'awaze-lamb-tibs': '/dishes/tibs.jpg',
-  'quanta-firfir': '/dishes/tibs.jpg',
-  'chornake-fish-tibs': '/dishes/tibs.jpg',
+  'awaze-lamb-tibs': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Ethiopian_food_tibs.jpg/800px-Ethiopian_food_tibs.jpg',
+  'quanta-firfir': 'https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&w=800&q=80',
+  'chornake-fish-tibs': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=800&q=80',
   'prime-beef-kitfo': '/dishes/kitfo.jpg',
-  'gored-gored': '/dishes/kitfo.jpg',
-  'kitfo-dulet': '/dishes/kitfo.jpg',
+  'gored-gored': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+  'kitfo-dulet': 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80',
   'full-vegan-beyaynetu': '/dishes/beyaynetu.jpg',
-  'misir-wat': '/dishes/beyaynetu.jpg',
-  'kik-alicha-wat': '/dishes/beyaynetu.jpg',
-  'gomen-collards': '/dishes/beyaynetu.jpg',
-  'fresh-timatim-fitfit': '/dishes/beyaynetu.jpg',
+  'misir-wat': 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80',
+  'kik-alicha-wat': 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=800&q=80',
+  'gomen-collards': 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=800&q=80',
+  'fresh-timatim-fitfit': 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80',
   'house-tej-carafe': '/dishes/tej.jpg',
   'jebena-spiced-coffee': '/dishes/coffee.jpg',
-  'spiced-habesha-chai': '/dishes/coffee.jpg',
+  'spiced-habesha-chai': 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=800&q=80',
   'great-mesob-feast': '/hero-cover.png'
 };
 
@@ -372,7 +372,8 @@ function normalizeDish(dish) {
     ingredients = [];
   }
 
-  const image = dish.image || dish.imageUrl || (dish.slug && DISH_IMAGES[dish.slug]) || getDishImage(dish);
+  const matchedImage = (dish.slug && DISH_IMAGES[dish.slug]) || getDishImage(dish);
+  const image = matchedImage || dish.image || dish.imageUrl || DEFAULT_FALLBACK_IMAGE;
 
   return {
     ...dish,

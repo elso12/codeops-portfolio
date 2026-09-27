@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Addis Eats</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+<h1>Addis Eats</h1>
+<input id="search" placeholder="Search dishes..." aria-label="Search dishes" />
+</header>
+<main>
+<section id="menu" aria-label="Menu"></section>
+<aside id="cart-panel" aria-label="Your order and checkout">
+<h2>Your Order</h2>
+<ul id="cart-list" aria-label="Shopping cart items"></ul>
+<div id="cart-total" class="cart-total-display">Total: 0 ETB</div>
+<div id="order-confirmation" class="confirmation-box hidden" role="status" aria-live="polite"></div>
+<form id="checkout" novalidate>
+<h3>Checkout (TeleBirr)</h3>
+<label for="name">
+Full Name
+<input id="name" type="text" placeholder="e.g. Abebe Bikila" required />
+</label>
+<label for="phone">
+Phone Number (TeleBirr)
+<input id="phone" type="tel" placeholder="09xxxxxxxx or +2519xxxxxxxx" required />
+</label>
+<label for="area">
+Delivery Area
+<select id="area">
+<option value="Bole">Bole</option>
+<option value="Kazanchis">Kazanchis</option>
+<option value="Megenagna">Megenagna</option>
+<option value="Piassa">Piassa</option>
+<option value="Sarbet">Sarbet</option>
+</select>
+</label>
+<p id="form-error" class="error" aria-live="polite"></p>
+<button id="order-btn" type="submit" class="btn-checkout">Place Order</button>
+</form>
+</aside>
+</main>
+<footer>
+<p>Bole, Addis Ababa · TeleBirr Integrated</p>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>

@@ -109,6 +109,10 @@ export default function Hero({ onExploreSpecials, onExploreMenu, onExploreCeremo
                 src="/hero-cover.png" 
                 alt="Great Mesob Feast - Ethiopian communal banquet" 
                 className="hero-main-img"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "https://s3-alpha.figma.com/hub/file/2397235313364318155/43a7669f-5c3c-4721-b852-a83279d39985-cover.png";
+                }}
               />
               <div className="hero-image-overlay" />
             </div>
