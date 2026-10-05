@@ -7,6 +7,9 @@ This document details the rendering strategy adopted for every route in the **Me
 | `/` (Root Home) | **Static (SSG / Prerendered)** | `○ (Static)` | Brand story, cultural pillars, and hero showcase never change per request and are prerendered once at build time for instant CDN delivery. |
 | `/menu` (Menu Catalog) | **Incremental Static Regeneration (ISR)** | `○ (Static)` with `1m revalidate` | Seasonal Habesha specials, chef recommendations, and market prices update periodically; a 60-second ISR window balances lightning-fast cached responses with fresh kitchen data. |
 | `/menu/[id]` (Dish Detail) | **Static Generation with `generateStaticParams` (SSG)** | `● (SSG)` | The curated catalog of authentic Ethiopian dishes is known at build time, allowing Next.js to compile dedicated static HTML for every dish with zero server latency. |
+| `/offers` (Special Offers) | **Static (SSG / Prerendered)** | `○ (Static)` | Promotional packages and coupon codes are static marketing campaigns delivered instantly from the edge cache. |
+| `/reservations` (Table Booking) | **Static Prerender with Client Form** | `○ (Static)` | Static presentation shell pre-rendered at build time with an interactive client form for live party sizing and instant confirmation. |
+| `/login` (Guest & Member Access) | **Static Prerender with Client Form** | `○ (Static)` | Marketing and auth shell is static, allowing instant first load before handling client-side guest credentials and phone verification. |
 | `/checkout` (Table Reservation & Cart) | **Dynamic Server Rendering (SSR)** | `ƒ (Dynamic)` | Must read request-specific headers/cookies (`await cookies()`) on every request to resolve individual guest session tokens and dining seating preferences. |
 
 ---
@@ -14,7 +17,7 @@ This document details the rendering strategy adopted for every route in the **Me
 ### Key Architectural Verifications
 
 1. **Root Layout Ownership**:
-   - `app/layout.js` owns the `<html>` and `<body>` tags, imports `globals.css` containing the Figma palette (Paprika Reds, Turmeric Golds, Forest Greens, Warm Ivory, and Dark Espresso), and wraps all routes with the header and footer.
+   - `app/layout.js` owns the `<html>` and `<body>` tags, imports `globals.css` containing the Figma palette (Paprika Reds, Turmeric Golds, Forest Greens, Warm Ivory, and Dark Espresso), and wraps all routes with global navigation and footer.
 
 2. **Persistent Nested Layout & State Survival**:
    - `app/menu/layout.js` introduces a category sidebar and a client state counter (`MenuCounter.js`).

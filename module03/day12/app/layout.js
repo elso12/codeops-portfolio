@@ -26,11 +26,20 @@ export default function RootLayout({ children }) {
                     <Link href="/">Home</Link>
                   </li>
                   <li>
-                    <Link href="/menu">Full Menu</Link>
+                    <Link href="/menu">Menu</Link>
+                  </li>
+                  <li>
+                    <Link href="/offers">Offers</Link>
+                  </li>
+                  <li>
+                    <Link href="/reservations">Reservations</Link>
+                  </li>
+                  <li>
+                    <Link href="/login" style={{ color: 'var(--text-muted)' }}>Login</Link>
                   </li>
                   <li>
                     <Link href="/checkout" className="nav-order-btn">
-                      Checkout &amp; Cart
+                      Cart &amp; Order
                     </Link>
                   </li>
                 </ul>
@@ -58,19 +67,22 @@ export default function RootLayout({ children }) {
                   <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                     <li><Link href="/">Home &amp; Heritage</Link></li>
                     <li><Link href="/menu">Browse Mesob Offerings</Link></li>
-                    <li><Link href="/checkout">Table Reservations &amp; Pickup</Link></li>
+                    <li><Link href="/offers">Special Feasts &amp; Discounts</Link></li>
+                    <li><Link href="/reservations">Book a Handcrafted Mesob</Link></li>
+                    <li><Link href="/login">Guest &amp; Member Portal</Link></li>
+                    <li><Link href="/checkout">Active Cart &amp; Checkout</Link></li>
                   </ul>
                 </div>
                 <div>
-                  <h4 style={{ marginBottom: '0.85rem', color: '#fff', fontSize: '1.05rem' }}>Dining Hours</h4>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.35rem' }}>Bole Road, Addis Ababa</p>
+                  <h4 style={{ marginBottom: '0.85rem', color: '#fff', fontSize: '1.05rem' }}>Dining Hours &amp; Location</h4>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.35rem' }}>Bole Road, Addis Ababa, Ethiopia</p>
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.35rem' }}>Mon – Fri: 11:30 AM – 11:00 PM</p>
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Sat – Sun: 10:00 AM – Midnight</p>
                 </div>
               </div>
               <div className="footer-bottom">
                 <p>&copy; {new Date().getFullYear()} Mesob House Restaurant. Authentic Habesha Gastronomy.</p>
-                <p>Designed with Next.js App Router · Module 3 Day 37</p>
+                <p>Built with Next.js App Router · Module 3 Day 37</p>
               </div>
             </div>
           </footer>
