@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 export default function ReservationForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [confirmationCode, setConfirmationCode] = useState('MESOB-4192');
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -22,6 +23,7 @@ export default function ReservationForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setConfirmationCode(`MESOB-${Math.floor(1000 + Math.random() * 9000)}`);
     setSubmitted(true);
   };
 
@@ -59,7 +61,7 @@ export default function ReservationForm() {
           fontSize: '0.9rem'
         }}>
           <div><strong>Seating Style:</strong> <span style={{ color: 'var(--color-turmeric)' }}>{formData.seating}</span></div>
-          <div style={{ marginTop: '0.4rem' }}><strong>Confirmation Code:</strong> <code style={{ color: '#fff' }}>MESOB-{Math.floor(1000 + Math.random() * 9000)}</code></div>
+          <div style={{ marginTop: '0.4rem' }}><strong>Confirmation Code:</strong> <code style={{ color: '#fff' }}>{confirmationCode}</code></div>
           {formData.culturalNotes && (
             <div style={{ marginTop: '0.4rem' }}><strong>Special Request:</strong> <span>{formData.culturalNotes}</span></div>
           )}

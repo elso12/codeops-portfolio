@@ -21,32 +21,34 @@ Mesob House (መሶብ ሀውስ) is a premium Ethiopian and Eritrean culinary w
 > next build
 
 ▲ Next.js 16.3.8 (Turbopack)
-✓ Running next.config took 76ms
+✓ Running next.config took 57ms
 
   Creating an optimized production build ...
-✓ Compiled successfully in 4.9s
+✓ Compiled successfully in 9.9s
   Running TypeScript ...
-  Finished TypeScript in 11ms ...
+  Finished TypeScript in 6ms ...
   Collecting page data using 7 workers ...
-  Generating static pages using 7 workers (0/14) ...
-  Generating static pages using 7 workers (3/14) 
-  Generating static pages using 7 workers (6/14) 
-  Generating static pages using 7 workers (10/14) 
-✓ Generating static pages using 7 workers (14/14) in 10.7s
+  Generating static pages using 7 workers (0/16) ...
+  Generating static pages using 7 workers (4/16) 
+  Generating static pages using 7 workers (8/16) 
+  Generating static pages using 7 workers (12/16) 
+✓ Generating static pages using 7 workers (16/16) in 6.0s
   Finalizing page optimization ...
 
 Route (app)            Revalidate  Expire
 ┌ ○ /
 ├ ○ /_not-found
+├ ○ /cart
 ├ ƒ /checkout
 ├ ○ /login
-├ ○ /menu                      1m      1y
+├ ○ /menu                      1h      1y
 ├   /menu/[id]
 │ ├ ● /menu/doro-wat
 │ ├ ● /menu/kitfo
 │ ├ ● /menu/beyaynetu
 │ └ ● [+3 more paths]
 ├ ○ /offers
+├ ○ /register
 └ ○ /reservations
 
 
@@ -61,7 +63,7 @@ Route (app)            Revalidate  Expire
 
 | Question | Verification Result |
 | :--- | :--- |
-| **Does the build output mark each route the way STRATEGY.md says?** | Yes: `/`, `/offers`, `/reservations`, `/login` are `○`, `/menu` is `○ (1m revalidate)`, `/menu/[id]` is `● (SSG)`, and `/checkout` is `ƒ (Dynamic)`. |
+| **Does the build output mark each route the way STRATEGY.md says?** | Yes: `/`, `/offers`, `/reservations`, `/login`, `/register`, `/cart` are `○`, `/menu` is `○ (1h revalidate)`, `/menu/[id]` is `● (SSG)`, and `/checkout` is `ƒ (Dynamic)`. |
 | **Does a counter in the menu layout keep its value when you open a dish?** | Yes: `MenuCounter` in `app/menu/layout.js` persists during client-side navigation into any `/menu/[id]`. |
 | **Did `generateStaticParams` produce one HTML file per dish?** | Yes: 6 static dish pages (`● (SSG)`). |
 | **Can you name the exact line that makes the checkout dynamic?** | Line 13 in `app/checkout/page.js`: `const cookieStore = await cookies();`. |

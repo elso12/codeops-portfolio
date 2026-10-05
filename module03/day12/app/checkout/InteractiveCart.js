@@ -24,6 +24,7 @@ export default function InteractiveCart({ initialSessionId, initialTablePreferen
   const [seating, setSeating] = useState(initialTablePreference);
   const [extraInjera, setExtraInjera] = useState(false);
   const [isOrdered, setIsOrdered] = useState(false);
+  const [orderRef, setOrderRef] = useState('HABESHA-ORD-4821');
 
   const updateQty = (id, delta) => {
     setItems((prev) =>
@@ -75,7 +76,7 @@ export default function InteractiveCart({ initialSessionId, initialTablePreferen
           textAlign: 'left',
           fontSize: '0.9rem'
         }}>
-          <div><strong>Order Ref:</strong> <code style={{ color: 'var(--color-turmeric)' }}>HABESHA-ORD-{Math.floor(1000 + Math.random() * 9000)}</code></div>
+          <div><strong>Order Ref:</strong> <code style={{ color: 'var(--color-turmeric)' }}>{orderRef}</code></div>
           <div style={{ marginTop: '0.35rem' }}><strong>Dining Style:</strong> <span>{seating}</span></div>
           <div style={{ marginTop: '0.35rem' }}><strong>Amount Charged:</strong> <span style={{ fontWeight: 800, color: '#fff' }}>${total.toFixed(2)}</span></div>
         </div>
@@ -266,7 +267,10 @@ export default function InteractiveCart({ initialSessionId, initialTablePreferen
         </Link>
         <button
           type="button"
-          onClick={() => setIsOrdered(true)}
+          onClick={() => {
+            setOrderRef(`HABESHA-ORD-${Math.floor(1000 + Math.random() * 9000)}`);
+            setIsOrdered(true);
+          }}
           disabled={items.length === 0}
           className="btn btn-primary"
           style={{ padding: '0.9rem 2.25rem', fontSize: '1.05rem', cursor: items.length > 0 ? 'pointer' : 'not-allowed' }}

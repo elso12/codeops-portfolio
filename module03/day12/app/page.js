@@ -84,7 +84,7 @@ export default function HomePage() {
             textTransform: 'uppercase',
             letterSpacing: '1px'
           }}>
-            Chef's Weekend Special · የሳምንቱ መጨረሻ ልዩ
+            Chef&apos;s Weekend Special · የሳምንቱ መጨረሻ ልዩ
           </span>
           <h2 style={{ fontSize: '1.85rem', color: '#fff', marginTop: '0.35rem', marginBottom: '0.5rem' }}>
             Grand Mesob Feast for Two

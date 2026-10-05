@@ -1,16 +1,18 @@
-# Mesob House · Route Rendering Strategies
+# Addis Eats (Mesob House) · Route Rendering Strategies
 
-This document details the rendering strategy adopted for every route in the **Mesob House (Habesha Restaurant)** application (inspired by the Figma Community design by Eyasu Nigussie), along with concise justifications based on data dynamism, caching requirements, and performance targets.
+This document details the rendering strategy adopted for every route in the **Addis Eats (Mesob House)** application (inspired by the Figma Community design by Eyasu Nigussie), along with concise justifications based on data dynamism, caching requirements, and performance targets.
 
 | Route | Rendering Strategy | Build Marker | One-Line Justification |
 | :--- | :--- | :--- | :--- |
-| `/` (Root Home) | **Static (SSG / Prerendered)** | `○ (Static)` | Brand story, cultural pillars, and hero showcase never change per request and are prerendered once at build time for instant CDN delivery. |
-| `/menu` (Menu Catalog) | **Incremental Static Regeneration (ISR)** | `○ (Static)` with `1m revalidate` | Seasonal Habesha specials, chef recommendations, and market prices update periodically; a 60-second ISR window balances lightning-fast cached responses with fresh kitchen data. |
-| `/menu/[id]` (Dish Detail) | **Static Generation with `generateStaticParams` (SSG)** | `● (SSG)` | The curated catalog of authentic Ethiopian dishes is known at build time, allowing Next.js to compile dedicated static HTML for every dish with zero server latency. |
-| `/offers` (Special Offers) | **Static (SSG / Prerendered)** | `○ (Static)` | Promotional packages and coupon codes are static marketing campaigns delivered instantly from the edge cache. |
-| `/reservations` (Table Booking) | **Static Prerender with Client Form** | `○ (Static)` | Static presentation shell pre-rendered at build time with an interactive client form for live party sizing and instant confirmation. |
-| `/login` (Guest & Member Access) | **Static Prerender with Client Form** | `○ (Static)` | Marketing and auth shell is static, allowing instant first load before handling client-side guest credentials and phone verification. |
-| `/checkout` (Table Reservation & Cart) | **Dynamic Server Rendering (SSR)** | `ƒ (Dynamic)` | Must read request-specific headers/cookies (`await cookies()`) on every request to resolve individual guest session tokens and dining seating preferences. |
+| `/` (Root Home) | **Static (SSG / Prerendered)** | `○ (Static)` | The story and address never change between builds. |
+| `/menu` (Menu Catalog) | **Incremental Static Regeneration (ISR)** | `○ (Static)` with `1h revalidate` | Dishes change occasionally; speed matters most (1-hour revalidation window). |
+| `/menu/[id]` (Dish Detail) | **Static Generation with `generateStaticParams` (SSG)** | `● (SSG)` | Every dish is known at build time; Next.js compiles dedicated static HTML per dish. |
+| `/cart` (User Cart) | **Client Component (CSR)** | `○ (Static shell)` | The person's own state, and private (managed via React client state). |
+| `/checkout` (Table Reservation & Order) | **Dynamic Server Rendering (SSR)** | `ƒ (Dynamic)` | Reads the session cookie (`await cookies()`) and live pricing on every request. |
+| `/offers` (Special Offers) | **Static (SSG / Prerendered)** | `○ (Static)` | Promotional packages and coupon codes are static marketing campaigns delivered instantly from the edge. |
+| `/reservations` (Table Booking) | **Static Prerender with Client Form** | `○ (Static)` | Static presentation shell pre-rendered at build time with an interactive client form for party reservations. |
+| `/login` (Guest & Member Access) | **Static Prerender with Client Form** | `○ (Static)` | Marketing and auth shell is static, allowing instant first load before handling client-side credentials. |
+| `/register` (Member Registration) | **Static Prerender with Client Form** | `○ (Static)` | Membership signup shell is static with client-side interactive form validation and state. |
 
 ---
 

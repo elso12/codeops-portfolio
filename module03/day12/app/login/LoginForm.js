@@ -148,7 +148,7 @@ export default function LoginForm() {
                 }}
               />
               <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '0.35rem', display: 'block' }}>
-                We'll text you SMS updates on your table and order status.
+                We&apos;ll text you SMS updates on your table and order status.
               </span>
             </div>
           </div>
@@ -201,6 +201,13 @@ export default function LoginForm() {
         <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '0.95rem' }}>
           {tab === 'guest' ? 'Continue as Guest &rarr;' : 'Sign In to Mesob Club &rarr;'}
         </button>
+
+        <div style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+          Don&apos;t have a member account yet?{' '}
+          <Link href="/register" style={{ color: 'var(--color-turmeric)', fontWeight: 600 }}>
+            Register here
+          </Link>
+        </div>
       </form>
     </div>
   );

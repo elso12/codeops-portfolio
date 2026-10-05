@@ -2,10 +2,10 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { getDishes } from '../../lib/dishes';
 
-// Revalidate the menu every 60 seconds (Incremental Static Regeneration)
-// Justification: Menu items, prices, and daily specials change occasionally during business hours,
-// so a 60-second window balances immediate cache hits with up-to-date daily kitchen offerings.
-export const revalidate = 60;
+// Revalidate the menu every 3600 seconds / 1 hour (Incremental Static Regeneration)
+// Justification: Dishes change occasionally; speed matters most. 
+// A 1-hour ISR window serves instant static CDN responses while keeping kitchen offerings fresh.
+export const revalidate = 3600;
 
 async function DishList() {
   // Fetches dishes; streamed inside Suspense so layout and sidebar render with zero blocking

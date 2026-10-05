@@ -2,8 +2,8 @@ import './globals.css';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Mesob House | Authentic Habesha Restaurant & Elevated Dining',
-  description: 'Experience communal Ethiopian and Eritrean culinary heritage at Mesob House. Handcrafted injera, rich wats, sizzling tibs, and ceremonial jebena coffee.',
+  title: 'Addis Eats · Mesob House | Authentic Habesha Restaurant',
+  description: 'Experience communal Ethiopian and Eritrean culinary heritage at Addis Eats · Mesob House. Handcrafted injera, rich wats, sizzling tibs, and ceremonial jebena coffee.',
 };
 
 export default function RootLayout({ children }) {
@@ -16,8 +16,8 @@ export default function RootLayout({ children }) {
               <Link href="/" className="brand">
                 <span className="brand-badge">መሶብ</span>
                 <div>
-                  <div style={{ lineHeight: 1.1 }}>Mesob House</div>
-                  <span className="brand-sub">Habesha Restaurant</span>
+                  <div style={{ lineHeight: 1.1 }}>Addis Eats</div>
+                  <span className="brand-sub">Mesob House</span>
                 </div>
               </Link>
               <nav>
@@ -35,11 +35,17 @@ export default function RootLayout({ children }) {
                     <Link href="/reservations">Reservations</Link>
                   </li>
                   <li>
+                    <Link href="/cart">Cart</Link>
+                  </li>
+                  <li>
                     <Link href="/login" style={{ color: 'var(--text-muted)' }}>Login</Link>
                   </li>
                   <li>
+                    <Link href="/register" style={{ color: 'var(--text-muted)' }}>Register</Link>
+                  </li>
+                  <li>
                     <Link href="/checkout" className="nav-order-btn">
-                      Cart &amp; Order
+                      Checkout
                     </Link>
                   </li>
                 </ul>
@@ -70,6 +76,7 @@ export default function RootLayout({ children }) {
                     <li><Link href="/offers">Special Feasts &amp; Discounts</Link></li>
                     <li><Link href="/reservations">Book a Handcrafted Mesob</Link></li>
                     <li><Link href="/login">Guest &amp; Member Portal</Link></li>
+                    <li><Link href="/register">Register New Account</Link></li>
                     <li><Link href="/checkout">Active Cart &amp; Checkout</Link></li>
                   </ul>
                 </div>
