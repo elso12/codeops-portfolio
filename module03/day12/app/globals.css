@@ -1,0 +1,616 @@
+/* ==========================================================================
+   MESOB HOUSE · HABESHA RESTAURANT DESIGN SYSTEM
+   Inspired by the Figma Community design by Eyasu Nigussie
+   Palette: Rich Paprika Reds, Turmeric Golds, Forest Greens, Warm Ivory & Espresso
+   ========================================================================== */
+
+:root {
+  /* Color Tokens */
+  --color-paprika: #ba3320;
+  --color-paprika-dark: #8e2313;
+  --color-paprika-light: #d64e3a;
+  
+  --color-turmeric: #e5a93c;
+  --color-turmeric-light: #f7ca75;
+  --color-turmeric-dark: #b87c17;
+
+  --color-forest: #1c382b;
+  --color-forest-light: #2b5441;
+  --color-forest-dark: #102219;
+
+  --color-ivory: #fcf9f2;
+  --color-ivory-warm: #f4eee2;
+  --color-ivory-muted: #dcd2bf;
+
+  --bg-primary: #120f0d;       /* Deep roasted coffee bean background */
+  --bg-secondary: #1a1512;     /* Warm dark espresso container */
+  --bg-card: #231c18;          /* Rich claypot / mesob dark card */
+  --bg-card-hover: #2c241f;
+  --border-color: #382c23;     /* Handcrafted earth border */
+  --border-highlight: #5a4638;
+
+  --text-main: #fcf9f2;
+  --text-muted: #b8aba0;
+  --text-dim: #7f7267;
+
+  --primary-accent: var(--color-turmeric);
+  --primary-glow: rgba(229, 169, 60, 0.22);
+  --accent-spice: var(--color-paprika);
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: 'Georgia', 'Playfair Display', serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* App Shell */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* ==========================================================================
+   Header & Navigation
+   ========================================================================== */
+.site-header {
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(18, 15, 13, 0.92);
+  backdrop-filter: blur(16px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 1rem 2rem;
+  transition: all 0.3s ease;
+}
+
+.header-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.brand-badge {
+  background: linear-gradient(135deg, var(--color-paprika), var(--color-turmeric));
+  color: #fff;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(186, 51, 32, 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-sub {
+  font-size: 0.7rem;
+  display: block;
+  font-weight: 500;
+  color: var(--color-turmeric);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+}
+
+.nav-links a:hover {
+  color: var(--color-turmeric-light);
+  background: rgba(229, 169, 60, 0.08);
+}
+
+.nav-order-btn {
+  background: linear-gradient(135deg, var(--color-paprika), var(--color-paprika-dark));
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(186, 51, 32, 0.3);
+  padding: 0.5rem 1.1rem !important;
+  border-radius: 8px;
+}
+
+.nav-order-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(186, 51, 32, 0.45);
+}
+
+/* ==========================================================================
+   Buttons & Tags
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.6rem;
+  border-radius: 9px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-paprika), var(--color-turmeric));
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(186, 51, 32, 0.35);
+}
+
+.btn-primary:hover {
+  opacity: 0.95;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(229, 169, 60, 0.4);
+}
+
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--color-turmeric);
+}
+
+.btn-forest {
+  background: linear-gradient(135deg, var(--color-forest), var(--color-forest-dark));
+  color: var(--color-ivory);
+  border: 1px solid rgba(229, 169, 60, 0.3);
+}
+
+.btn-forest:hover {
+  border-color: var(--color-turmeric);
+}
+
+/* ==========================================================================
+   Hero & Home Experience (Figma Mesob House)
+   ========================================================================== */
+.hero-wrapper {
+  padding: 3.5rem 1rem 4rem;
+  text-align: center;
+  position: relative;
+}
+
+.hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 1.1rem;
+  border-radius: 9999px;
+  background: rgba(229, 169, 60, 0.12);
+  border: 1px solid rgba(229, 169, 60, 0.3);
+  color: var(--color-turmeric);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 5vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  margin-bottom: 1.25rem;
+  color: #fff;
+}
+
+.hero-highlight {
+  background: linear-gradient(135deg, var(--color-paprika-light), var(--color-turmeric));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-desc {
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.feature-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3.5rem;
+}
+
+.feature-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 1.75rem;
+  text-align: left;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.feature-box:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-turmeric);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.feature-box h3 {
+  font-size: 1.2rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.feature-box p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   Menu Layout & Sidebar (Figma Habesha Restaurant)
+   ========================================================================== */
+.menu-layout {
+  display: grid;
+  grid-template-columns: 290px 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .menu-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.menu-sidebar {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.75rem;
+  position: sticky;
+  top: 6rem;
+}
+
+.sidebar-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 1.25rem;
+  color: var(--color-turmeric);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  letter-spacing: -0.2px;
+}
+
+.category-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.category-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.95rem;
+  border-radius: 9px;
+  color: var(--text-muted);
+  font-size: 0.925rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.category-link:hover {
+  color: #fff;
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+.category-link.active {
+  color: var(--color-turmeric);
+  background: rgba(229, 169, 60, 0.12);
+  border-color: rgba(229, 169, 60, 0.3);
+  font-weight: 700;
+}
+
+.sidebar-promo-card {
+  margin-top: 1.5rem;
+  padding: 1.2rem;
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(186, 51, 32, 0.15), rgba(28, 56, 43, 0.3));
+  border: 1px solid rgba(186, 51, 32, 0.3);
+}
+
+.sidebar-promo-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--color-paprika-light);
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.sidebar-promo-card h4 {
+  font-size: 1rem;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
+
+.sidebar-promo-card p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Dish Grid & Card Components
+   ========================================================================== */
+.dish-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1.5rem;
+}
+
+.dish-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.65rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.dish-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-turmeric);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.dish-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-paprika), var(--color-turmeric));
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.dish-card:hover::before {
+  opacity: 1;
+}
+
+.dish-header {
+  margin-bottom: 0.85rem;
+}
+
+.dish-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.dish-amharic {
+  font-size: 0.9rem;
+  color: var(--color-turmeric);
+  font-weight: 500;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.tag {
+  font-size: 0.725rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.tag-category {
+  background: rgba(229, 169, 60, 0.12);
+  color: var(--color-turmeric);
+  border: 1px solid rgba(229, 169, 60, 0.25);
+}
+
+.tag-spice {
+  background: rgba(186, 51, 32, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(186, 51, 32, 0.3);
+}
+
+.dish-desc {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.dish-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dish-price {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--color-turmeric);
+}
+
+/* ==========================================================================
+   Dish Detail Page (Figma Mesob House Showcase)
+   ========================================================================== */
+.dish-detail-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 2.75rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  margin-bottom: 1.75rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.back-link:hover {
+  color: var(--color-turmeric);
+}
+
+.detail-badge-group {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.detail-section {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.detail-section h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.85rem;
+  color: #fff;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.site-footer {
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  padding: 3.5rem 2rem 2.5rem;
+  margin-top: auto;
+}
+
+.footer-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 2.5rem;
+}
+
+@media (max-width: 800px) {
+  .footer-top {
+    grid-template-columns: 1fr;
+  }
+}
+
+.footer-about h3 {
+  color: var(--color-turmeric);
+  margin-bottom: 0.85rem;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.footer-about p {
+  color: var(--text-muted);
+  font-size: 0.925rem;
+  line-height: 1.65;
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
