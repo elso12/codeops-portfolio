@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgKitfo" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#40120B"/>
+      <stop offset="100%" stop-color="#140402"/>
+    </radialGradient>
+    <linearGradient id="kitfoMound" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#B83A1B"/>
+      <stop offset="50%" stop-color="#8F2D14"/>
+      <stop offset="100%" stop-color="#5E1A0A"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bgKitfo)"/>
+
+  <!-- Platter Plate -->
+  <g filter="url(#shadow)">
+    <circle cx="400" cy="300" r="210" fill="#291E1C" stroke="#D99426" stroke-width="6"/>
+    <!-- Teff Injera base -->
+    <circle cx="400" cy="300" r="195" fill="#EBE0D3"/>
+
+    <!-- Minced Prime Kitfo Mound -->
+    <circle cx="400" cy="300" r="130" fill="url(#kitfoMound)"/>
+
+    <!-- Mitmita Orange Spice dusting -->
+    <circle cx="400" cy="300" r="100" fill="#D99426" opacity="0.3"/>
+    
+    <!-- Golden Niter Kibbeh Pool -->
+    <path d="M 340 270 Q 420 230 460 300 T 360 340 Z" fill="#E5A83B" opacity="0.7"/>
+
+    <!-- Fresh Ayib Cheese Portion Side -->
+    <circle cx="510" cy="250" r="35" fill="#FFFDF9" stroke="#EBE0D3" stroke-width="2"/>
+    <!-- Gomen Collard Greens Side -->
+    <circle cx="290" cy="350" r="40" fill="#2D6A4F" stroke="#1E4D2B" stroke-width="2"/>
+
+    <!-- Garnish Korarima seeds -->
+    <circle cx="390" cy="270" r="3" fill="#140402"/>
+    <circle cx="410" cy="285" r="4" fill="#140402"/>
+    <circle cx="380" cy="320" r="3" fill="#140402"/>
+    <circle cx="430" cy="310" r="3" fill="#140402"/>
+
+    <!-- Warm Aroma Steam -->
+    <path d="M 380 180 Q 360 140 380 110" fill="none" stroke="#FFF" stroke-width="2.5" opacity="0.35" stroke-linecap="round"/>
+    <path d="M 420 170 Q 440 130 420 100" fill="none" stroke="#FFF" stroke-width="2.5" opacity="0.35" stroke-linecap="round"/>
+  </g>
+
+  <!-- Title Badge Overlay -->
+  <rect x="250" y="500" width="300" height="48" rx="24" fill="#140402" opacity="0.85" stroke="#D99426" stroke-width="1.5"/>
+  <text x="400" y="530" font-family="'Fraunces', Georgia, serif" font-size="20" font-weight="bold" fill="#F5EDE0" text-anchor="middle">Prime Beef Kitfo • ክትፎ</text>
+</svg>

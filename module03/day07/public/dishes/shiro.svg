@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgShiro" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#3D2612"/>
+      <stop offset="100%" stop-color="#140C05"/>
+    </radialGradient>
+    <linearGradient id="shiroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E5A83B"/>
+      <stop offset="50%" stop-color="#D99426"/>
+      <stop offset="100%" stop-color="#A66B12"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bgShiro)"/>
+
+  <!-- Earthenware Clay Pot -->
+  <g filter="url(#shadow)">
+    <circle cx="400" cy="300" r="200" fill="#42291A" stroke="#7A4C32" stroke-width="8"/>
+    <circle cx="400" cy="300" r="185" fill="url(#shiroGrad)"/>
+
+    <!-- Bubbling Shiro texture -->
+    <circle cx="350" cy="250" r="16" fill="#F4C46B" opacity="0.7"/>
+    <circle cx="440" cy="270" r="22" fill="#F4C46B" opacity="0.6"/>
+    <circle cx="380" cy="340" r="18" fill="#F4C46B" opacity="0.8"/>
+    <circle cx="450" cy="350" r="14" fill="#F4C46B" opacity="0.5"/>
+
+    <!-- Niter Kibbeh Golden Oil Pool -->
+    <path d="M 330 280 Q 400 240 470 290 T 360 360 Z" fill="#FFC857" opacity="0.5"/>
+
+    <!-- Green Jalapeño & Tomato Garnish -->
+    <circle cx="400" cy="290" r="18" fill="#2D6A4F" stroke="#1E4D2B" stroke-width="3"/>
+    <circle cx="400" cy="290" r="8" fill="#42291A"/>
+
+    <ellipse cx="440" cy="310" rx="12" ry="8" fill="#8F2D14"/>
+    <ellipse cx="360" cy="310" rx="10" ry="6" fill="#8F2D14"/>
+
+    <!-- Piping Hot Bubbling Steam -->
+    <path d="M 370 170 Q 350 140 370 110" fill="none" stroke="#FFF" stroke-width="3" opacity="0.4" stroke-linecap="round"/>
+    <path d="M 430 160 Q 450 130 430 100" fill="none" stroke="#FFF" stroke-width="3" opacity="0.4" stroke-linecap="round"/>
+  </g>
+
+  <!-- Title Badge Overlay -->
+  <rect x="250" y="500" width="300" height="48" rx="24" fill="#140C05" opacity="0.85" stroke="#D99426" stroke-width="1.5"/>
+  <text x="400" y="530" font-family="'Fraunces', Georgia, serif" font-size="20" font-weight="bold" fill="#F5EDE0" text-anchor="middle">Shiro Tegamino • ሽሮ ተጋሚኖ</text>
+</svg>

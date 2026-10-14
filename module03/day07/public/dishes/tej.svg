@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgTej" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#4D3308"/>
+      <stop offset="100%" stop-color="#1A1102"/>
+    </radialGradient>
+    <linearGradient id="tejHoney" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFC857"/>
+      <stop offset="50%" stop-color="#E5A83B"/>
+      <stop offset="100%" stop-color="#D99426"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bgTej)"/>
+
+  <!-- Berbele Glass Flask (Tej Flask) -->
+  <g filter="url(#shadow)">
+    <!-- Round Bulb Body -->
+    <circle cx="400" cy="340" r="120" fill="url(#tejHoney)" stroke="#FFE8B0" stroke-width="4"/>
+    
+    <!-- Flask Neck -->
+    <path d="M 375 220 L 375 140 C 375 130 425 130 425 140 L 425 220 Z" fill="url(#tejHoney)" stroke="#FFE8B0" stroke-width="3"/>
+    
+    <!-- Glass Highlights -->
+    <path d="M 320 280 A 100 100 0 0 1 360 240" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.6"/>
+    <line x1="385" y1="150" x2="385" y2="210" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- Honey Drop -->
+    <path d="M 400 110 C 390 125 390 135 400 140 C 410 135 410 125 400 110 Z" fill="#FFC857"/>
+
+    <!-- Small Glass Cup Side -->
+    <path d="M 520 320 L 510 400 Q 550 420 590 400 L 580 320 Z" fill="url(#tejHoney)" opacity="0.9" stroke="#FFE8B0" stroke-width="3"/>
+    <ellipse cx="550" cy="320" rx="30" ry="8" fill="#FFE8B0" opacity="0.6"/>
+  </g>
+
+  <!-- Title Badge Overlay -->
+  <rect x="230" y="500" width="340" height="48" rx="24" fill="#1A1102" opacity="0.85" stroke="#D99426" stroke-width="1.5"/>
+  <text x="400" y="530" font-family="'Fraunces', Georgia, serif" font-size="20" font-weight="bold" fill="#F5EDE0" text-anchor="middle">House Wild Honey Tej • ጠጅ</text>
+</svg>
