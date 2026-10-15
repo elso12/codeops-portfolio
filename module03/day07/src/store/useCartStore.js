@@ -29,7 +29,7 @@ const MOCK_ORDERS = [
 export const useCartStore = create(
   persist(
     (set, get) => ({
-      cart: [],
+      items: [],
       diningType: 'dine-in', // 'dine-in' | 'delivery' | 'takeout'
       isCartOpen: false,
       activeDishModal: null,
@@ -41,6 +41,11 @@ export const useCartStore = create(
       toastTimer: null,
       orders: MOCK_ORDERS,
 
+      // Convenience getter for cart alias
+      get cart() {
+        return get().items;
+      },
+
       // Actions
       showToast: (message) => {
         if (get().toastTimer) clearTimeout(get().toastTimer);
@@ -51,29 +56,33 @@ export const useCartStore = create(
         set({ toastTimer: timer });
       },
 
-      addToCart: (dish, quantity = 1, note = '') => {
-        const currentCart = get().cart;
-        const existingIndex = currentCart.findIndex((item) => item.id === dish.id);
-        let newCart;
+      addItem: (dish, quantity = 1, note = '') => {
+        const currentItems = get().items;
+        const existingIndex = currentItems.findIndex((item) => item.id === dish.id);
+        let newItems;
 
         if (existingIndex > -1) {
-          newCart = [...currentCart];
-          newCart[existingIndex] = {
-            ...newCart[existingIndex],
-            quantity: newCart[existingIndex].quantity + quantity,
-            note: note || newCart[existingIndex].note
+          newItems = [...currentItems];
+          newItems[existingIndex] = {
+            ...newItems[existingIndex],
+            quantity: newItems[existingIndex].quantity + quantity,
+            note: note || newItems[existingIndex].note
           };
         } else {
-          newCart = [...currentCart, { ...dish, quantity, note }];
+          newItems = [...currentItems, { ...dish, quantity, note }];
         }
 
-        set({ cart: newCart });
+        set({ items: newItems });
         get().showToast(`Added ${dish.nameEn} to your feast order!`);
       },
 
+      addToCart: (dish, quantity = 1, note = '') => {
+        get().addItem(dish, quantity, note);
+      },
+
       updateQuantity: (id, delta) => {
-        const newCart = get()
-          .cart.map((item) => {
+        const newItems = get()
+          .items.map((item) => {
             if (item.id === id) {
               const newQty = item.quantity + delta;
               return newQty > 0 ? { ...item, quantity: newQty } : null;
@@ -82,15 +91,23 @@ export const useCartStore = create(
           })
           .filter(Boolean);
 
-        set({ cart: newCart });
+        set({ items: newItems });
+      },
+
+      remove: (id) => {
+        set({ items: get().items.filter((item) => item.id !== id) });
       },
 
       removeFromCart: (id) => {
-        set({ cart: get().cart.filter((item) => item.id !== id) });
+        get().remove(id);
+      },
+
+      clear: () => {
+        set({ items: [] });
       },
 
       clearCart: () => {
-        set({ cart: [] });
+        get().clear();
       },
 
       setDiningType: (type) => set({ diningType: type }),
@@ -123,7 +140,7 @@ export const useCartStore = create(
     }),
     {
       name: 'mesob_house_cart_store_v2',
-      partialize: (state) => ({ cart: state.cart, orders: state.orders, diningType: state.diningType })
+      partialize: (state) => ({ items: state.items, orders: state.orders, diningType: state.diningType })
     }
   )
 );
