@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { 
   FiShoppingBag, 
   FiSearch, 
@@ -13,13 +14,16 @@ import {
   FiUser,
   FiLogOut,
   FiChevronDown,
-  FiTruck
+  FiTruck,
+  FiSun,
+  FiMoon
 } from 'react-icons/fi';
 import { GiCoffeePot, GiCookingPot } from 'react-icons/gi';
 
 export default function Header({ searchQuery, setSearchQuery, onNavigate }) {
   const { totalItems, openCart, openReservation, openTracker } = useCart();
   const { user, openAuthModal, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -138,6 +142,16 @@ export default function Header({ searchQuery, setSearchQuery, onNavigate }) {
                 />
               )}
             </div>
+
+            {/* Theme Toggle Button */}
+            <button 
+              className="icon-btn theme-toggle-btn"
+              onClick={toggleTheme}
+              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+              aria-label={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+            >
+              {theme === 'dark' ? <FiSun /> : <FiMoon />}
+            </button>
 
             {/* Track Order Button */}
             <button 
