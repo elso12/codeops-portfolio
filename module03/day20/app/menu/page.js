@@ -1,0 +1,60 @@
+/**
+ * app/menu/page.js - Menu page (Server Component)
+ *
+ * Rendering strategy: ISR (3600 seconds)
+ * The menu is fetched directly on the server without an unnecessary internal API hop.
+ * The dish catalog revalidates every hour to keep availability and prices fresh.
+ *
+ * Server-Client Boundary:
+ * MenuPage is a Server Component that fetches data.
+ * Interactive category selection is handled by CategoryBar (client leaf)
+ * which receives server-rendered dishes as `children`.
+ */
+import { getDishes } from "@/lib/data";
+import CategoryBar from "@/components/CategoryBar";
+import DishCard from "./DishCard";
+import SearchBox from "./SearchBox";
+
+export const revalidate = 3600; // Revalidate every hour
+
+export const metadata = {
+  title: "Menu",
+  description:
+    "Doro Wat, Tibs, Kitfo and Shiro, delivered across Addis Ababa.",
+  alternates: {
+    canonical: "/menu",
+  },
+};
+
+export default async function MenuPage() {
+  const dishes = getDishes();
+
+  return (
+    <main className="container">
+      <div className="section-header-centered">
+        <span className="section-eyebrow">የምግብ ዝርዝር · SACRED RECIPES</span>
+        <h1 className="section-title-large">Authentic Habesha Menu</h1>
+        <p className="section-sub-centered">
+          Every wat and sauté is prepared using stone-ground highland berbere, pure herb-infused niter kibbeh,
+          and naturally fermented 100% teff grain sourdough injera.
+        </p>
+      </div>
+
+      {/* Debounced live search with SWR caching */}
+      <SearchBox />
+
+      {/* CategoryBar receives server-rendered children to preserve RSC boundary */}
+      <CategoryBar>
+        <div className="dish-grid">
+          {dishes.map((dish) => (
+            <DishCard key={dish.id} dish={dish} />
+          ))}
+        </div>
+      </CategoryBar>
+
+      <div className="footer-notice" style={{ marginTop: "3.5rem" }}>
+        <strong>Strategy: ISR (Incremental Static Regeneration)</strong> — Statically generated with 3,600s revalidation. Menu data is loaded directly on the server without client JS overhead.
+      </div>
+    </main>
+  );
+}

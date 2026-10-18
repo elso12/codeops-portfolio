@@ -1,0 +1,17 @@
+{
+  "name": "day20",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "swr": "^2.2.5",
+    "zod": "^4.6.5"
+  }
+}
