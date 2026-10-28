@@ -57,6 +57,14 @@
 └── Layer 2: Client Route API  -> GET /api/orders/:id re-verifies session + returns HTTP 403 if user is not the owner
 ```
 
+### For `/track/[id]` (Live Courier GPS & Real-Time Delivery Tracking)
+```text
+/track/[id]
+├── Layer 1: Edge Middleware  -> Intercepts requests; redirects unauthenticated guests with 307 Redirect to /login?next=/track/:id
+├── Layer 2: Server Page SSR   -> session verified via getSession(); verifies order.userId === user.id || user.role === 'staff'; renders HTTP 403 on ownership mismatch
+└── Layer 3: SSE Route Stream  -> GET /api/orders/:id/stream verifies getSession() (401) + verifies order.userId === user.id || user.role === 'staff' (403) before opening ReadableStream
+```
+
 ---
 
 ## 3. DevTools Cookie Flags Verification
@@ -67,9 +75,10 @@ Inspected directly in DevTools (`Application` → `Storage` → `Cookies`):
 
 | Cookie Name | Value / Format | Domain | Path | Expires / Max-Age | Size | HttpOnly | Secure | SameSite | What it Proves |
 | :--- | :--- | :--- | :--- | :--- | :--- | :---: | :---: | :---: | :--- |
-| `mesob_session` | `<base64urlPayload>.<signature>` | `localhost` / `addiseats.et` | `/` | 86,400s (24h) | ~240 B | **✓ Checked** | **✓ Checked** | **Lax** | JavaScript cannot access token (XSS immune), sent over HTTPS only, CSRF protected. |
+| `mesob_session` | `<base64urlPayload>.<signature>` | `localhost` / `addis-eats.vercel.app` | `/` | 86,400s (24h) | ~240 B | **✓ Checked** | **✓ Checked** | **Lax** | JavaScript cannot access token via `document.cookie` (mitigates credential theft via XSS), sent over HTTPS in production (`Secure`), and protected against cross-site POSTs via `SameSite=Lax` and Server Action origin verification. |
 
----
+> [!NOTE]
+> **Session Revocation Limitation:** Stateless cryptographic tokens avoid database lookups per request. However, early revocation of a single token before its 24-hour expiration requires maintaining a revocation blacklist (e.g. Redis) or rotating the global `SESSION_SECRET` (which invalidates all active sessions). This is documented for Module 4 backend migration.
 
 ## 4. Verifying the Protection: The Three Security Attacks
 

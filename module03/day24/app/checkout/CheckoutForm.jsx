@@ -65,10 +65,13 @@ export default function CheckoutForm({ dishes, preselectedDishId, userName }) {
           Total Amount: <strong style={{ color: "var(--color-paprika)", fontSize: "1.2rem" }}>{state.order.total} {state.order.currency}</strong>
         </p>
         <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
-          <Link href="/orders" className="btn-figma btn-figma--primary" style={{ minHeight: "44px" }}>
-            View My Orders &rarr;
+          <Link href={`/track/${state.order.id}`} className="btn-figma btn-figma--primary" style={{ minHeight: "44px" }}>
+            🛵 Track Live Delivery &rarr;
           </Link>
-          <Link href="/menu" className="btn-figma btn-figma--sand" style={{ minHeight: "44px" }}>
+          <Link href="/orders" className="btn-figma btn-figma--sand" style={{ minHeight: "44px" }}>
+            View My Orders
+          </Link>
+          <Link href="/menu" className="btn-figma btn-figma--outline" style={{ minHeight: "44px" }}>
             Order More Dishes
           </Link>
         </div>

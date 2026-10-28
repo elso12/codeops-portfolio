@@ -2,11 +2,13 @@
   "name": "day24-frontend-capstone",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "echo No lint errors"
+    "lint": "echo No lint errors",
+    "test": "node scripts/test-hardening.mjs && node scripts/test-csv.mjs && node scripts/test-security-auth.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

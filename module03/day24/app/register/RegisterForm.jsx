@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signUp } from "@/app/actions";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -14,24 +15,46 @@ export default function RegisterForm() {
   });
   const [loading, setLoading] = useState(false);
   const submittingRef = useRef(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [success, setSuccess] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrorMessage("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (submittingRef.current || loading) return;
     submittingRef.current = true;
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    setErrorMessage("");
+
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("email", formData.email);
+    data.append("phone", formData.phone);
+    data.append("password", formData.password);
+
+    try {
+      const res = await signUp(null, data);
+      if (!res.ok) {
+        setErrorMessage(res.error || "Registration failed.");
+        setLoading(false);
+        submittingRef.current = false;
+        return;
+      }
+
       setSuccess(true);
       setTimeout(() => {
-        router.push("/orders");
-      }, 1000);
-    }, 600);
+        router.push(res.redirectTo || "/orders");
+        router.refresh();
+      }, 600);
+    } catch (err) {
+      setErrorMessage("Network error or failed request.");
+      setLoading(false);
+      submittingRef.current = false;
+    }
   };
 
   return (
@@ -43,6 +66,21 @@ export default function RegisterForm() {
           Create an account to order authentic Habesha dishes, reserve mesobs, and earn reward discounts.
         </p>
       </div>
+
+      {errorMessage && (
+        <div style={{
+          background: "rgba(220, 38, 38, 0.1)",
+          border: "1px solid #dc2626",
+          color: "#dc2626",
+          padding: "0.75rem 1rem",
+          borderRadius: "var(--radius-sm)",
+          marginBottom: "1.25rem",
+          fontSize: "0.88rem",
+          fontWeight: 600,
+        }}>
+          ⚠️ {errorMessage}
+        </div>
+      )}
 
       {success && (
         <div style={{
@@ -56,7 +94,7 @@ export default function RegisterForm() {
           fontWeight: 600,
           textAlign: "center"
         }}>
-          ✓ Account created successfully! Welcome to Mesob House.
+          ✓ Account created successfully! Logging you in...
         </div>
       )}
 

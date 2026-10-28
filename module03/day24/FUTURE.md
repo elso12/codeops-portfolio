@@ -22,7 +22,7 @@ To protect the non-negotiable **Verification Battery, Security Auditing, Perform
 | Priority | Feature / Scope Item | Status | Justification / Impact |
 | :--- | :--- | :---: | :--- |
 | **MUST** | Cryptographic HMAC session authentication (`mesob_session` cookie) | **SHIPPED** | Fundamental boundary. Essential for user identity and multi-tier protection. |
-| **MUST** | Edge Middleware route guard (`/checkout`, `/orders`, `/kitchen`, `/dashboard`) | **SHIPPED** | First line of defense before SSR execution begins. |
+| **MUST** | Edge Middleware route guard (`/checkout`, `/orders`, `/kitchen`, `/dashboard`, `/track`) | **SHIPPED** | First line of defense before SSR execution begins. |
 | **MUST** | Complete End-to-End Main Order Flow (Menu → Cart → Checkout → Confirmation) | **SHIPPED** | The core business purpose of the application. |
 | **MUST** | Zero-Trust Server Actions (`placeOrder`, `cancelOrder`, `updateKitchenStatus`) | **SHIPPED** | Data security boundary; refuses unsigned and cross-tenant writes. |
 | **MUST** | Three Security Attacks Refusal & Line-Level Proofs | **SHIPPED** | Mandatory rubric requirement (20% grade weight). |

@@ -38,5 +38,7 @@ export const config = {
     "/kitchen/:path*",
     "/dashboard",
     "/dashboard/:path*",
+    "/track",
+    "/track/:path*",
   ],
 };

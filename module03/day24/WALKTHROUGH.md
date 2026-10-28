@@ -5,7 +5,7 @@
 > **Module 3:** Frontend: React & Next.js · Day 49 (Week 10 Capstone)  
 > **Course Director:** Mehran Dasgar  
 > **Presenter:** Mehran Dasgar  
-> **Live URL:** [https://addiseats.et](https://addiseats.et) *(or local production at `http://localhost:3000`)*
+> **Deployment:** Local Production Server at `http://localhost:3000` *(built via `npm run build && npm run start`)*
 
 ---
 
@@ -30,7 +30,7 @@ Use a timer on your phone and stick strictly to these blocks:
 ---
 
 ### [1:00 – 3:00] Step 2: The Main Flow (Live, from the Deployed URL)
-* **Action:** Open your browser to the live site at `https://addiseats.et` (or `http://localhost:3000`).
+* **Action:** Open your browser to the local production site at `http://localhost:3000`.
 * **What to demonstrate:**
   1. **Public Catalog (`/menu`):** Click the "Wats" category pill. Type `"doro"` in the search input — demonstrate that the cards filter dynamically without screen flickering (`keepPreviousData: true`).
   2. **Dish Detail (`/menu/doro-wat`):** Click into Doro Wat. Highlight the server-rendered structured data, nutritional profile, and crisp AVIF image.

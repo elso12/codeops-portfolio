@@ -19,6 +19,7 @@ import {
   cancelOrderById,
   updateOrderStatusById,
   authenticateUser,
+  registerUser,
 } from "@/lib/data";
 import {
   getSession,
@@ -27,6 +28,40 @@ import {
   SESSION_COOKIE_NAME,
   sanitizeNextUrl,
 } from "@/lib/session";
+
+/**
+ * Sign up action (Brand-new account registration)
+ * Validates credentials, creates user record, and issues cryptographic session cookie.
+ */
+export async function signUp(prevState, formData) {
+  const name = formData.get("name");
+  const email = formData.get("email");
+  const phone = formData.get("phone");
+  const password = formData.get("password");
+
+  if (!name || !email || !password) {
+    return { ok: false, error: "Please fill in your name, email, and password." };
+  }
+
+  if (password.length < 6) {
+    return { ok: false, error: "Password must be at least 6 characters long." };
+  }
+
+  try {
+    const user = registerUser({ name, email, phone, password });
+    const token = await createSessionToken(user);
+    const cookieStore = await cookies();
+    cookieStore.set({
+      ...SESSION_COOKIE_OPTIONS,
+      value: token,
+    });
+
+    revalidatePath("/", "layout");
+    return { ok: true, redirectTo: "/orders" };
+  } catch (err) {
+    return { ok: false, error: err.message || "Failed to create account. Please try again." };
+  }
+}
 
 /**
  * Sign in action
@@ -42,7 +77,7 @@ export async function signIn(prevState, formData) {
     return { ok: false, error: "Please provide both email and password." };
   }
 
-  const user = authenticateUser(email, password);
+  const user = await authenticateUser(email, password);
   if (!user) {
     return { ok: false, error: "Invalid email or password. Please try again." };
   }

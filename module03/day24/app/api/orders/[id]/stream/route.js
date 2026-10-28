@@ -11,6 +11,7 @@
  */
 
 import { getOrderById } from "@/lib/data";
+import { getSession } from "@/lib/session";
 
 // Area coordinates across Addis Ababa [lat, lng]
 const AREA_COORDINATES = {
@@ -33,12 +34,34 @@ const RESTAURANT_LOCATION = {
 export const dynamic = "force-dynamic";
 
 export async function GET(request, { params }) {
+  // 1. Authentication Layer: Verify session cookie
+  const user = await getSession();
+  if (!user) {
+    return Response.json({ error: "Not signed in" }, { status: 401 });
+  }
+
   const resolvedParams = await Promise.resolve(params);
   const orderId = resolvedParams?.id;
 
+  // 2. Existence Check
   const order = getOrderById(orderId);
+  if (!order) {
+    return Response.json(
+      { error: "Not found", detail: `No order with id "${orderId}"` },
+      { status: 404 }
+    );
+  }
+
+  // 3. Authorization Layer: Enforce record ownership or staff role (Anti-IDOR)
+  if (order.userId !== user.id && user.role !== "staff") {
+    return Response.json(
+      { error: "Forbidden", detail: "You do not have permission to track this order." },
+      { status: 403 }
+    );
+  }
+
   const destinationCoord =
-    (order && AREA_COORDINATES[order.area]) || [8.9950, 38.7896];
+    AREA_COORDINATES[order.area] || [8.9950, 38.7896];
 
   const destination = {
     name: order?.customerName || "Customer Destination",

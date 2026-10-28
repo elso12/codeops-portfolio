@@ -6,8 +6,10 @@
  * Handed over to <TrackingClient> to attach the live SSE stream via EventSource.
  */
 
-import { getOrderById, getAllOrders } from "@/lib/data";
-import { notFound } from "next/navigation";
+import { getOrderById } from "@/lib/data";
+import { getSession } from "@/lib/session";
+import { notFound, redirect } from "next/navigation";
+import Link from "next/link";
 import TrackingClient from "./TrackingClient";
 
 export const dynamic = "force-dynamic";
@@ -22,14 +24,50 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function TrackOrderPage({ params }) {
+  // 1. Authentication Layer: Verify session cookie at render time
+  const user = await getSession();
   const resolvedParams = await Promise.resolve(params);
   const id = resolvedParams?.id || "ord_001";
 
+  if (!user) {
+    redirect(`/login?next=/track/${id}`);
+  }
+
   const order = getOrderById(id);
-  const allOrders = getAllOrders();
 
   if (!order) {
     notFound();
+  }
+
+  // 2. Authorization Layer: Enforce order ownership (anti-IDOR)
+  if (order.userId !== user.id && user.role !== "staff") {
+    return (
+      <main className="container" style={{ maxWidth: 840, padding: "4rem 1rem", textAlign: "center" }}>
+        <div style={{
+          background: "rgba(224, 86, 36, 0.08)",
+          border: "2px solid var(--color-paprika)",
+          borderRadius: "var(--radius-md)",
+          padding: "3rem 2rem",
+          margin: "2rem auto"
+        }}>
+          <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🔒</div>
+          <h1 style={{ color: "var(--color-paprika)", fontFamily: "var(--font-serif)", fontSize: "2rem", marginBottom: "0.5rem" }}>
+            Access Restricted (HTTP 403)
+          </h1>
+          <p style={{ color: "var(--text-muted)", fontSize: "1.05rem", marginBottom: "1.5rem" }}>
+            You do not have permission to view delivery tracking for order <strong>{id}</strong>.
+          </p>
+          <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+            <Link href="/orders" className="btn-figma btn-figma--primary" style={{ minHeight: "44px" }}>
+              Back to My Orders
+            </Link>
+            <Link href="/menu" className="btn-figma btn-figma--outline" style={{ minHeight: "44px" }}>
+              View Menu
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
   }
 
   // Pre-seed initial state matching the server stream starting point
@@ -78,7 +116,7 @@ export default async function TrackOrderPage({ params }) {
 
   return (
     <main style={{ minHeight: "85vh", paddingBottom: "3rem" }}>
-      <TrackingClient id={id} initialData={initialData} initialHistory={allOrders} />
+      <TrackingClient id={id} initialData={initialData} />
     </main>
   );
 }

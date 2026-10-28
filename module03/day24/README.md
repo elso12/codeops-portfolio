@@ -6,15 +6,15 @@
 
 ---
 
-## 🚀 Live Production & Deployment Deliverable
+## 🚀 Deployment & Local Production Verification
 
-* **Production URL:** [https://addis-eats.vercel.app](https://addis-eats.vercel.app)
-* **Preview Deployment:** `https://addis-eats-git-preview.vercel.app`
-* **Local Reproduction:**
+* **Verified Local Production:** `http://localhost:3000`
   ```bash
   npm run build
   npm run start
   ```
+* **Target Cloud Deployment:** `https://addis-eats.vercel.app` *(Target Vercel domain; requires connecting repo & configuring `SESSION_SECRET` in Vercel environment settings)*
+* **Architecture Note:** All functional, performance, and security benchmarks documented herein were verified against the local production server build. The application uses an in-memory data store for Module 3 assessment; persistent database storage is planned for Module 4.
 
 ---
 

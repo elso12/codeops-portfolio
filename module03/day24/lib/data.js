@@ -67,34 +67,34 @@ export const dishes = [
   },
 ];
 
-/** Mock user accounts with distinct roles */
+/** Mock user accounts with distinct roles — passwords stored as modular PBKDF2-SHA256 salted hashes */
 export const users = [
   {
     id: "user_abebe_001",
     name: "Abebe Kebede",
     email: "abebe@mesobhouse.et",
-    password: "customer123",
+    passwordHash: "$pbkdf2-sha256$i=210000$1f870d9d238ac87535db5550fdd2c3a9$ae08825fcc9f2ad135fd31ce7c5f448c80cece6a0b4644ccb02b1413efa7f4b8",
     role: "customer",
   },
   {
     id: "user_chala_002",
     name: "Chala Tadesse",
     email: "chala@mesobhouse.et",
-    password: "customer123",
+    passwordHash: "$pbkdf2-sha256$i=210000$25904cde90bc6f86bb4674c61805ff1c$54c8486c6f7503d3e3f8e6e935ef3e71f447652cd1106eb97e19de04cf6ef071",
     role: "customer",
   },
   {
     id: "staff_tigist_001",
     name: "Chef Tigist Mengistu",
     email: "chef@mesobhouse.et",
-    password: "kitchen123",
+    passwordHash: "$pbkdf2-sha256$i=210000$57034f1f9460b42338373b1a7205df04$13e7ddf0abb8488be13351e1c8808b0ea01a4066fb25878036ea8af8ed6cc7c7",
     role: "staff",
   },
   {
     id: "user_sara_003",
     name: "Sara Haile",
     email: "sara@mesobhouse.et",
-    password: "customer123",
+    passwordHash: "$pbkdf2-sha256$i=210000$b8ab8b83ba04153c19634ec49e37a22b$5c212d30e8d768649102edc0767ea802ca7de3e0cea570febb6b379c636899fe",
     role: "customer",
   },
 ];
@@ -461,19 +461,117 @@ export function searchDishes(q, category) {
   );
 }
 
+export const DEFAULT_PBKDF2_ITERATIONS = 210000;
+
 /**
- * Authentication lookup
+ * Derives a PBKDF2-SHA256 password hash in Modular Crypt Format
+ * @param {string} password
+ * @param {{ salt?: string | Uint8Array, iterations?: number }} [options]
+ * @returns {Promise<string>} Format: "$pbkdf2-sha256$i=<iterations>$<saltHex>$<hashHex>"
+ */
+export async function hashPassword(
+  password,
+  { salt = null, iterations = DEFAULT_PBKDF2_ITERATIONS } = {}
+) {
+  const enc = new TextEncoder();
+  let saltBytes;
+  let saltHex;
+
+  if (salt) {
+    if (typeof salt === "string") {
+      saltHex = salt;
+      const bytes = new Uint8Array(saltHex.length / 2);
+      for (let i = 0; i < bytes.length; i++) {
+        bytes[i] = parseInt(saltHex.substr(i * 2, 2), 16);
+      }
+      saltBytes = bytes;
+    } else {
+      saltBytes = salt;
+      saltHex = Array.from(saltBytes).map((b) => b.toString(16).padStart(2, "0")).join("");
+    }
+  } else {
+    saltBytes = crypto.getRandomValues(new Uint8Array(16));
+    saltHex = Array.from(saltBytes).map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(password),
+    { name: "PBKDF2" },
+    false,
+    ["deriveBits"]
+  );
+
+  const derivedBits = await crypto.subtle.deriveBits(
+    {
+      name: "PBKDF2",
+      salt: saltBytes,
+      iterations,
+      hash: "SHA-256",
+    },
+    keyMaterial,
+    256
+  );
+
+  const hashHex = Array.from(new Uint8Array(derivedBits))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  return `$pbkdf2-sha256$i=${iterations}$${saltHex}$${hashHex}`;
+}
+
+/**
+ * Verifies a candidate password against a stored PBKDF2 hash (modular format or legacy)
+ * @param {string} password
+ * @param {string} storedHash
+ * @returns {Promise<boolean>}
+ */
+export async function verifyPassword(password, storedHash) {
+  if (!storedHash || typeof storedHash !== "string") {
+    return false;
+  }
+
+  // Format 1: Modular Crypt Format ($pbkdf2-sha256$i=...$salt$hash)
+  if (storedHash.startsWith("$pbkdf2-sha256$")) {
+    const parts = storedHash.split("$").filter(Boolean);
+    if (parts.length !== 4) return false;
+    const [, iterStr, saltHex, expectedHashHex] = parts;
+    const iterMatch = iterStr.match(/^i=(\d+)$/);
+    if (!iterMatch) return false;
+    const iterations = parseInt(iterMatch[1], 10);
+    if (isNaN(iterations) || iterations <= 0) return false;
+
+    const computed = await hashPassword(password, { salt: saltHex, iterations });
+    return computed === storedHash;
+  }
+
+  // Format 2: Backward-compatible legacy format (<saltHex>:<hashHex> at 10000 iters)
+  if (storedHash.includes(":")) {
+    const [saltHex, expectedHash] = storedHash.split(":");
+    if (!saltHex || !expectedHash) return false;
+    const computed = await hashPassword(password, { salt: saltHex, iterations: 10000 });
+    const computedHashHex = computed.split("$")[4];
+    return computedHashHex === expectedHash;
+  }
+
+  return false;
+}
+
+/**
+ * Authentication lookup with cryptographic PBKDF2 hash verification
  * @param {string} email
  * @param {string} password
  */
-export function authenticateUser(email, password) {
+export async function authenticateUser(email, password) {
   const normalizedEmail = (email || "").trim().toLowerCase();
-  const user = users.find(
-    (u) => u.email.toLowerCase() === normalizedEmail && u.password === password
-  );
-  if (!user) return null;
-  // Strip password from returned session object
-  const { password: _, ...safeUser } = user;
+  const user = users.find((u) => u.email.toLowerCase() === normalizedEmail);
+  if (!user || !user.passwordHash) return null;
+
+  const isValid = await verifyPassword(password, user.passwordHash);
+  if (!isValid) return null;
+
+  // Strip password hash from returned session object
+  const { passwordHash: _, ...safeUser } = user;
   return safeUser;
 }
 
@@ -481,7 +579,34 @@ export function authenticateUser(email, password) {
 export function findUserById(id) {
   const user = users.find((u) => u.id === id);
   if (!user) return null;
-  const { password: _, ...safeUser } = user;
+  const { passwordHash: _, ...safeUser } = user;
+  return safeUser;
+}
+
+/**
+ * Register a brand-new user account with PBKDF2 password hashing
+ * @param {{ name: string, email: string, phone?: string, password: string }} param0
+ */
+export async function registerUser({ name, email, phone, password }) {
+  const normalizedEmail = (email || "").trim().toLowerCase();
+  const existing = users.find((u) => u.email.toLowerCase() === normalizedEmail);
+  if (existing) {
+    throw new Error("An account with this email address already exists.");
+  }
+
+  // Hash password with unique salt prior to persistence
+  const passwordHash = await hashPassword(password);
+
+  const newUser = {
+    id: `user_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+    name: (name || "").trim(),
+    email: normalizedEmail,
+    phone: (phone || "").trim(),
+    passwordHash,
+    role: "customer",
+  };
+  users.push(newUser);
+  const { passwordHash: _, ...safeUser } = newUser;
   return safeUser;
 }
 
