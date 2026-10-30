@@ -162,6 +162,32 @@ export async function placeOrder(prevState, formData) {
   try {
     const order = createOrder(result.data, user.id);
 
+    // Persist active order in cookie for Vercel serverless cross-lambda persistence
+    try {
+      const cookieStore = await cookies();
+      cookieStore.set("mesob_active_order", JSON.stringify({
+        id: order.id,
+        userId: user.id,
+        dishId: result.data.dishId,
+        quantity: result.data.quantity,
+        customerName: result.data.name,
+        phone: result.data.phone,
+        area: result.data.area,
+        notes: result.data.notes || "",
+        paymentMethod: result.data.paymentMethod || "telebirr",
+        total: order.total,
+        currency: order.currency,
+        status: "pending",
+        createdAt: order.createdAt,
+      }), {
+        path: "/",
+        maxAge: 3600,
+        sameSite: "lax",
+      });
+    } catch (e) {
+      console.warn("Could not set active order cookie:", e);
+    }
+
     // 5. Invalidate cached views
     revalidatePath("/orders");
     revalidatePath("/kitchen");

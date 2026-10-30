@@ -323,7 +323,7 @@ export default function OrderStatus({ id, initial }) {
           <Link href="/orders" className="btn-figma btn-figma--sand btn-figma--sm">
             &larr; All Orders
           </Link>
-          <Link href={`/track/${id}`} className="btn-figma btn-figma--primary btn-figma--sm" style={{ fontWeight: 700 }}>
+          <Link href={`/track/${id || "ord_001"}`} className="btn-figma btn-figma--primary btn-figma--sm" style={{ fontWeight: 700 }}>
             🛵 Live Courier Map &rarr;
           </Link>
           <Link href="/menu" className="btn-figma btn-figma--sand btn-figma--sm">

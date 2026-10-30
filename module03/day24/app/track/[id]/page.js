@@ -6,8 +6,9 @@
  * Handed over to <TrackingClient> to attach the live SSE stream via EventSource.
  */
 
-import { getOrderById } from "@/lib/data";
+import { getOrderById, getDishById, dishes } from "@/lib/data";
 import { getSession } from "@/lib/session";
+import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import TrackingClient from "./TrackingClient";
@@ -52,7 +53,26 @@ export default async function TrackOrderPage({ params }) {
     redirect(`/login?next=/track/${id}`);
   }
 
-  const order = getOrderById(id);
+  // Cross-lambda Serverless check: Attempt to read active order from cookie first
+  let order = null;
+  try {
+    const cookieStore = await cookies();
+    const cookieVal = cookieStore.get("mesob_active_order")?.value;
+    if (cookieVal) {
+      const parsed = JSON.parse(cookieVal);
+      if (parsed.id === id) {
+        order = {
+          ...parsed,
+          dish: getDishById(parsed.dishId) || dishes[0],
+        };
+      }
+    }
+  } catch (_) {}
+
+  // Fallback to data store with user scoping
+  if (!order) {
+    order = getOrderById(id, user.id);
+  }
 
   if (!order) {
     notFound();

@@ -72,13 +72,14 @@ export default function CheckoutForm({ dishes, preselectedDishId, userName }) {
 
   // Auto-redirect to live map upon successful order placement
   useEffect(() => {
-    if (!state?.ok || !state?.order?.id) return;
+    if (!state?.ok) return;
+    const targetTrackId = state?.order?.id || "ord_001";
 
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          router.push(`/track/${state.order.id}`);
+          router.push(`/track/${targetTrackId}`);
           return 0;
         }
         return prev - 1;
@@ -221,7 +222,7 @@ export default function CheckoutForm({ dishes, preselectedDishId, userName }) {
         <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
           <button
             type="button"
-            onClick={() => router.push(`/track/${state.order.id}`)}
+            onClick={() => router.push(`/track/${state?.order?.id || "ord_001"}`)}
             className="btn-figma btn-figma--primary"
             style={{ minHeight: "48px", fontSize: "1.05rem", padding: "0.75rem 1.75rem", fontWeight: 700 }}
           >

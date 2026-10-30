@@ -13,7 +13,7 @@ export async function GET(request, { params }) {
   }
 
   const { id } = await params;
-  const order = getOrderById(id);
+  const order = getOrderById(id, user.id);
 
   if (!order) {
     return Response.json(
@@ -37,7 +37,7 @@ export async function PATCH(request, { params }) {
   }
 
   const { id } = await params;
-  const order = getOrderById(id);
+  const order = getOrderById(id, user.id);
 
   if (!order) {
     return Response.json({ error: "Not found" }, { status: 404 });

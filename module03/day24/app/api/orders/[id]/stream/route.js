@@ -51,7 +51,7 @@ export async function GET(request, { params }) {
   const orderId = resolvedParams?.id;
 
   // 2. Existence Check
-  const order = getOrderById(orderId);
+  const order = getOrderById(orderId, user.id);
   if (!order) {
     return Response.json(
       { error: "Not found", detail: `No order with id "${orderId}"` },
