@@ -80,26 +80,39 @@ export default function TrackingClient({ id, initialData, initialHistory = [] })
     }
   };
 
-  // Reconnect stream handler
-  const handleReconnect = () => {
+  // Reconnect / Re-simulate stream handler
+  const handleReconnect = (forceReset = false) => {
     if (eventSourceRef.current) {
       eventSourceRef.current.close();
     }
-    const es = new EventSource(`/api/orders/${encodeURIComponent(id)}/stream`);
+    const query = forceReset ? "?reset=true" : "";
+    const es = new EventSource(`/api/orders/${encodeURIComponent(id)}/stream${query}`);
     eventSourceRef.current = es;
     setConnectionState("connecting");
 
     es.onopen = () => setConnectionState("live");
     es.onmessage = (event) => {
-      const payload = JSON.parse(event.data);
-      setData(payload);
-      setLastHeartbeat(new Date());
-      if (payload.status === "delivered") {
-        es.close();
-        setConnectionState("delivered");
+      try {
+        const payload = JSON.parse(event.data);
+        setData(payload);
+        setLastHeartbeat(new Date());
+        if (payload.status === "delivered") {
+          es.close();
+          setConnectionState("delivered");
+        } else {
+          setConnectionState("live");
+        }
+      } catch (err) {
+        console.error("Failed to parse SSE payload:", err);
       }
     };
-    es.onerror = () => setConnectionState("error");
+    es.onerror = () => {
+      if (es.readyState === EventSource.CLOSED) {
+        setConnectionState("closed");
+      } else {
+        setConnectionState("error");
+      }
+    };
   };
 
   // CSV Export handler with awkward values test
@@ -312,24 +325,25 @@ export default function TrackingClient({ id, initialData, initialHistory = [] })
           ) : (
             <button
               type="button"
-              onClick={handleReconnect}
+              onClick={() => handleReconnect(true)}
               style={{
                 padding: "10px 18px",
                 minHeight: "44px",
                 display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: "rgba(16, 185, 129, 0.15)",
-                color: "#6ee7b7",
-                border: "1px solid rgba(16, 185, 129, 0.3)",
+                backgroundColor: "rgba(245, 158, 11, 0.18)",
+                color: "#fbbf24",
+                border: "1px solid rgba(245, 158, 11, 0.4)",
                 borderRadius: "10px",
                 fontSize: "0.85rem",
                 cursor: "pointer",
-                fontWeight: 500,
+                fontWeight: 600,
                 transition: "all 0.2s",
               }}
+              title="Re-run the motorcycle delivery simulation from the beginning"
             >
-              ↻ Reconnect Stream
+              🔄 Re-simulate Delivery Journey
             </button>
           )}
 

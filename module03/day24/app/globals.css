@@ -1875,3 +1875,11 @@ button:disabled,
   pointer-events: none;
 }
 
+/* Leaflet Custom Marker Clean Reset */
+.leaflet-div-icon,
+.custom-leaflet-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+

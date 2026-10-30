@@ -78,6 +78,10 @@ export async function GET(request, { params }) {
     notes: order?.notes || "Fragile — handle with care",
   };
 
+  const url = new URL(request.url);
+  const forceSimulate =
+    url.searchParams.get("simulate") === "true" || url.searchParams.get("reset") === "true";
+
   // Pre-calculate trajectory interpolation between Restaurant and Destination
   const totalSteps = 6;
   const startLat = RESTAURANT_LOCATION.position[0];
@@ -85,7 +89,8 @@ export async function GET(request, { params }) {
   const destLat = destination.position[0];
   const destLng = destination.position[1];
 
-  let currentStep = 0;
+  let currentStep =
+    !forceSimulate && (order.status === "completed" || order.status === "delivered") ? 5 : 0;
   let intervalId = null;
 
   const stream = new ReadableStream({
@@ -151,10 +156,11 @@ export async function GET(request, { params }) {
           orderSummary: {
             id: order?.id || orderId,
             dishName: order?.dish?.name || "Traditional Mesob Selection",
-            quantity: order?.quantity || 2,
+            quantity: order?.quantity || 1,
             total: order?.total || 360,
             currency: order?.currency || "ETB",
             area: order?.area || "Bole Rwanda",
+            paymentMethod: order?.paymentMethod || "telebirr",
             createdAt: order?.createdAt || now.toISOString(),
           },
         };
@@ -162,6 +168,14 @@ export async function GET(request, { params }) {
 
       // 1. Immediately seed the stream with initial status
       send(getPayloadForStep(currentStep));
+
+      // If already delivered and not simulating, close cleanly
+      if (currentStep >= totalSteps - 1) {
+        try {
+          controller.close();
+        } catch (_) {}
+        return;
+      }
 
       // 2. Stream subsequent updates every 3.5 seconds
       intervalId = setInterval(() => {
