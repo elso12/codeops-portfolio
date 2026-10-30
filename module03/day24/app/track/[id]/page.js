@@ -12,6 +12,25 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import TrackingClient from "./TrackingClient";
 
+// Area coordinates across Addis Ababa [lat, lng]
+const AREA_COORDINATES = {
+  "Bole Rwanda": [8.9950, 38.7896],
+  "Bole": [8.9980, 38.7860],
+  "Kazanchis": [9.0105, 38.7615],
+  "Piassa": [9.0350, 38.7520],
+  "Sarbet": [9.0020, 38.7350],
+  "Mexico": [9.0120, 38.7450],
+  "Old Airport": [8.9880, 38.7410],
+  "CMC": [9.0230, 38.8350],
+  "Merkato": [9.0310, 38.7390],
+  "Lideta": [9.0150, 38.7380],
+  "Yeka": [9.0310, 38.7950],
+  "Nifas Silk": [8.9680, 38.7510],
+  "Kolfe": [9.0220, 38.7180],
+  "Gulele": [9.0620, 38.7480],
+  "Addis Ketema": [9.0360, 38.7360],
+};
+
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
@@ -92,7 +111,7 @@ export default async function TrackOrderPage({ params }) {
     destination: {
       name: order.customerName || "Customer Destination",
       area: order.area || "Bole Rwanda",
-      position: [8.9950, 38.7896],
+      position: AREA_COORDINATES[order.area] || [8.9950, 38.7896],
       address: order.address || `${order.area || "Bole Rwanda"}, House 42`,
       notes: order.notes || "Fragile — handle with care",
     },
@@ -110,6 +129,7 @@ export default async function TrackOrderPage({ params }) {
       total: order.total || 360,
       currency: order.currency || "ETB",
       area: order.area || "Bole Rwanda",
+      paymentMethod: order.paymentMethod || "telebirr",
       createdAt: order.createdAt || now.toISOString(),
     },
   };

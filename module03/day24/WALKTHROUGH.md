@@ -35,8 +35,8 @@ Use a timer on your phone and stick strictly to these blocks:
   1. **Public Catalog (`/menu`):** Click the "Wats" category pill. Type `"doro"` in the search input — demonstrate that the cards filter dynamically without screen flickering (`keepPreviousData: true`).
   2. **Dish Detail (`/menu/doro-wat`):** Click into Doro Wat. Highlight the server-rendered structured data, nutritional profile, and crisp AVIF image.
   3. **Cart & Basket (`/cart`):** Click *"Add to Mesob Basket"*. Open the cart, bump the quantity to 2, and review the reactive ETB total calculation.
-  4. **Checkout (`/checkout`):** Click *"Proceed to Checkout"*. Show that guests are redirected to `/login?next=/checkout`. Sign in with 1-click test credentials as **Abebe**. Complete the checkout with delivery area `"Bole Rwanda"`.
-  5. **Live Confirmation & GPS Map (`/track/[id]`):** Observe the immediate transition to the live tracking page. Point out that the initial map and milestone coordinates appear on the very first frame with **zero loading spinner (0ms)**, followed by real-time courier motorcycle position streaming via Server-Sent Events (SSE).
+  4. **Checkout (`/checkout`):** Click *"Proceed to Checkout"*. Show that guests are redirected to `/login?next=/checkout`. Sign in with 1-click test credentials as **Abebe**. Select **Telebirr (ቴሌብር)** or **Cash on Delivery** under Payment Methods and delivery area `"Bole Rwanda"`. Click *"Confirm & Place Order"*.
+  5. **Live Confirmation & GPS Map (`/track/[id]`):** Observe the immediate 3-second auto-transition to the live GPS tracking page (or click *"🛵 Track Live on Map Now"*). Point out that the initial map and milestone coordinates appear on the very first frame with **zero loading spinner (0ms)**, displaying verified Telebirr payment settlement and real-time courier motorcycle position streaming along Addis Ababa roads via Server-Sent Events (SSE).
 
 ---
 

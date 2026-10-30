@@ -629,6 +629,7 @@ export function createOrder(data, userId) {
     phone: data.phone,
     area: data.area,
     notes: data.notes ?? "",
+    paymentMethod: data.paymentMethod || "telebirr",
     status: "pending",
     createdAt: new Date().toISOString(),
   };

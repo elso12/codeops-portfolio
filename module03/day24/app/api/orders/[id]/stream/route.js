@@ -23,6 +23,13 @@ const AREA_COORDINATES = {
   "Mexico": [9.0120, 38.7450],
   "Old Airport": [8.9880, 38.7410],
   "CMC": [9.0230, 38.8350],
+  "Merkato": [9.0310, 38.7390],
+  "Lideta": [9.0150, 38.7380],
+  "Yeka": [9.0310, 38.7950],
+  "Nifas Silk": [8.9680, 38.7510],
+  "Kolfe": [9.0220, 38.7180],
+  "Gulele": [9.0620, 38.7480],
+  "Addis Ketema": [9.0360, 38.7360],
 };
 
 const RESTAURANT_LOCATION = {

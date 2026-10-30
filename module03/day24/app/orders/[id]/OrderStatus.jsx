@@ -286,6 +286,26 @@ export default function OrderStatus({ id, initial }) {
           <strong style={{ fontSize: "1.5rem", color: "var(--color-paprika)" }}>
             {currentOrder.total} {currentOrder.currency}
           </strong>
+          <span
+            style={{
+              display: "inline-block",
+              marginTop: "0.25rem",
+              fontSize: "0.75rem",
+              padding: "2px 8px",
+              borderRadius: "4px",
+              backgroundColor: "rgba(255, 255, 255, 0.08)",
+              color: "var(--text-main)",
+              fontWeight: 600,
+            }}
+          >
+            {currentOrder.paymentMethod === "cash_on_delivery"
+              ? "💵 Cash on Delivery"
+              : currentOrder.paymentMethod === "cbe_birr"
+              ? "🏦 CBE Birr"
+              : currentOrder.paymentMethod === "chapa"
+              ? "💳 Chapa Card"
+              : "📱 Telebirr"}
+          </span>
         </div>
       </div>
 
@@ -302,6 +322,9 @@ export default function OrderStatus({ id, initial }) {
         <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
           <Link href="/orders" className="btn-figma btn-figma--sand btn-figma--sm">
             &larr; All Orders
+          </Link>
+          <Link href={`/track/${id}`} className="btn-figma btn-figma--primary btn-figma--sm" style={{ fontWeight: 700 }}>
+            🛵 Live Courier Map &rarr;
           </Link>
           <Link href="/menu" className="btn-figma btn-figma--sand btn-figma--sm">
             Browse Menu

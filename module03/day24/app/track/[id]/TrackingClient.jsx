@@ -6,6 +6,13 @@ import MapPanel from "./MapPanel";
 import { etb, when, formatRelativeTime } from "@/lib/format";
 import { toCsv, downloadCsv } from "@/lib/csv";
 
+const PAYMENT_LABELS = {
+  telebirr: { title: "Telebirr (ቴሌብር)", icon: "📱", status: "Settled & Verified" },
+  cbe_birr: { title: "CBE Birr (የኢትዮጵያ ንግድ ባንክ)", icon: "🏦", status: "Settled & Verified" },
+  cash_on_delivery: { title: "Cash on Delivery (ጥሬ ገንዘብ)", icon: "💵", status: "Due Upon Arrival" },
+  chapa: { title: "Chapa / Card", icon: "💳", status: "Settled & Verified" },
+};
+
 export default function TrackingClient({ id, initialData, initialHistory = [] }) {
   // 1. Seeded from server render — zero spinner on arrival (Slide 13)
   const [data, setData] = useState(initialData);
@@ -619,7 +626,7 @@ export default function TrackingClient({ id, initialData, initialHistory = [] })
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", borderBottom: "1px solid rgba(255, 255, 255, 0.04)", paddingBottom: "8px" }}>
               <div>
                 <dt style={{ color: "#64748b", fontSize: "0.8rem", textTransform: "uppercase" }}>
                   Items Ordered
@@ -630,10 +637,36 @@ export default function TrackingClient({ id, initialData, initialHistory = [] })
               </div>
               <div>
                 <dt style={{ color: "#64748b", fontSize: "0.8rem", textTransform: "uppercase" }}>
-                  Total Paid
+                  Total Bill
                 </dt>
                 <dd style={{ margin: "4px 0 0", color: "#10b981", fontWeight: 700 }}>
                   {etb.format(data.orderSummary.total)}
+                </dd>
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+              <div>
+                <dt style={{ color: "#64748b", fontSize: "0.8rem", textTransform: "uppercase" }}>
+                  Payment Method
+                </dt>
+                <dd style={{ margin: "4px 0 0", color: "#f8fafc", fontWeight: 600 }}>
+                  {(PAYMENT_LABELS[data.orderSummary.paymentMethod] || PAYMENT_LABELS.telebirr).icon}{" "}
+                  {(PAYMENT_LABELS[data.orderSummary.paymentMethod] || PAYMENT_LABELS.telebirr).title}
+                </dd>
+              </div>
+              <div>
+                <dt style={{ color: "#64748b", fontSize: "0.8rem", textTransform: "uppercase" }}>
+                  Payment Status
+                </dt>
+                <dd
+                  style={{
+                    margin: "4px 0 0",
+                    color: data.orderSummary.paymentMethod === "cash_on_delivery" ? "#f59e0b" : "#34d399",
+                    fontWeight: 600,
+                  }}
+                >
+                  {(PAYMENT_LABELS[data.orderSummary.paymentMethod] || PAYMENT_LABELS.telebirr).status}
                 </dd>
               </div>
             </div>

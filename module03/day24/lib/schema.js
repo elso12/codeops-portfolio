@@ -7,4 +7,5 @@ export const orderSchema = z.object({
   quantity: z.coerce.number().min(1, "Quantity must be at least 1").optional().default(1),
   area: z.string().optional(),
   notes: z.string().max(200, "Notes cannot exceed 200 characters").optional(),
+  paymentMethod: z.enum(["telebirr", "cbe_birr", "cash_on_delivery", "chapa"]).optional().default("telebirr"),
 });

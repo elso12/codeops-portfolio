@@ -146,6 +146,7 @@ export async function placeOrder(prevState, formData) {
     quantity: Number(formData.get("quantity")),
     area: formData.get("area"),
     notes: formData.get("notes") || undefined,
+    paymentMethod: formData.get("paymentMethod") || "telebirr",
   };
 
   // 3. Schema validation
@@ -167,7 +168,12 @@ export async function placeOrder(prevState, formData) {
 
     const response = {
       ok: true,
-      order: { id: order.id, total: order.total, currency: order.currency },
+      order: {
+        id: order.id,
+        total: order.total,
+        currency: order.currency,
+        paymentMethod: order.paymentMethod,
+      },
     };
 
     if (idempotencyKey) {
