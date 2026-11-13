@@ -52,13 +52,22 @@ export default function CartClient() {
           You haven&apos;t added any authentic Habesha dishes yet. Browse our slow-cooked wats,
           sizzling tibs, and breakfast firfir.
         </p>
-        <Link
-          href="/menu"
-          className="btn-figma btn-figma--primary"
-          style={{ padding: "0.85rem 2.2rem" }}
-        >
-          Browse the Banquet Menu &rarr;
-        </Link>
+        <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+          <Link
+            href="/menu"
+            className="btn-figma btn-figma--primary"
+            style={{ padding: "0.85rem 2.2rem" }}
+          >
+            Browse the Banquet Menu &rarr;
+          </Link>
+          <Link
+            href="/orders"
+            className="btn-figma btn-figma--sand"
+            style={{ padding: "0.85rem 2.2rem" }}
+          >
+            📦 View &amp; Track Past Orders
+          </Link>
+        </div>
       </div>
     );
   }
@@ -247,6 +256,35 @@ export default function CartClient() {
             Clear Basket
           </button>
         </div>
+      </div>
+
+      {/* Existing Orders Callout */}
+      <div
+        style={{
+          marginTop: "1.5rem",
+          marginBottom: "1.5rem",
+          padding: "1rem 1.5rem",
+          backgroundColor: "var(--bg-surface-sand)",
+          border: "1px solid var(--border-color)",
+          borderRadius: "var(--radius-md)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "1rem",
+        }}
+      >
+        <div>
+          <strong style={{ color: "var(--text-main)", fontSize: "0.95rem" }}>
+            📦 Already have an order cooking?
+          </strong>
+          <p style={{ margin: "0.2rem 0 0", fontSize: "0.85rem", color: "var(--text-muted)" }}>
+            Follow live kitchen simmering and courier delivery across Addis Ababa.
+          </p>
+        </div>
+        <Link href="/orders" className="btn-figma btn-figma--sand btn-figma--sm">
+          Track Active Orders &rarr;
+        </Link>
       </div>
 
       <div className="notice">

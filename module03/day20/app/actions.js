@@ -114,7 +114,7 @@ export async function placeOrder(prevState, formData) {
 
   // 4. Create order strictly bound to session user.id
   try {
-    const order = createOrder(result.data, user.id);
+    const order = createOrder(result.data, user.id );
 
     // 5. Invalidate cached views
     revalidatePath("/orders");
@@ -149,16 +149,16 @@ export async function cancelOrder(orderId) {
   const order = getOrderById(orderId);
   if (!order) {
     throw new Error(`Order "${orderId}" not found.`);
-  }
+  }                  
 
   // Attack 2 defense line:
   if (order.userId !== user.id) {
-    throw new Error(
+    throw new Error(            
       `Forbidden: Ownership mismatch. Order "${orderId}" belongs to "${order.userId}", not session "${user.id}".`
     );
   }
 
-  if (order.status === "cancelled") {
+  if (order.status === "cancelled") {///////
     throw new Error("Order is already cancelled.");
   }
 

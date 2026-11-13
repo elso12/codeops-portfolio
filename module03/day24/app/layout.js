@@ -1,6 +1,7 @@
 import "./globals.css";
 import Providers from "@/components/Providers";
 import Navbar from "@/components/Navbar";
+import FloatingOrderTracker from "@/components/FloatingOrderTracker";
 import { getSession } from "@/lib/session";
 import Link from "next/link";
 import Script from "next/script";
@@ -90,6 +91,9 @@ export default async function RootLayout({ children }) {
             <Navbar session={session} />
 
             <main className="main-content">{children}</main>
+
+            {/* Floating Order Status Pill for Live Tracking */}
+            <FloatingOrderTracker />
 
             <footer className="footer-figma">
               <div className="footer-figma__inner">

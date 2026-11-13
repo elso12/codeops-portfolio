@@ -30,11 +30,11 @@ export async function middleware(request) {
  */
 export const config = {
   matcher: [
-    "/checkout",
+    // "/checkout",
     "/checkout/:path*",
-    "/orders",
+    // "/orders",
     "/orders/:path*",
-    "/kitchen",
+    // "/kitchen",
     "/kitchen/:path*",
   ],
 };

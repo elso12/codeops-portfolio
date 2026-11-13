@@ -3,10 +3,13 @@
  * Designed strictly according to Mesob House Figma Community file:
  * https://www.figma.com/community/file/1679526791160944664
  */
-import { getDishes } from "@/lib/data";
+import { getDishes, getOrdersByUser, getDishById, dishes } from "@/lib/data";
+import { getSession } from "@/lib/session";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import Image from "next/image";
 import AddToCartButton from "@/components/AddToCartButton";
+import HomeOrderSection from "@/components/HomeOrderSection";
 
 export const metadata = {
   title: "Authentic Habesha Hearth & Communal Dining",
@@ -17,8 +20,29 @@ export const metadata = {
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
   const featured = getDishes().slice(0, 4);
+  const user = await getSession();
+  let userOrders = [];
+
+  if (user) {
+    userOrders = getOrdersByUser(user.id);
+  }
+
+  // Cross-lambda Serverless check: also check if active order cookie exists
+  try {
+    const cookieStore = await cookies();
+    const cookieVal = cookieStore.get("mesob_active_order")?.value;
+    if (cookieVal) {
+      const parsed = JSON.parse(cookieVal);
+      if (!userOrders.some((o) => o.id === parsed.id)) {
+        userOrders.unshift({
+          ...parsed,
+          dish: getDishById(parsed.dishId) || dishes[0],
+        });
+      }
+    }
+  } catch (_) {}
 
   const restaurantJsonLd = {
     "@context": "https://schema.org",
@@ -79,6 +103,9 @@ export default function HomePage() {
             </Link>
             <Link href="/reservations" className="btn-figma btn-figma--honey">
               <span className="coffee-icon">☕</span> Buna Ceremony 4:00 PM Daily
+            </Link>
+            <Link href="#track-orders" className="btn-figma btn-figma--outline" style={{ background: "rgba(255,255,255,0.7)" }}>
+              📦 Track Orders
             </Link>
           </div>
 
@@ -179,6 +206,9 @@ export default function HomePage() {
           </p>
         </div>
       </section>
+
+      {/* Interactive Orders & Real-time Delivery Tracker */}
+      <HomeOrderSection user={user} initialOrders={userOrders} />
 
       {/* Special Offer Banner */}
       <section className="special-banner">

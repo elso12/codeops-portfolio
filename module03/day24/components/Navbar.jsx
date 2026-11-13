@@ -40,23 +40,34 @@ export default function Navbar({ session }) {
             <li>
               <Link
                 href="/orders"
-                className={`nav-link ${isActive("/orders") || isActive("/dashboard") ? "nav-link--active" : ""}`}
+                className={`nav-link ${isActive("/orders") || isActive("/track") ? "nav-link--active" : ""}`}
+                title="View your orders and track live deliveries"
               >
-                📊 Dashboard
+                <span>📦 Orders</span>
               </Link>
             </li>
 
             {/* Staff-only route navigation */}
             {session?.role === "staff" && (
-              <li>
-                <Link
-                  href="/kitchen"
-                  className={`nav-link ${isActive("/kitchen") ? "nav-link--active" : ""}`}
-                  style={{ color: "var(--color-turmeric)", fontWeight: 700 }}
-                >
-                  👨‍🍳 Kitchen
-                </Link>
-              </li>
+              <>
+                <li>
+                  <Link
+                    href="/dashboard"
+                    className={`nav-link ${isActive("/dashboard") ? "nav-link--active" : ""}`}
+                  >
+                    📊 Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/kitchen"
+                    className={`nav-link ${isActive("/kitchen") ? "nav-link--active" : ""}`}
+                    style={{ color: "var(--color-turmeric)", fontWeight: 700 }}
+                  >
+                    👨‍🍳 Kitchen
+                  </Link>
+                </li>
+              </>
             )}
 
             <li>

@@ -1,4 +1,4 @@
-# 100 Examination & Grading Questions with Exact Code Answers
+     # 100 Examination & Grading Questions with Exact Code Answers
 
 > **Project:** Addis Eats · Mesob House Gastronomy Platform  
 > **Curriculum:** Module 3 · Frontend Web Development (React & Next.js) · Day 45 Advanced Project  
@@ -29,7 +29,7 @@
 **Answer:** The homepage contains static marketing copy, restaurant history, and structured JSON-LD data. Rendering it on the server sends pure zero-JS HTML to the client, accelerating First Contentful Paint (FCP) and providing search crawlers with complete markup.
 
 ### Q3: What is the purpose of `app/layout.js`?
-**Answer:** It is the Root Layout wrapping all pages. It initializes global CSS ([`app/globals.css`](file:///c:/Users/hp/Desktop/IBT/codeops-portfolio/module03/day20/app/globals.css)), configures `next/font` typography variables, sets the `metadataBase`, injects Schema.org JSON-LD, renders the persistent `<Navbar>`, and wraps children in client providers (`<Providers>`).
+**Answer:** It is the Root Layout wrapping all pages. It initializes global CSS ([`app/globals.css`](file:///c:/Users/hp/Desktop/IBT/codeops-portfolio/module03/day20/app/globals.css)), confi6gures `next/font` typography variables, sets the `metadataBase`, injects Schema.org JSON-LD, renders the persistent `<Navbar>`, and wraps children in client providers (`<Providers>`).
 
 ### Q4: How is the server-client boundary managed in this codebase?
 **Answer:** Server components form the backbone of the page shells (fetching data and rendering structure), while client components (`"use client"`) are pushed down to the leaves of the component tree (e.g., `<SearchBox />`, `<OrderStatus />`, `<AddToCartButton />`).

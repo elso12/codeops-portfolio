@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "name": "Doro Wat",
+    "category": "Main",
+    "price": 240,
+    "spicy": true,
+    "description": "Slow-simmered tender chicken leg and hard-boiled egg infused with rich berbere spice blend, clarified niter kibbeh butter, and sweet caramelized onions.",
+    "prepTime": "25 mins",
+    "calories": "580 kcal",
+    "spicinessLevel": "High",
+    "allergens": ["Poultry", "Egg", "Dairy (Butter)"]
+  },
+  {
+    "id": 2,
+    "name": "Shiro",
+    "category": "Vegetarian",
+    "price": 120,
+    "spicy": false,
+    "description": "Velvety spiced chickpea and broad bean stew cooked in a traditional clay pot (mankorina) with garlic, minced shallots, and ginger.",
+    "prepTime": "15 mins",
+    "calories": "390 kcal",
+    "spicinessLevel": "Mild",
+    "allergens": ["Legumes"]
+  },
+  {
+    "id": 3,
+    "name": "Kitfo",
+    "category": "Main",
+    "price": 320,
+    "spicy": true,
+    "description": "Prime lean beef finely minced and seasoned with warm mitmita chili powder and fragrant niter kibbeh herb butter, served with ayib cheese and gomen.",
+    "prepTime": "18 mins",
+    "calories": "620 kcal",
+    "spicinessLevel": "Very High",
+    "allergens": ["Beef", "Dairy (Butter)"]
+  },
+  {
+    "id": 4,
+    "name": "Tibs",
+    "category": "Main",
+    "price": 280,
+    "spicy": true,
+    "description": "Sautéed tender beef cubes seared over high heat with rosemary sprigs, sweet red onions, and hot jalapeño peppers.",
+    "prepTime": "20 mins",
+    "calories": "540 kcal",
+    "spicinessLevel": "Medium",
+    "allergens": ["Beef"]
+  },
+  {
+    "id": 5,
+    "name": "Injera Firfir",
+    "category": "Breakfast",
+    "price": 100,
+    "spicy": true,
+    "description": "Shredded teff injera gently soaked in spicy berbere stew, infused with cardamom, garlic, and seasoned clarified butter.",
+    "prepTime": "12 mins",
+    "calories": "410 kcal",
+    "spicinessLevel": "Medium",
+    "allergens": ["Gluten-free Teff", "Dairy"]
+  },
+  {
+    "id": 6,
+    "name": "Beyaynetu",
+    "category": "Vegetarian",
+    "price": 150,
+    "spicy": false,
+    "description": "A vibrant rainbow platter of vegetarian stews: misir wat, ater kik, collard gomen, fosolia green beans, and seasoned beetroot salad on 100% teff injera.",
+    "prepTime": "15 mins",
+    "calories": "480 kcal",
+    "spicinessLevel": "Variable",
+    "allergens": ["Legumes"]
+  },
+  {
+    "id": 7,
+    "name": "Misir Wat",
+    "category": "Vegetarian",
+    "price": 110,
+    "spicy": true,
+    "description": "Split red lentils simmered patiently in rich berbere sauce, garlic, and fresh ground ginger until deeply savory and comforting.",
+    "prepTime": "15 mins",
+    "calories": "360 kcal",
+    "spicinessLevel": "Medium",
+    "allergens": ["Legumes"]
+  },
+  {
+    "id": 8,
+    "name": "Gomen",
+    "category": "Vegetarian",
+    "price": 90,
+    "spicy": false,
+    "description": "Tender chopped collard greens steamed with aromatic garlic, sliced ginger, and cold-pressed Ethiopian vegetable oil.",
+    "prepTime": "10 mins",
+    "calories": "180 kcal",
+    "spicinessLevel": "Mild",
+    "allergens": []
+  },
+  {
+    "id": 9,
+    "name": "Atkilt Wot",
+    "category": "Vegetarian",
+    "price": 100,
+    "spicy": false,
+    "description": "A mild, naturally sweet blend of cabbage florets, tender carrots, and potato chunks braised in golden turmeric oil.",
+    "prepTime": "14 mins",
+    "calories": "220 kcal",
+    "spicinessLevel": "Mild",
+    "allergens": []
+  },
+  {
+    "id": 10,
+    "name": "Derek Tibs",
+    "category": "Main",
+    "price": 310,
+    "spicy": true,
+    "description": "Crisp-fried beef cubes seasoned with crushed black pepper, fresh rosemary, and awaze dipping sauce.",
+    "prepTime": "22 mins",
+    "calories": "590 kcal",
+    "spicinessLevel": "Medium",
+    "allergens": ["Beef"]
+  }
+]

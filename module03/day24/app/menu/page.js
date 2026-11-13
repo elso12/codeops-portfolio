@@ -14,6 +14,7 @@ import { getDishes } from "@/lib/data";
 import CategoryBar from "@/components/CategoryBar";
 import DishCard from "./DishCard";
 import SearchBox from "./SearchBox";
+import MenuOrdersBar from "@/components/MenuOrdersBar";
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -39,6 +40,9 @@ export default async function MenuPage() {
           and naturally fermented 100% teff grain sourdough injera.
         </p>
       </div>
+
+      {/* Live Order Status Bar & Quick Order Tracker */}
+      <MenuOrdersBar />
 
       {/* Debounced live search with SWR caching */}
       <SearchBox />

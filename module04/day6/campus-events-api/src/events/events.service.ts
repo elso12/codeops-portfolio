@@ -5,7 +5,6 @@ import { CampusEvent, PaginatedResponse, Session } from './interfaces/event.inte
 
 @Injectable()
 export class EventsService {
-  // In-memory array storage for campus events
   private events: CampusEvent[] = [
     {
       id: 'evt-101',
@@ -63,7 +62,6 @@ export class EventsService {
     },
   ];
 
-  // In-memory array storage for event sessions
   private sessions: Session[] = [
     {
       id: 'ses-201',
@@ -115,9 +113,6 @@ export class EventsService {
     },
   ];
 
-  /**
-   * Find events with filtering, sorting, and pagination
-   */
   findAll(query: FindEventsQueryDto): PaginatedResponse<CampusEvent> {
     const {
       category,
@@ -132,43 +127,38 @@ export class EventsService {
       dateTo,
     } = query;
 
-    // 1. FILTERING
-    let filtered = this.events.filter((event) => {
-      // Category filter (case-insensitive)
+    // 1. Filter
+    const filtered = this.events.filter((event) => {
       if (category && event.category.toLowerCase() !== category.trim().toLowerCase()) {
         return false;
       }
 
-      // Location filter (case-insensitive substring match)
       if (location && !event.location.toLowerCase().includes(location.trim().toLowerCase())) {
         return false;
       }
 
-      // isPublished filter
       if (isPublished !== undefined && event.isPublished !== isPublished) {
         return false;
       }
 
-      // Stretch: Search filter (matches words in title)
       if (search) {
-        const queryWords = search.trim().toLowerCase().split(/\s+/);
+        const words = search.trim().toLowerCase().split(/\s+/);
         const titleLower = event.title.toLowerCase();
-        const matchesAll = queryWords.every((word) => titleLower.includes(word));
-        if (!matchesAll) return false;
-      }
-
-      // Stretch: dateFrom filter
-      if (dateFrom) {
-        const fromTime = new Date(dateFrom).getTime();
-        if (!isNaN(fromTime) && new Date(event.eventDate).getTime() < fromTime) {
+        if (!words.every((word) => titleLower.includes(word))) {
           return false;
         }
       }
 
-      // Stretch: dateTo filter
+      if (dateFrom) {
+        const fromDate = new Date(dateFrom).getTime();
+        if (!isNaN(fromDate) && new Date(event.eventDate).getTime() < fromDate) {
+          return false;
+        }
+      }
+
       if (dateTo) {
-        const toTime = new Date(dateTo).getTime();
-        if (!isNaN(toTime) && new Date(event.eventDate).getTime() > toTime) {
+        const toDate = new Date(dateTo).getTime();
+        if (!isNaN(toDate) && new Date(event.eventDate).getTime() > toDate) {
           return false;
         }
       }
@@ -178,28 +168,25 @@ export class EventsService {
 
     const total = filtered.length;
 
-    // 2. SORTING (Sort a copy to preserve seed data immutability)
-    let sorted = [...filtered];
+    // 2. Sort a shallow copy so original array is not mutated
+    const sorted = [...filtered];
     if (sortBy) {
       sorted.sort((a, b) => {
-        let comparison = 0;
+        let diff = 0;
         if (sortBy === 'eventDate') {
-          comparison = new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime();
+          diff = new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime();
         } else if (sortBy === 'title') {
-          comparison = a.title.localeCompare(b.title);
+          diff = a.title.localeCompare(b.title);
         }
-
-        return order === 'desc' ? -comparison : comparison;
+        return order === 'desc' ? -diff : diff;
       });
     }
 
-    // 3. PAGINATION
+    // 3. Paginate
     const pageNum = Math.max(1, Number(page));
     const limitNum = Math.max(1, Number(limit));
     const offset = (pageNum - 1) * limitNum;
-    const start = offset;
-    const end = start + limitNum;
-    const items = sorted.slice(start, end);
+    const items = sorted.slice(offset, offset + limitNum);
     const totalPages = Math.ceil(total / limitNum);
 
     return {
@@ -211,9 +198,6 @@ export class EventsService {
     };
   }
 
-  /**
-   * Return events whose date is today or later
-   */
   findUpcoming(): CampusEvent[] {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -223,16 +207,10 @@ export class EventsService {
       .sort((a, b) => new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime());
   }
 
-  /**
-   * Return only published events (Stretch challenge)
-   */
   findPublished(): CampusEvent[] {
-    return this.events.filter((event) => event.isPublished === true);
+    return this.events.filter((event) => event.isPublished);
   }
 
-  /**
-   * Find single event by ID
-   */
   findOne(id: string): CampusEvent {
     const event = this.events.find((e) => e.id === id);
     if (!event) {
@@ -241,20 +219,12 @@ export class EventsService {
     return event;
   }
 
-  /**
-   * Find all sessions belonging to an event
-   */
   findSessionsByEvent(eventId: string): Session[] {
-    // Ensure the event itself exists first (throws 404 if not)
     this.findOne(eventId);
     return this.sessions.filter((s) => s.eventId === eventId);
   }
 
-  /**
-   * Find one session belonging to an event
-   */
   findOneSession(eventId: string, sessionId: string): Session {
-    // Ensure the event itself exists first (throws 404 if not)
     this.findOne(eventId);
 
     const session = this.sessions.find(
@@ -270,17 +240,13 @@ export class EventsService {
     return session;
   }
 
-  /**
-   * Create a new campus event
-   */
-  create(createEventDto: CreateEventDto): CampusEvent {
+  create(dto: CreateEventDto): CampusEvent {
     const newEvent: CampusEvent = {
       id: `evt-${Date.now().toString().slice(-4)}`,
-      ...createEventDto,
+      ...dto,
     };
 
     this.events.push(newEvent);
     return newEvent;
   }
 }
-

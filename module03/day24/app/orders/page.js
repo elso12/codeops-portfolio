@@ -178,9 +178,13 @@ export default async function OrdersDashboardPage({ searchParams }) {
         }}
       >
         <div>
-          <span className="section-eyebrow">የአዲስ አበባ ዳሽቦርድ • OPERATIONAL LEDGER</span>
+          <span className="section-eyebrow">
+            {isStaff && showAllOrders
+              ? "የአዲስ አበባ ዳሽቦርድ • OPERATIONAL LEDGER"
+              : "የእኔ ትዕዛዞች • AUTHENTICATED REALM"}
+          </span>
           <h1 className="section-title-large" style={{ margin: "0.25rem 0" }}>
-            The Addis Eats Dashboard
+            {isStaff && showAllOrders ? "The Addis Eats Dashboard" : "My Mesob Orders"}
           </h1>
           <p className="section-sub" style={{ margin: 0 }}>
             Signed in as <strong style={{ color: "var(--color-paprika)" }}>{user.name}</strong>{" "}
@@ -189,6 +193,12 @@ export default async function OrdersDashboardPage({ searchParams }) {
               Session: {user.id}
             </span>
           </p>
+        </div>
+
+        <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", flexWrap: "wrap" }}>
+          <Link href="/menu" className="btn-figma btn-figma--primary btn-figma--sm">
+            🍽️ Order From Menu
+          </Link>
         </div>
 
         {/* Staff Overview Toggle */}

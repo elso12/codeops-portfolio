@@ -209,17 +209,33 @@ export default function OrderTable({
                       ETB {Number(orderItem.total).toFixed(2)}
                     </td>
                     <td className="order-cell-action" style={{ textAlign: "center", whiteSpace: "nowrap" }}>
-                      <Link
-                        href={`/orders/${orderItem.id}`}
-                        className="btn-link"
-                        style={{
-                          fontSize: "0.82rem",
-                          fontWeight: 700,
-                          color: "var(--color-paprika)",
-                        }}
-                      >
-                        Track &rarr;
-                      </Link>
+                      <div style={{ display: "inline-flex", gap: "0.5rem", alignItems: "center" }}>
+                        <Link
+                          href={`/orders/${orderItem.id}`}
+                          className="btn-link"
+                          style={{
+                            fontSize: "0.82rem",
+                            fontWeight: 700,
+                            color: "var(--color-paprika)",
+                          }}
+                          title="View order status and progression"
+                        >
+                          📋 Status
+                        </Link>
+                        <span style={{ color: "var(--border-color)", userSelect: "none" }}>|</span>
+                        <Link
+                          href={`/track/${orderItem.id}`}
+                          className="btn-link"
+                          style={{
+                            fontSize: "0.82rem",
+                            fontWeight: 700,
+                            color: "var(--color-forest-light)",
+                          }}
+                          title="Track live courier on Leaflet map"
+                        >
+                          🛵 Map
+                        </Link>
+                      </div>
                     </td>
                   </tr>
                 );
