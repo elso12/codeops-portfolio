@@ -8,7 +8,6 @@ import { createEvent } from "@/services/eventService";
 export default function CreateEventPage() {
   const router = useRouter();
 
-  // Form states
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
@@ -16,7 +15,6 @@ export default function CreateEventPage() {
   const [category, setCategory] = useState("");
   const [isPublished, setIsPublished] = useState(true);
 
-  // Submission & feedback states
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -28,7 +26,6 @@ export default function CreateEventPage() {
     setApiError(null);
     setSuccessMessage(null);
 
-    // 1. Validation of required fields
     if (!title.trim()) {
       setValidationError("Event title is required.");
       return;
@@ -50,7 +47,6 @@ export default function CreateEventPage() {
       return;
     }
 
-    // Convert datetime-local to valid ISO 8601 string
     let isoDate: string;
     try {
       const parsedDate = new Date(eventDate);
@@ -64,7 +60,6 @@ export default function CreateEventPage() {
       return;
     }
 
-    // 2. Submit to API via createEvent
     setIsSubmitting(true);
     try {
       const created = await createEvent({
@@ -76,7 +71,6 @@ export default function CreateEventPage() {
         isPublished,
       });
 
-      // 3. Success feedback & redirection
       setSuccessMessage("Event successfully created! Redirecting to event details...");
       router.refresh();
 
@@ -95,7 +89,6 @@ export default function CreateEventPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
-      {/* Header & Breadcrumb */}
       <div>
         <nav className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-2">
           <Link
@@ -117,7 +110,6 @@ export default function CreateEventPage() {
         </p>
       </div>
 
-      {/* Feedback Alerts */}
       {validationError && (
         <div className="p-4 rounded-xl border border-amber-200 dark:border-amber-900/60 bg-amber-50 dark:bg-amber-950/30 text-amber-800 dark:text-amber-200 flex items-start gap-3">
           <svg
@@ -177,13 +169,11 @@ export default function CreateEventPage() {
         </div>
       )}
 
-      {/* Main Form Container */}
       <form
         onSubmit={handleSubmit}
         noValidate
         className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-10 space-y-6"
       >
-        {/* Title */}
         <div>
           <label
             htmlFor="event-title"
@@ -202,9 +192,7 @@ export default function CreateEventPage() {
           />
         </div>
 
-        {/* Category & Status Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {/* Category */}
           <div>
             <label
               htmlFor="event-category"
@@ -232,7 +220,6 @@ export default function CreateEventPage() {
             </select>
           </div>
 
-          {/* Publication Status Toggle/Checkbox */}
           <div className="flex flex-col justify-end">
             <span className="block text-sm font-bold text-slate-900 dark:text-white mb-1.5">
               Publication Status
@@ -259,9 +246,7 @@ export default function CreateEventPage() {
           </div>
         </div>
 
-        {/* Schedule & Location Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {/* Event Date (datetime-local) */}
           <div>
             <label
               htmlFor="event-date"
@@ -282,7 +267,6 @@ export default function CreateEventPage() {
             </p>
           </div>
 
-          {/* Location */}
           <div>
             <label
               htmlFor="event-location"
@@ -305,7 +289,6 @@ export default function CreateEventPage() {
           </div>
         </div>
 
-        {/* Description */}
         <div>
           <label
             htmlFor="event-description"
@@ -324,7 +307,6 @@ export default function CreateEventPage() {
           />
         </div>
 
-        {/* Form Actions */}
         <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-end gap-3">
           <Link
             href="/events"

@@ -11,6 +11,73 @@ import {
 import { Event, Session } from "@/types/event";
 import Loading from "@/components/Loading";
 
+const CATEGORY_STYLES: Record<string, string> = {
+  technology: "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 border-blue-200 dark:border-blue-800",
+  career: "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300 border-purple-200 dark:border-purple-800",
+  sports: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800",
+  arts: "bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300 border-rose-200 dark:border-rose-800",
+  academic: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 border-amber-200 dark:border-amber-800",
+};
+
+const DEFAULT_CATEGORY_STYLE =
+  "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700";
+
+function getCategoryStyle(category?: string): string {
+  if (!category) return DEFAULT_CATEGORY_STYLE;
+  return CATEGORY_STYLES[category.toLowerCase()] || DEFAULT_CATEGORY_STYLE;
+}
+
+function formatFullDate(dateString?: string): string {
+  if (!dateString) return "N/A";
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+    return new Intl.DateTimeFormat("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    }).format(date);
+  } catch {
+    return dateString;
+  }
+}
+
+function formatTime(timeString?: string): string {
+  if (!timeString) return "N/A";
+  try {
+    const date = new Date(timeString);
+    if (isNaN(date.getTime())) return timeString;
+    return new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      month: "short",
+      day: "numeric",
+    }).format(date);
+  } catch {
+    return timeString;
+  }
+}
+
+function calculateDuration(start?: string, end?: string): string | null {
+  if (!start || !end) return null;
+  try {
+    const s = new Date(start).getTime();
+    const e = new Date(end).getTime();
+    if (isNaN(s) || isNaN(e) || e <= s) return null;
+    const minutes = Math.round((e - s) / (1000 * 60));
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    if (hours === 0) return `${minutes} mins`;
+    if (remainingMinutes === 0) return `${hours} hr${hours > 1 ? "s" : ""}`;
+    return `${hours} hr${hours > 1 ? "s" : ""} ${remainingMinutes} mins`;
+  } catch {
+    return null;
+  }
+}
+
 function EventDetailsContent() {
   const params = useParams();
   const eventId =
@@ -20,20 +87,16 @@ function EventDetailsContent() {
       ? params.id[0]
       : "";
 
-  // Event & sessions data states
   const [event, setEvent] = useState<Event | null>(null);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isNotFound, setIsNotFound] = useState<boolean>(false);
 
-  // Session Details Modal state (Page 4 requirements)
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [loadingSessionId, setLoadingSessionId] = useState<string | null>(null);
   const [sessionModalOpen, setSessionModalOpen] = useState<boolean>(false);
-  const [sessionError, setSessionError] = useState<string | null>(null);
 
-  // Fetch Event and its Sessions
   const loadEventAndSessions = useCallback(async () => {
     if (!eventId) return;
 
@@ -45,7 +108,6 @@ function EventDetailsContent() {
       const eventData = await getEventById(eventId);
       setEvent(eventData);
 
-      // Fetch sessions for this event
       try {
         const sessionsData = await getEventSessions(eventId);
         setSessions(sessionsData || []);
@@ -71,26 +133,18 @@ function EventDetailsContent() {
     loadEventAndSessions();
   }, [loadEventAndSessions]);
 
-  // Open Session Modal by fetching session details
   const handleOpenSessionModal = async (sessionId: string) => {
     if (!eventId) return;
     setLoadingSessionId(sessionId);
-    setSessionError(null);
 
     try {
       const sessionData = await getSessionById(eventId, sessionId);
       setSelectedSession(sessionData);
       setSessionModalOpen(true);
-    } catch (err: unknown) {
-      const msg =
-        err instanceof Error
-          ? err.message
-          : "Could not retrieve session details.";
-      setSessionError(msg);
-      // Fallback: look up in already loaded sessions array
-      const local = sessions.find((s) => s.id === sessionId);
-      if (local) {
-        setSelectedSession(local);
+    } catch {
+      const fallback = sessions.find((s) => s.id === sessionId);
+      if (fallback) {
+        setSelectedSession(fallback);
         setSessionModalOpen(true);
       }
     } finally {
@@ -101,79 +155,8 @@ function EventDetailsContent() {
   const handleCloseSessionModal = () => {
     setSessionModalOpen(false);
     setSelectedSession(null);
-    setSessionError(null);
   };
 
-  // Helper date formatters
-  const formatFullDate = (dateString?: string) => {
-    if (!dateString) return "N/A";
-    try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return dateString;
-      return new Intl.DateTimeFormat("en-US", {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-      }).format(date);
-    } catch {
-      return dateString;
-    }
-  };
-
-  const formatTime = (timeString?: string) => {
-    if (!timeString) return "N/A";
-    try {
-      const date = new Date(timeString);
-      if (isNaN(date.getTime())) return timeString;
-      return new Intl.DateTimeFormat("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        month: "short",
-        day: "numeric",
-      }).format(date);
-    } catch {
-      return timeString;
-    }
-  };
-
-  const calculateDuration = (start?: string, end?: string) => {
-    if (!start || !end) return null;
-    try {
-      const s = new Date(start).getTime();
-      const e = new Date(end).getTime();
-      if (isNaN(s) || isNaN(e) || e <= s) return null;
-      const minutes = Math.round((e - s) / (1000 * 60));
-      const hours = Math.floor(minutes / 60);
-      const remainingMinutes = minutes % 60;
-      if (hours === 0) return `${minutes} mins`;
-      if (remainingMinutes === 0) return `${hours} hr${hours > 1 ? "s" : ""}`;
-      return `${hours} hr${hours > 1 ? "s" : ""} ${remainingMinutes} mins`;
-    } catch {
-      return null;
-    }
-  };
-
-  const getCategoryStyle = (category?: string) => {
-    switch (category?.toLowerCase()) {
-      case "technology":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 border-blue-200 dark:border-blue-800";
-      case "career":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300 border-purple-200 dark:border-purple-800";
-      case "sports":
-        return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800";
-      case "arts":
-        return "bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300 border-rose-200 dark:border-rose-800";
-      case "academic":
-        return "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 border-amber-200 dark:border-amber-800";
-      default:
-        return "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700";
-    }
-  };
-
-  // 1. Loading State
   if (loading) {
     return (
       <div className="py-20">
@@ -182,7 +165,6 @@ function EventDetailsContent() {
     );
   }
 
-  // 2. Not Found State
   if (isNotFound || !event) {
     return (
       <div className="max-w-2xl mx-auto py-16 px-4 text-center">
@@ -230,7 +212,6 @@ function EventDetailsContent() {
     );
   }
 
-  // 3. API Error State
   if (error) {
     return (
       <div className="max-w-2xl mx-auto py-16 px-4">
@@ -276,10 +257,10 @@ function EventDetailsContent() {
     );
   }
 
-  // 4. Success State: Render Event Details (Page 3) and Agenda Sessions (Page 4)
+  const duration = calculateDuration(selectedSession?.startsAt, selectedSession?.endsAt);
+
   return (
     <div className="space-y-10">
-      {/* Navigation Breadcrumb / Back Link */}
       <nav className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
         <Link
           href="/events"
@@ -306,13 +287,10 @@ function EventDetailsContent() {
         </span>
       </nav>
 
-      {/* Main Event Details Card */}
       <article className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-        {/* Banner Top Accent */}
         <div className="h-3.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600" />
 
         <div className="p-6 sm:p-10 space-y-6">
-          {/* Header Badges */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2.5">
               <span
@@ -341,14 +319,11 @@ function EventDetailsContent() {
             </span>
           </div>
 
-          {/* Event Title */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
             {event.title}
           </h1>
 
-          {/* Meta Details Box: Schedule & Venue */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800">
-            {/* Date & Time */}
             <div className="flex items-start gap-3.5">
               <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                 <svg
@@ -375,7 +350,6 @@ function EventDetailsContent() {
               </div>
             </div>
 
-            {/* Location / Room */}
             <div className="flex items-start gap-3.5">
               <div className="w-10 h-10 rounded-xl bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
                 <svg
@@ -409,7 +383,6 @@ function EventDetailsContent() {
             </div>
           </div>
 
-          {/* Full Description */}
           <div className="space-y-3 pt-2">
             <h2 className="text-lg font-bold text-slate-900 dark:text-white">
               Event Overview
@@ -421,7 +394,6 @@ function EventDetailsContent() {
         </div>
       </article>
 
-      {/* Sessions & Agenda Section */}
       <section className="space-y-6">
         <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
           <div>
@@ -440,7 +412,6 @@ function EventDetailsContent() {
           </span>
         </div>
 
-        {/* Empty Sessions State */}
         {sessions.length === 0 ? (
           <div className="text-center py-12 px-4 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900/50">
             <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
@@ -466,7 +437,6 @@ function EventDetailsContent() {
             </p>
           </div>
         ) : (
-          /* Grid of Sessions */
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {sessions.map((session) => (
               <div
@@ -474,7 +444,6 @@ function EventDetailsContent() {
                 className="flex flex-col justify-between p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-md transition-all duration-200 group"
               >
                 <div className="space-y-3">
-                  {/* Room badge & ID */}
                   <div className="flex items-center justify-between text-xs">
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                       <svg
@@ -497,12 +466,10 @@ function EventDetailsContent() {
                     </span>
                   </div>
 
-                  {/* Session Title */}
                   <h3 className="text-base font-bold text-slate-900 dark:text-white line-clamp-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                     {session.title}
                   </h3>
 
-                  {/* Time Schedule */}
                   <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1 pt-1 border-t border-slate-100 dark:border-slate-800/80">
                     <div className="flex items-center gap-2">
                       <svg
@@ -523,7 +490,6 @@ function EventDetailsContent() {
                   </div>
                 </div>
 
-                {/* Open Session Details Modal Button */}
                 <div className="pt-4 mt-3 border-t border-slate-100 dark:border-slate-800">
                   <button
                     type="button"
@@ -562,7 +528,6 @@ function EventDetailsContent() {
         )}
       </section>
 
-      {/* Session Details Modal (Page 4 Implementation) */}
       {sessionModalOpen && selectedSession && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200"
@@ -571,7 +536,6 @@ function EventDetailsContent() {
           aria-labelledby="session-modal-title"
         >
           <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
-            {/* Modal Header */}
             <div className="p-6 pb-4 border-b border-slate-100 dark:border-slate-800 flex items-start justify-between gap-4">
               <div className="space-y-1">
                 <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
@@ -606,9 +570,7 @@ function EventDetailsContent() {
               </button>
             </div>
 
-            {/* Modal Body: Displays all required fields */}
             <div className="p-6 space-y-4 text-sm">
-              {/* Related Event Title */}
               <div className="p-3.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/60">
                 <p className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-0.5">
                   Related Campus Event
@@ -618,7 +580,6 @@ function EventDetailsContent() {
                 </p>
               </div>
 
-              {/* Start & End Times */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
@@ -639,17 +600,13 @@ function EventDetailsContent() {
                 </div>
               </div>
 
-              {/* Duration (if calculable) */}
-              {calculateDuration(selectedSession.startsAt, selectedSession.endsAt) && (
+              {duration && (
                 <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-indigo-50/50 dark:bg-indigo-950/30 text-xs text-indigo-700 dark:text-indigo-300 font-medium border border-indigo-100 dark:border-indigo-900/40">
                   <span>Estimated Session Duration:</span>
-                  <span className="font-bold">
-                    {calculateDuration(selectedSession.startsAt, selectedSession.endsAt)}
-                  </span>
+                  <span className="font-bold">{duration}</span>
                 </div>
               )}
 
-              {/* Room Location */}
               <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 flex items-center justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
@@ -676,14 +633,12 @@ function EventDetailsContent() {
                 </div>
               </div>
 
-              {/* IDs reference */}
               <div className="text-xs text-slate-400 flex justify-between pt-1 font-mono">
                 <span>Session ID: {selectedSession.id}</span>
                 <span>Event ID: {selectedSession.eventId}</span>
               </div>
             </div>
 
-            {/* Modal Footer */}
             <div className="p-4 bg-slate-50 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800 flex justify-end">
               <button
                 type="button"

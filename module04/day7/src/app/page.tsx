@@ -35,9 +35,7 @@ export default function HomePage() {
 
   return (
     <div className="space-y-12 sm:space-y-16">
-      {/* 1. Welcome Hero Section */}
       <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-700 via-blue-800 to-indigo-900 text-white shadow-xl">
-        {/* Subtle decorative campus background pattern */}
         <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
 
         <div className="relative px-6 py-12 sm:px-12 sm:py-16 md:py-20 max-w-4xl">
@@ -100,9 +98,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. Upcoming Events Section */}
       <section className="space-y-6">
-        {/* Section Header with "View All Events" link */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
           <div>
             <div className="flex items-center gap-2">
@@ -137,14 +133,12 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* Loading State */}
         {loading && (
           <div className="py-12">
             <Loading message="Loading upcoming campus events..." size="md" />
           </div>
         )}
 
-        {/* API Error State (e.g. backend offline or fetch failed) */}
         {!loading && error && (
           <div className="p-6 rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/30 text-rose-800 dark:text-rose-200">
             <div className="flex items-start gap-4">
@@ -197,7 +191,6 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Empty State */}
         {!loading && !error && events.length === 0 && (
           <div className="text-center py-16 px-4 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900/50">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-50 dark:bg-blue-950/50 flex items-center justify-center text-blue-600 dark:text-blue-400">
@@ -239,7 +232,6 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Upcoming Events Grid */}
         {!loading && !error && events.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {events.map((event) => (
@@ -249,7 +241,6 @@ export default function HomePage() {
         )}
       </section>
 
-      {/* 3. Bottom Call-to-Action for Organizers */}
       <section className="rounded-2xl border border-blue-100 dark:border-blue-900/50 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-slate-900/80 p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="space-y-2 text-center md:text-left">
           <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">

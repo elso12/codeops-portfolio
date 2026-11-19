@@ -7,49 +7,38 @@ import { PaginatedEvents, EventQueryParams } from "@/types/event";
 import EventCard from "@/components/EventCard";
 import Loading from "@/components/Loading";
 
+const PAGE_LIMIT = 6;
+
 export default function EventsPage() {
-  // Backend query states
   const [category, setCategory] = useState<string>("");
   const [location, setLocation] = useState<string>("");
-  const [isPublished, setIsPublished] = useState<string>("all"); // "all" | "true" | "false"
+  const [isPublished, setIsPublished] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"eventDate" | "title">("eventDate");
   const [order, setOrder] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState<number>(1);
-  const limit = 6;
 
-  // Frontend-only title search state
+  // Frontend-only title search: backend has no search endpoint, so we filter the current page in memory.
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  // Data & request states
   const [data, setData] = useState<PaginatedEvents | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch events from backend API
   const fetchEvents = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const params: EventQueryParams = {
         page,
-        limit,
+        limit: PAGE_LIMIT,
         sortBy,
         order,
       };
 
-      if (category.trim()) {
-        params.category = category.trim();
-      }
-
-      if (location.trim()) {
-        params.location = location.trim();
-      }
-
-      if (isPublished === "true") {
-        params.isPublished = true;
-      } else if (isPublished === "false") {
-        params.isPublished = false;
-      }
+      if (category.trim()) params.category = category.trim();
+      if (location.trim()) params.location = location.trim();
+      if (isPublished === "true") params.isPublished = true;
+      if (isPublished === "false") params.isPublished = false;
 
       const response = await getEvents(params);
       setData(response);
@@ -68,7 +57,6 @@ export default function EventsPage() {
     fetchEvents();
   }, [fetchEvents]);
 
-  // Frontend-only title search: filters the fetched page's items in memory without calling backend
   const displayedEvents = useMemo(() => {
     if (!data?.items) return [];
     if (!searchQuery.trim()) return data.items;
@@ -78,7 +66,6 @@ export default function EventsPage() {
     );
   }, [data?.items, searchQuery]);
 
-  // Filter change handlers that reset page to 1
   const handleCategoryChange = (newCategory: string) => {
     setCategory(newCategory);
     setPage(1);
@@ -115,10 +102,12 @@ export default function EventsPage() {
   };
 
   const totalPages = data?.totalPages || 1;
+  const hasActiveFilters = Boolean(
+    category || location || isPublished !== "all" || searchQuery
+  );
 
   return (
     <div className="space-y-8">
-      {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
@@ -150,9 +139,7 @@ export default function EventsPage() {
         </Link>
       </div>
 
-      {/* Control Panel: Filters, Sorting, and Frontend Title Search */}
       <section className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xs space-y-5">
-        {/* Row 1: Frontend-Only Title Search Input */}
         <div>
           <label
             htmlFor="title-search"
@@ -209,9 +196,7 @@ export default function EventsPage() {
           </div>
         </div>
 
-        {/* Row 2: Backend Query Controls (Category, Location, Publication, Sort, Order) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {/* Category Filter */}
           <div>
             <label
               htmlFor="filter-category"
@@ -234,7 +219,6 @@ export default function EventsPage() {
             </select>
           </div>
 
-          {/* Location Filter */}
           <div>
             <label
               htmlFor="filter-location"
@@ -252,7 +236,6 @@ export default function EventsPage() {
             />
           </div>
 
-          {/* Publication Status Filter */}
           <div>
             <label
               htmlFor="filter-status"
@@ -272,7 +255,6 @@ export default function EventsPage() {
             </select>
           </div>
 
-          {/* Sort By Field */}
           <div>
             <label
               htmlFor="filter-sort"
@@ -293,7 +275,6 @@ export default function EventsPage() {
             </select>
           </div>
 
-          {/* Sort Direction / Order */}
           <div>
             <label
               htmlFor="filter-order"
@@ -315,8 +296,7 @@ export default function EventsPage() {
           </div>
         </div>
 
-        {/* Active Filter Chips & Reset */}
-        {(category || location || isPublished !== "all" || searchQuery) && (
+        {hasActiveFilters && (
           <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
             <span className="font-medium text-slate-500 dark:text-slate-400">
               Active Filters:
@@ -380,9 +360,7 @@ export default function EventsPage() {
         )}
       </section>
 
-      {/* Main Content Area */}
       <section className="space-y-6">
-        {/* Results Count & Meta Indicator */}
         {!loading && !error && data && (
           <div className="flex items-center justify-between text-xs sm:text-sm text-slate-500 dark:text-slate-400 px-1">
             <span>
@@ -397,14 +375,12 @@ export default function EventsPage() {
           </div>
         )}
 
-        {/* Loading Spinner */}
         {loading && (
           <div className="py-16">
             <Loading message="Fetching campus events..." size="md" />
           </div>
         )}
 
-        {/* Error Alert with Retry Button */}
         {!loading && error && (
           <div className="p-6 rounded-2xl border border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/30 text-rose-800 dark:text-rose-200">
             <div className="flex items-start gap-4">
@@ -457,7 +433,6 @@ export default function EventsPage() {
           </div>
         )}
 
-        {/* Empty State: No events match backend criteria or frontend search */}
         {!loading && !error && displayedEvents.length === 0 && (
           <div className="text-center py-16 px-4 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900/50">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-50 dark:bg-blue-950/50 flex items-center justify-center text-blue-600 dark:text-blue-400">
@@ -486,7 +461,7 @@ export default function EventsPage() {
                 : "There are currently no events matching the selected filter criteria. Try adjusting your filters or create a new event."}
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-              {(category || location || isPublished !== "all" || searchQuery) && (
+              {hasActiveFilters && (
                 <button
                   type="button"
                   onClick={handleResetFilters}
@@ -505,7 +480,6 @@ export default function EventsPage() {
           </div>
         )}
 
-        {/* Events Grid */}
         {!loading && !error && displayedEvents.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayedEvents.map((event) => (
@@ -514,7 +488,6 @@ export default function EventsPage() {
           </div>
         )}
 
-        {/* Pagination Controls */}
         {!loading && !error && data && data.total > 0 && (
           <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-sm text-slate-500 dark:text-slate-400">
