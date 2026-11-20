@@ -32,21 +32,17 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
-        {/* Navigation Bar */}
         <Suspense fallback={<div className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900" />}>
           <Navbar />
         </Suspense>
 
-        {/* Main Content Area */}
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {children}
         </main>
 
-        {/* Clean College Platform Footer */}
         <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-colors">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Brand and Description */}
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 rounded-md bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
@@ -74,7 +70,6 @@ export default function RootLayout({
                 </p>
               </div>
 
-              {/* Quick Links */}
               <div>
                 <h4 className="text-sm font-semibold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
                   Quick Navigation
@@ -107,7 +102,6 @@ export default function RootLayout({
                 </ul>
               </div>
 
-              {/* Campus Portal Info */}
               <div>
                 <h4 className="text-sm font-semibold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
                   Campus Resources
@@ -123,7 +117,6 @@ export default function RootLayout({
               </div>
             </div>
 
-            {/* Bottom Bar */}
             <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
               <p>
                 &copy; 2026 Campus Events Discovery Platform. All rights reserved.

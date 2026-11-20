@@ -4,15 +4,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
+const NAV_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/events", label: "Events" },
+  { href: "/create-event", label: "Create Event" },
+];
+
 export default function Navbar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/events", label: "Events" },
-    { href: "/create-event", label: "Create Event" },
-  ];
 
   const isActive = (path: string) => {
     if (path === "/") {
@@ -25,7 +25,6 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo / Brand */}
           <Link
             href="/"
             className="flex items-center gap-2.5 group text-slate-900 dark:text-white"
@@ -50,9 +49,8 @@ export default function Navbar() {
             </span>
           </Link>
 
-          {/* Desktop & Tablet Navigation */}
           <nav className="hidden md:flex items-center gap-1.5 sm:gap-2">
-            {navLinks.map((link) => {
+            {NAV_LINKS.map((link) => {
               const active = isActive(link.href);
               if (link.href === "/create-event") {
                 return (
@@ -99,7 +97,6 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Mobile Menu Button */}
           <div className="flex md:hidden">
             <button
               type="button"
@@ -142,10 +139,9 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-2 pb-4 space-y-1">
-          {navLinks.map((link) => {
+          {NAV_LINKS.map((link) => {
             const active = isActive(link.href);
             return (
               <Link
