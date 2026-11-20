@@ -1,0 +1,120 @@
+### Register
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "student@example.com",
+  "password": "Password123!"
+}
+
+### Duplicate email
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "student@example.com",
+  "password": "Password123!"
+}
+
+### Invalid email
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "not-an-email",
+  "password": "Password123!"
+}
+
+### Short password
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "valid@example.com",
+  "password": "short"
+}
+
+### Extra payload field
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "attacker@example.com",
+  "password": "Password123!",
+  "roles": ["admin"]
+}
+
+### Login
+# @name login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "student@example.com",
+  "password": "Password123!"
+}
+
+### Wrong password
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "student@example.com",
+  "password": "WrongPassword!"
+}
+
+### Unknown email
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "unknown@example.com",
+  "password": "Password123!"
+}
+
+### Profile without token
+GET http://localhost:3000/api/auth/me
+
+### Profile with bearer token
+@token = {{login.response.body.accessToken}}
+GET http://localhost:3000/api/auth/me
+Authorization: Bearer {{token}}
+
+### Profile with tampered token
+GET http://localhost:3000/api/auth/me
+Authorization: Bearer {{token}}x
+
+### Refresh token rotation
+# @name refresh
+@refreshToken = {{login.response.body.refreshToken}}
+POST http://localhost:3000/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### Replay old refresh token
+POST http://localhost:3000/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### Logout without token
+POST http://localhost:3000/api/auth/logout
+
+### Logout
+@rotatedAccessToken = {{refresh.response.body.accessToken}}
+POST http://localhost:3000/api/auth/logout
+Authorization: Bearer {{rotatedAccessToken}}
+
+### Refresh after logout
+@rotatedRefreshToken = {{refresh.response.body.refreshToken}}
+POST http://localhost:3000/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{rotatedRefreshToken}}"
+}
