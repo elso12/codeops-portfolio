@@ -1,0 +1,143 @@
+### ==============================================================================
+### Campus Events Platform — API Test Suite & Verification Checklist
+### Base URL: http://localhost:3001/api
+### ==============================================================================
+
+@baseUrl = http://localhost:3001/api
+@apiKey = campus-secret-key-2026
+
+### ------------------------------------------------------------------------------
+### TEST 1: GET All Events (Expected: 200 OK)
+### ------------------------------------------------------------------------------
+# @name getAllEvents
+GET {{baseUrl}}/events HTTP/1.1
+Accept: application/json
+
+### ------------------------------------------------------------------------------
+### TEST 2: Filter by Category (Expected: 200 OK with matching category)
+### ------------------------------------------------------------------------------
+# @name filterByCategory
+GET {{baseUrl}}/events?category=technology HTTP/1.1
+Accept: application/json
+
+### ------------------------------------------------------------------------------
+### TEST 3: Filter by Publication Status (Expected: 200 OK, only published events)
+### ------------------------------------------------------------------------------
+# @name filterByPublished
+GET {{baseUrl}}/events?isPublished=true HTTP/1.1
+Accept: application/json
+
+### ------------------------------------------------------------------------------
+### TEST 4: Sort and Paginate (Expected: 200 OK, page 1 with 3 events sorted by date)
+### ------------------------------------------------------------------------------
+# @name sortAndPaginate
+GET {{baseUrl}}/events?sortBy=eventDate&order=asc&page=1&limit=3 HTTP/1.1
+Accept: application/json
+
+### ------------------------------------------------------------------------------
+### TEST 5: Get Upcoming Events (Expected: 200 OK, events dated today or later)
+### ------------------------------------------------------------------------------
+# @name getUpcomingEvents
+GET {{baseUrl}}/events/upcoming HTTP/1.1
+Accept: application/json
+
+### ------------------------------------------------------------------------------
+### TEST 6: Get Existing Event by ID (Expected: 200 OK)
+### ------------------------------------------------------------------------------
+# @name getExistingEvent
+GET {{baseUrl}}/events/1 HTTP/1.1
+Accept: application/json
+
+### ------------------------------------------------------------------------------
+### TEST 7: Get Missing Event (Expected: 404 Not Found)
+### ------------------------------------------------------------------------------
+# @name getMissingEvent
+GET {{baseUrl}}/events/999999 HTTP/1.1
+Accept: application/json
+
+### ------------------------------------------------------------------------------
+### TEST 8: Get Event Sessions (Expected: 200 OK with related session array)
+### ------------------------------------------------------------------------------
+# @name getEventSessions
+GET {{baseUrl}}/events/1/sessions HTTP/1.1
+Accept: application/json
+
+### ------------------------------------------------------------------------------
+### TEST 9: Create Valid Event (Expected: 201 Created with valid API key)
+### ------------------------------------------------------------------------------
+# @name createValidEvent
+POST {{baseUrl}}/events HTTP/1.1
+Content-Type: application/json
+x-api-key: {{apiKey}}
+
+{
+  "title": "Intro to Cloud Computing",
+  "description": "A beginner-friendly campus workshop on cloud infrastructure.",
+  "location": "Engineering Block, Room 2",
+  "eventDate": "2026-12-04T09:00:00.000Z",
+  "category": "technology",
+  "isPublished": true
+}
+
+### ------------------------------------------------------------------------------
+### TEST 10: Create Invalid Event (Expected: 400 Bad Request, empty payload)
+### ------------------------------------------------------------------------------
+# @name createInvalidEvent
+POST {{baseUrl}}/events HTTP/1.1
+Content-Type: application/json
+x-api-key: {{apiKey}}
+
+{}
+
+### ------------------------------------------------------------------------------
+### TEST 11: Middleware Request Logging Verification (Expected: Logged in terminal)
+### ------------------------------------------------------------------------------
+# @name testMiddleware
+GET {{baseUrl}}/events HTTP/1.1
+
+### ------------------------------------------------------------------------------
+### TEST 12: Guard Authentication Check (Expected: 401 Unauthorized without API key)
+### ------------------------------------------------------------------------------
+# @name testGuardUnauthorized
+POST {{baseUrl}}/events HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Unauthorized Hackathon",
+  "description": "Should fail before reaching controller",
+  "location": "Campus Center",
+  "eventDate": "2026-12-10T10:00:00.000Z",
+  "category": "technology",
+  "isPublished": true
+}
+
+### ------------------------------------------------------------------------------
+### TEST 13: Interceptor Timing & Header Verification (Expected: X-Response-Time header)
+### ------------------------------------------------------------------------------
+# @name testTimingInterceptor
+GET {{baseUrl}}/events/published HTTP/1.1
+Accept: application/json
+
+### ------------------------------------------------------------------------------
+### TEST 14: ParseIntPipe Parameter Validation (Expected: 400 Bad Request for non-integer)
+### ------------------------------------------------------------------------------
+# @name testParseIntPipe
+GET {{baseUrl}}/events/example?page=hello HTTP/1.1
+Accept: application/json
+
+### ------------------------------------------------------------------------------
+### TEST 15: ValidationPipe DTO Property Validation (Expected: 400 Bad Request, invalid date)
+### ------------------------------------------------------------------------------
+# @name testValidationPipe
+POST {{baseUrl}}/events HTTP/1.1
+Content-Type: application/json
+x-api-key: {{apiKey}}
+
+{
+  "title": "Robotics Expo",
+  "description": "Annual student robotics competition.",
+  "location": "Main Gymnasium",
+  "eventDate": "not-an-iso-date",
+  "category": "technology",
+  "isPublished": "not-a-boolean"
+}
