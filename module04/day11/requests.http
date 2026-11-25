@@ -1,0 +1,40 @@
+@baseUrl = http://localhost:3000
+
+### 1. Public route (no auth required)
+GET {{baseUrl}}/health
+
+### 2. Register a new user
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "alice@example.com",
+  "name": "Alice",
+  "password": "StrongPassword123!"
+}
+
+### 3. Login to receive accessToken & refreshToken
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@example.com",
+  "password": "StrongPassword123!"
+}
+
+### 4. Access protected route with accessToken
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer {{login.response.body.accessToken}}
+
+### 5. Access another protected route
+GET {{baseUrl}}/protected
+Authorization: Bearer {{login.response.body.accessToken}}
+
+### 6. Refresh tokens using refreshToken
+POST {{baseUrl}}/auth/refresh
+Authorization: Bearer {{login.response.body.refreshToken}}
+
+### 7. Logout (requires accessToken, invalidates refreshToken)
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{login.response.body.accessToken}}
